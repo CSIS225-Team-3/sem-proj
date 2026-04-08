@@ -90,4 +90,17 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         }
         return false;
     }
+
+    private boolean hasNum(String password) {
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isDigit(password.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasSymbol(String password) {
+        return true;
+    }
 }
