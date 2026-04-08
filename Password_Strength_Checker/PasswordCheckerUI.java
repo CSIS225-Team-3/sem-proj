@@ -71,6 +71,14 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
             strength += 5;
         }
 
+        if (hasNum(password)) {
+            strength += 5;
+        }
+
+        if (hasSymbol(password)) {
+            strength += 5;
+        }
+
     }
 
     private boolean hasUpperCase(String password) {
@@ -101,6 +109,12 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
     }
 
     private boolean hasSymbol(String password) {
-        return true;
+        for (int i = 0; i < password.length(); i++) {
+            if (!Character.isDigit(password.charAt(i)) && !Character.isUpperCase(password.charAt(i))
+                    && !Character.isLowerCase(password.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
