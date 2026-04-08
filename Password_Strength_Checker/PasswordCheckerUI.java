@@ -15,6 +15,8 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
     private JLabel resultLabel;
     private JButton checkButton;
 
+    private int strength;
+
     @Override
     public void run() {
 
@@ -50,6 +52,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        resultLabel.setText("Strength: " + strength);
         return;
     }
 }
