@@ -36,6 +36,9 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         centerPanel.add(new JLabel("Enter Password:"));
 
         passwordBox = new JTextField(20);
+        passwordBox.addActionListener(e -> {
+            getAndUpdateScore();
+        });
         centerPanel.add(passwordBox);
 
         checkButton = new JButton("Check");
@@ -53,6 +56,10 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        getAndUpdateScore();
+    }
+
+    private void getAndUpdateScore(){
         calculateScore();
         setColor();
         resultLabel.setText("Strength: " + strength);
