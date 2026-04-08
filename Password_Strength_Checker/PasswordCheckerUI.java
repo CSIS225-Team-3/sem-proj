@@ -81,20 +81,23 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         strength = password.length();
 
         if (hasUpperCase(password)) {
-            strength *= 1.2;
+            strength *= 26; //26 uppercase letters
         }
 
         if (hasLowerCase(password)) {
-            strength *= 1.2;
+            strength *= 26; //26 lowercase letters
         }
 
         if (hasNum(password)) {
-            strength *= 1.2;
+            strength *= 10; //10 numbers
         }
 
         if (hasSymbol(password)) {
-            strength *= 1.2;
+            strength *= 32; //~32 symbols
         }
+
+        //Need to scale this down, maybe with log?
+        // strength /= 100;
     }
 
     private void setColor() {
