@@ -1,10 +1,10 @@
 package Password_Strength_Checker;
 
-import Password_Strength_Checker.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
 import javax.swing.*;
 
 /**
@@ -54,6 +54,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         calculateScore();
+        setColor();
         resultLabel.setText("Strength: " + strength);
     }
 
@@ -82,6 +83,18 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
             strength *= 1.2;
         }
 
+    }
+
+    private void setColor() {
+        if (strength < 10) {
+            resultLabel.setForeground(Color.RED);
+        } else if (strength < 20) {
+            resultLabel.setForeground(Color.ORANGE);
+        } else if (strength < 30) {
+            resultLabel.setForeground(Color.YELLOW);
+        } else {
+            resultLabel.setForeground(Color.GREEN);
+        }
     }
 
     private boolean hasUpperCase(String password) {
