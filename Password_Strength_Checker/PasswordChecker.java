@@ -1,5 +1,4 @@
 package Password_Strength_Checker;
-import Password_Strength_Checker.*;
 
 /**
  * Main for PasswordChecker, starts it.

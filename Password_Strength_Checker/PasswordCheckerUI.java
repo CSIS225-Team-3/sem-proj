@@ -1,4 +1,5 @@
 package Password_Strength_Checker;
+
 import Password_Strength_Checker.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -56,13 +57,37 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         resultLabel.setText("Strength: " + strength);
     }
 
-
     private void calculateScore() {
         String password = passwordBox.getText();
 
         // Length contributes 1 point per character
         strength += password.length();
 
-        
+        if (hasUpperCase(password)) {
+            strength += 5;
+        }
+
+        if (hasLowerCase(password)) {
+            strength += 5;
+        }
+
+    }
+
+    private boolean hasUpperCase(String password) {
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isUpperCase(password.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasLowerCase(String password) {
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isLowerCase(password.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
