@@ -60,6 +60,9 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
     private void calculateScore() {
         String password = passwordBox.getText();
 
+        // reset strength
+        strength = 0;
+
         // Length contributes 1 point per character
         strength += password.length();
 
