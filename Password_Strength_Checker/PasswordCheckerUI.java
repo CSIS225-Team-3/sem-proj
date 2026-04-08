@@ -13,8 +13,8 @@ import javax.swing.*;
 public class PasswordCheckerUI implements Runnable, ActionListener {
 
     private JTextField passwordBox;
-    private JLabel resultLabel;
     private JButton checkButton;
+    private JProgressBar strengthBar;
 
     private int strength;
 
@@ -45,11 +45,13 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         checkButton = new JButton("Check");
         checkButton.addActionListener(this);
         centerPanel.add(checkButton);
-
+        
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-
-        resultLabel = new JLabel("Strength: ", JLabel.CENTER);
-        mainPanel.add(resultLabel, BorderLayout.SOUTH);
+        
+        strengthBar = new JProgressBar(SwingConstants.HORIZONTAL, 0, 30);
+        strengthBar.setString("");;
+        strengthBar.setStringPainted(true);
+        mainPanel.add(strengthBar, BorderLayout.SOUTH);
 
         frame.pack();
         frame.setVisible(true);
@@ -63,7 +65,8 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
     private void getAndUpdateScore(){
         calculateScore();
         setColor();
-        resultLabel.setText("Strength: " + strength);
+        strengthBar.setValue(strength);
+        strengthBar.setString(String.valueOf(strength));
     }
 
     private void calculateScore() {
@@ -95,13 +98,13 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
     private void setColor() {
         if (strength < 10) {
-            resultLabel.setForeground(Color.RED);
+            strengthBar.setForeground(Color.RED);
         } else if (strength < 20) {
-            resultLabel.setForeground(Color.ORANGE);
+            strengthBar.setForeground(Color.ORANGE);
         } else if (strength < 30) {
-            resultLabel.setForeground(Color.YELLOW);
+            strengthBar.setForeground(Color.YELLOW);
         } else {
-            resultLabel.setForeground(Color.GREEN);
+            strengthBar.setForeground(Color.GREEN);
         }
     }
 
