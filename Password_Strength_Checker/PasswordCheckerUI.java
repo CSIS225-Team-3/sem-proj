@@ -52,7 +52,17 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        calculateScore();
         resultLabel.setText("Strength: " + strength);
-        return;
+    }
+
+
+    private void calculateScore() {
+        String password = passwordBox.getText();
+
+        // Length contributes 1 point per character
+        strength += password.length();
+
+        
     }
 }
