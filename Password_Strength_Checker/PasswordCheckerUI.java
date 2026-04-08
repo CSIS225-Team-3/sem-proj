@@ -11,7 +11,6 @@ import javax.swing.*;
  * User Interface for the password strength checker.
  */
 public class PasswordCheckerUI implements Runnable, ActionListener {
-
     private JTextField passwordBox;
     private JButton checkButton;
     private JProgressBar strengthBar;
@@ -20,11 +19,12 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
     @Override
     public void run() {
+        // Doesn't apply to existing JFrames, so must be called first
+        JFrame.setDefaultLookAndFeelDecorated(true);
 
         JFrame frame = new JFrame("Password Strength Checker");
         frame.setPreferredSize(new Dimension(400, 200));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JFrame.setDefaultLookAndFeelDecorated(true);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         frame.add(mainPanel);
@@ -32,12 +32,13 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         JLabel title = new JLabel("Password Strength Checker", JLabel.CENTER);
         mainPanel.add(title, BorderLayout.NORTH);
 
+        // Center panel
         JPanel centerPanel = new JPanel();
         centerPanel.add(new JLabel("Enter Password:"));
 
         passwordBox = new JTextField(20);
         passwordBox.addActionListener(e -> {
-            //this event gets fired when enter is pressed in the field
+            // This event gets fired when enter is pressed in the field
             getAndUpdateScore();
         });
         centerPanel.add(passwordBox);
@@ -45,11 +46,12 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         checkButton = new JButton("Check");
         checkButton.addActionListener(this);
         centerPanel.add(checkButton);
-        
+
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        
+        // Center panel done
+
         strengthBar = new JProgressBar(SwingConstants.HORIZONTAL, 0, 30);
-        strengthBar.setString("");;
+        strengthBar.setString("");
         strengthBar.setStringPainted(true);
         mainPanel.add(strengthBar, BorderLayout.SOUTH);
 
@@ -62,7 +64,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         getAndUpdateScore();
     }
 
-    private void getAndUpdateScore(){
+    private void getAndUpdateScore() {
         calculateScore();
         setColor();
         strengthBar.setValue(strength);
@@ -72,11 +74,11 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
     private void calculateScore() {
         String password = passwordBox.getText();
 
-        // reset strength
+        // Reset strength
         strength = 0;
 
         // Length contributes 1 point per character
-        strength += password.length();
+        strength = password.length();
 
         if (hasUpperCase(password)) {
             strength *= 1.2;
@@ -93,55 +95,46 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         if (hasSymbol(password)) {
             strength *= 1.2;
         }
-
     }
 
     private void setColor() {
-        if (strength < 10) {
+        if (strength < 10)
             strengthBar.setForeground(Color.RED);
-        } else if (strength < 20) {
+        else if (strength < 20)
             strengthBar.setForeground(Color.ORANGE);
-        } else if (strength < 30) {
+        else if (strength < 30)
             strengthBar.setForeground(Color.YELLOW);
-        } else {
+        else
             strengthBar.setForeground(Color.GREEN);
-        }
     }
 
     private boolean hasUpperCase(String password) {
-        for (int i = 0; i < password.length(); i++) {
-            if (Character.isUpperCase(password.charAt(i))) {
+        for (int i = 0; i < password.length(); i++)
+            if (Character.isUpperCase(password.charAt(i)))
                 return true;
-            }
-        }
         return false;
     }
 
     private boolean hasLowerCase(String password) {
-        for (int i = 0; i < password.length(); i++) {
-            if (Character.isLowerCase(password.charAt(i))) {
+        for (int i = 0; i < password.length(); i++)
+            if (Character.isLowerCase(password.charAt(i)))
                 return true;
-            }
-        }
         return false;
     }
 
     private boolean hasNum(String password) {
-        for (int i = 0; i < password.length(); i++) {
-            if (Character.isDigit(password.charAt(i))) {
+        for (int i = 0; i < password.length(); i++)
+            if (Character.isDigit(password.charAt(i)))
                 return true;
-            }
-        }
         return false;
     }
 
     private boolean hasSymbol(String password) {
-        for (int i = 0; i < password.length(); i++) {
-            if (!Character.isDigit(password.charAt(i)) && !Character.isUpperCase(password.charAt(i))
-                    && !Character.isLowerCase(password.charAt(i))) {
+        for (int i = 0; i < password.length(); i++)
+            if (!Character.isDigit(password.charAt(i)) &&
+                    !Character.isUpperCase(password.charAt(i)) &&
+                    !Character.isLowerCase(password.charAt(i)))
                 return true;
-            }
-        }
         return false;
     }
 }
