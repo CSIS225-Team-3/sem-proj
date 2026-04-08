@@ -103,9 +103,9 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         else if (strength < 20)
             strengthBar.setForeground(Color.ORANGE);
         else if (strength < 30)
-            strengthBar.setForeground(Color.YELLOW);
+            strengthBar.setForeground(new Color(220, 220, 0));
         else
-            strengthBar.setForeground(Color.GREEN);
+            strengthBar.setForeground(new Color(0, 200, 0));
     }
 
     private boolean hasUpperCase(String password) {
