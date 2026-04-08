@@ -74,30 +74,30 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
     private void calculateScore() {
         String password = passwordBox.getText();
 
-        // Reset strength
-        strength = 0;
-
-        // Length contributes 1 point per character
-        strength = password.length();
+        int choices = 0;
 
         if (hasUpperCase(password)) {
-            strength *= 26; //26 uppercase letters
+            choices += 26; //26 uppercase letters
         }
 
         if (hasLowerCase(password)) {
-            strength *= 26; //26 lowercase letters
+            choices += 26; //26 lowercase letters
         }
 
         if (hasNum(password)) {
-            strength *= 10; //10 numbers
+            choices += 10; //10 numbers
         }
 
         if (hasSymbol(password)) {
-            strength *= 32; //~32 symbols
+            choices += 32; //~32 symbols
         }
 
-        //Need to scale this down, maybe with log?
-        // strength /= 100;
+        // Length ^ options per character
+        // double is required because the result quickly becomes extremely large
+        double combinations = Math.pow(choices, password.length());
+
+        //Scale down the massive number
+        strength = (int)Math.log(combinations) / 2;
     }
 
     private void setColor() {
