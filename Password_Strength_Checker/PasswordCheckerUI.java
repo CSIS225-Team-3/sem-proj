@@ -37,6 +37,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
         passwordBox = new JTextField(20);
         passwordBox.addActionListener(e -> {
+            //this event gets fired when enter is pressed in the field
             getAndUpdateScore();
         });
         centerPanel.add(passwordBox);
