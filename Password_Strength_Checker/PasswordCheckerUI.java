@@ -64,7 +64,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         strength = 0;
 
         // Length contributes 1 point per character
-        strength += password.length();
+        strength += password.length()*2;
 
         if (hasUpperCase(password)) {
             strength += 5;
