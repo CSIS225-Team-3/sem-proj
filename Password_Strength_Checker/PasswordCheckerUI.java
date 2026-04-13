@@ -58,13 +58,13 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         });
         centerPanel.add(passwordBox);
 
-        showPassword = new JCheckBox("Show Password");
-        showPassword.addActionListener(this);
-        centerPanel.add(showPassword);
-
         checkButton = new JButton("Check");
         checkButton.addActionListener(this);
         centerPanel.add(checkButton);
+
+        showPassword = new JCheckBox("Show Password");
+        showPassword.addActionListener(this);
+        centerPanel.add(showPassword);
 
         strengthMessage = new JLabel(" ");
         centerPanel.add(strengthMessage, BorderLayout.CENTER);
