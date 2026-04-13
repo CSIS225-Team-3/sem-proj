@@ -19,12 +19,13 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
     private JLabel strengthMessage;
 
-    private JTextField passwordBox;
+    private JPasswordField passwordBox;
+    private JCheckBox showPassword;
+
     private JButton checkButton;
     private JProgressBar strengthBar;
 
     private int strength;
-
 
     private static final int LOW_STRENGTH = 10;
     private static final int MEDIUM_STRENGTH = 20;
@@ -49,12 +50,17 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         JPanel centerPanel = new JPanel();
         centerPanel.add(new JLabel("Enter Password:"));
 
-        passwordBox = new JTextField(20);
+        passwordBox = new JPasswordField(20);
+
         passwordBox.addActionListener(e -> {
             // This event gets fired when enter is pressed in the field
             getAndUpdateScore();
         });
         centerPanel.add(passwordBox);
+
+        showPassword = new JCheckBox("Show Password");
+        showPassword.addActionListener(this);
+        centerPanel.add(showPassword);
 
         checkButton = new JButton("Check");
         checkButton.addActionListener(this);
@@ -79,7 +85,19 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        getAndUpdateScore();
+        if (e.getSource() == showPassword) {
+            togglePasswordVisibility();
+        } else {
+            getAndUpdateScore();
+        }
+    }
+
+    private void togglePasswordVisibility() {
+        if (showPassword.isSelected()) {
+            passwordBox.setEchoChar((char) 0); // Show password
+        } else {
+            passwordBox.setEchoChar('*'); // Hide password
+        }
     }
 
     private void initPhrases() {
