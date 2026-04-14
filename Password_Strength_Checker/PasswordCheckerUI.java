@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.util.Random;
 
 /**
@@ -75,9 +77,17 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         inputPanel.add(new JLabel("Enter Password:"));
         passwordBox = new JPasswordField(20);
 
-        passwordBox.addActionListener(e -> {
-            // This event gets fired when enter is pressed in the field
-            getAndUpdateScore();
+        passwordBox.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e){
+                getAndUpdateScore();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e){
+                getAndUpdateScore();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e){}
         });
         inputPanel.add(passwordBox);
 
