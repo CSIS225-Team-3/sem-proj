@@ -105,12 +105,11 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
         buttons = new MinesweeperButtons[gridSize];
         for (int i = 0; i < gridSize; i++) {
             // TODO: CHANGE LOGIC TO ACTUALLY REFLECT
+            buttons[i] = new MinesweeperButtons(" ", i);
             if (rand.nextInt(0, 2) == 0) {
-                buttons[i] = new MinesweeperButtons("!!", i);
                 buttons[i].setMine(true);
-            } else {
-                buttons[i] = new MinesweeperButtons(" ", i);
             }
+
             gamePanel.add(buttons[i]);
             buttons[i].addActionListener(this);
         }
@@ -169,9 +168,7 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
         updateRoundTitleText();
 
         for (int i = 0; i < gridSize; i++) {
-            buttons[i].setText(" ");
-            buttons[i].setColor(Color.BLACK);
-            buttons[i].setSelected(false);
+            // TODO: FIX
         }
     }
 

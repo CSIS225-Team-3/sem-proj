@@ -1,6 +1,9 @@
 package Minesweeper;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.Image;
 
 /**
  * Custom JButton with more information
@@ -20,6 +23,8 @@ public class MinesweeperButtons extends JButton {
 
     private boolean isMine;
 
+    private static final ImageIcon MINE_ICON = loadMineIcon();
+
     /**
      * Constructor for ConcentrationButton
      * 
@@ -38,6 +43,18 @@ public class MinesweeperButtons extends JButton {
         isSelected = false;
         isMine = false;
 
+    }
+
+    private static ImageIcon loadMineIcon() {
+        try {
+            ImageIcon icon = new ImageIcon(MinesweeperButtons.class.getResource("MinesweeperFlag.png"));
+
+            Image scaled = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaled);
+        } catch (Exception e) {
+            System.err.println("Could not load mine image: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -76,13 +93,16 @@ public class MinesweeperButtons extends JButton {
         this.value = value;
     }
 
-    
-
     /**
      * Sets the button on click
      */
     public void onClick() {
-        setText(value);
+        if (isMine && MINE_ICON != null) {
+            setText("");
+            setIcon(MINE_ICON);
+        } else {
+            setText(value);
+        }
         isSelected = true;
     }
 
