@@ -20,7 +20,7 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
     private ArrayList<Integer> nums;
 
     /** The array of buttons for the game */
-    private MinesweeperButtons[] buttons;
+    private MinesweeperButton[] buttons;
 
     /** The label for the top of the window */
     private JLabel topLabel;
@@ -102,10 +102,10 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
         nums = new ArrayList<Integer>();
         Random rand = new Random();
 
-        buttons = new MinesweeperButtons[gridSize];
+        buttons = new MinesweeperButton[gridSize];
         for (int i = 0; i < gridSize; i++) {
             // TODO: CHANGE LOGIC TO ACTUALLY REFLECT
-            buttons[i] = new MinesweeperButtons(" ", i);
+            buttons[i] = new MinesweeperButton(i);
             if (rand.nextInt(0, 2) == 0) {
                 buttons[i].setMine(true);
             }
@@ -147,8 +147,8 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
             // Do Logic
         } else {
             // TODO: DO THE ACTUAL LOGIC OF THE GAME
-            MinesweeperButtons pressedButton = (MinesweeperButtons) e.getSource();
-            pressedButton.onClick();
+            MinesweeperButton pressedButton = (MinesweeperButton) e.getSource();
+            pressedButton.reveal();
         }
     }
 
