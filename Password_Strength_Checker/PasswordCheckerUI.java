@@ -101,6 +101,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         // Center panel done
 
         strengthBar = new JProgressBar(SwingConstants.HORIZONTAL, 0, 30);
+        strengthBar.setUI(new javax.swing.plaf.basic.BasicProgressBarUI());
         strengthBar.setString("");
         strengthBar.setStringPainted(true);
         mainPanel.add(strengthBar, BorderLayout.SOUTH);
