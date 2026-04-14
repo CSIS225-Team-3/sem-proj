@@ -57,7 +57,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         JFrame.setDefaultLookAndFeelDecorated(true);
 
         JFrame frame = new JFrame("Password Strength Checker");
-        frame.setPreferredSize(new Dimension(400, 200));
+        frame.setPreferredSize(new Dimension(450, 300));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -200,7 +200,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
      */
     private void calculateScore() {
         String password = new String(passwordBox.getPassword());
-
+        
         int choices = 0;
 
         if (hasUpperCase(password)) {
