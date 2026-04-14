@@ -133,13 +133,13 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
         JPanel modesPanel = new JPanel(new GridLayout(6, 1, 0, 5));
 
-        twoDimension = new JButton("2D Minesweeper");
+        twoDimension = new JButton("2D Minesweeper (WIP)");
         twoDimension.addActionListener(this);
-        threeDimension = new JButton("3D Minesweeper");
+        threeDimension = new JButton("3D Minesweeper (Coming Soon!)");
         threeDimension.addActionListener(this);
-        fourDimension = new JButton("4D Minesweeper");
+        fourDimension = new JButton("4D Minesweeper (Coming Soon!)");
         fourDimension.addActionListener(this);
-        hyperbolic = new JButton("Hyperbolic Minesweeper");
+        hyperbolic = new JButton("Hyperbolic Minesweeper (Coming Soon!)");
         hyperbolic.addActionListener(this);
 
         modesPanel.add(twoDimension);
@@ -187,16 +187,16 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         int rows = (int) rowsSpinner.getValue();
         int cols = (int) colsSpinner.getValue();
 
-        String buttonText = e.getActionCommand();
+        Object src = e.getSource();
 
-        if (buttonText.equals("2D Minesweeper")) {
+        if (src == twoDimension) {
             cards.add(new MinesweeperTwoDimensions(rows, cols, cardLayout, cards), TWO_DIMENSIONS);
             cardLayout.show(cards, TWO_DIMENSIONS);
-        } else if (buttonText.equals("3D Minesweeper")) {
+        } else if (src == threeDimension) {
             System.out.println("3D Minesweeper coming soon!");
-        } else if (buttonText.equals("4D Minesweeper")) {
+        } else if (src == fourDimension) {
             System.out.println("4D Minesweeper coming soon!");
-        } else if (buttonText.equals("Hyperbolic Minesweeper")) {
+        } else if (src == hyperbolic) {
             System.out.println("Hyperbolic Minesweeper coming soon!");
         }
     }
