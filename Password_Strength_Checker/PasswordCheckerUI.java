@@ -67,27 +67,35 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         mainPanel.add(title, BorderLayout.NORTH);
 
         // Center panel
-        JPanel centerPanel = new JPanel();
-        centerPanel.add(new JLabel("Enter Password:"));
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
+        JPanel inputPanel = new JPanel();
+
+        inputPanel.add(new JLabel("Enter Password:"));
         passwordBox = new JPasswordField(20);
 
         passwordBox.addActionListener(e -> {
             // This event gets fired when enter is pressed in the field
             getAndUpdateScore();
         });
-        centerPanel.add(passwordBox);
+        inputPanel.add(passwordBox);
 
         checkButton = new JButton("Check");
         checkButton.addActionListener(this);
-        centerPanel.add(checkButton);
+        inputPanel.add(checkButton);
+        centerPanel.add(inputPanel, BorderLayout.NORTH);
+
+        JPanel optionsPanel = new JPanel();
 
         showPassword = new JCheckBox("Show Password");
         showPassword.addActionListener(this);
-        centerPanel.add(showPassword);
+        optionsPanel.add(showPassword);
 
         strengthMessage = new JLabel(" ");
-        centerPanel.add(strengthMessage, BorderLayout.CENTER);
+        optionsPanel.add(strengthMessage, BorderLayout.CENTER);
+
+        centerPanel.add(optionsPanel, BorderLayout.CENTER);
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         // Center panel done
