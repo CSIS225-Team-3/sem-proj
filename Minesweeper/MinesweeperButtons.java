@@ -97,6 +97,7 @@ public class MinesweeperButtons extends JButton {
      * Sets the button on click
      */
     public void onClick() {
+        // TODO: HAVE FLAGS BE IMPLEMENTED AND NOT JUST BE MINES
         if (isMine && MINE_ICON != null) {
             setText("");
             setIcon(MINE_ICON);
