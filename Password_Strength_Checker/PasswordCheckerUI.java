@@ -1,5 +1,7 @@
 package Password_Strength_Checker;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -44,6 +46,12 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
     /** The current password strength */
     private int strength;
+
+    /** Panel to store labels which guide the user on the qualifications of a strong password */
+    private JPanel passwordChecksPanel;
+
+    /** List of JLabels which reveal aspects of the password */
+    private List<JLabel> checksLabels = new ArrayList<JLabel>();
 
     /** Constants for password strength levels */
     private static final int LOW_STRENGTH = 10;
@@ -110,11 +118,26 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         // Center panel done
 
+
+        passwordChecksPanel = new JPanel();
+        //Populating password checking labels
+        checksLabels.add(new JLabel(": Uppercase Letter (A-Z)"));
+        checksLabels.add(new JLabel(": Lowercase Letter (a-z)"));
+
+        for(JLabel label : checksLabels){
+            passwordChecksPanel.add(label);
+        }
+        mainPanel.add(passwordChecksPanel, BorderLayout.CENTER);
+
+
+        //Strength bar
         strengthBar = new JProgressBar(SwingConstants.HORIZONTAL, 0, 30);
         strengthBar.setUI(new javax.swing.plaf.basic.BasicProgressBarUI());
         strengthBar.setString("");
         strengthBar.setStringPainted(true);
         mainPanel.add(strengthBar, BorderLayout.SOUTH);
+
+
 
         frame.pack();
         frame.setVisible(true);
@@ -249,6 +272,10 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
             strengthBar.setForeground(new Color(220, 220, 0));
         else
             strengthBar.setForeground(new Color(0, 200, 0));
+    }
+
+    private void setGuides(){
+        
     }
 
     /**
