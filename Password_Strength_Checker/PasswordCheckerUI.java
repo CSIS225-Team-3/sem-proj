@@ -3,6 +3,7 @@ package Password_Strength_Checker;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.BorderLayout;
+import javax.swing.BoxLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -120,14 +121,18 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
 
 
         passwordChecksPanel = new JPanel();
+        passwordChecksPanel.setLayout(new BoxLayout(passwordChecksPanel, BoxLayout.Y_AXIS));
         //Populating password checking labels
-        checksLabels.add(new JLabel(": Uppercase Letter (A-Z)"));
-        checksLabels.add(new JLabel(": Lowercase Letter (a-z)"));
+        checksLabels.add(new JLabel(" Uppercase Letter (A-Z)", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" Lowercase Letter (a-z)", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" Symbol (!#%^?./)", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" Number (0-9)", SwingConstants.CENTER));
 
-        for(JLabel label : checksLabels){
+        for(JLabel label : checksLabels){ 
+            label.setPreferredSize(new Dimension(30, 10));
             passwordChecksPanel.add(label);
         }
-        mainPanel.add(passwordChecksPanel, BorderLayout.CENTER);
+        centerPanel.add(passwordChecksPanel, BorderLayout.SOUTH);
 
 
         //Strength bar
