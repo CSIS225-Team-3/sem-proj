@@ -12,10 +12,16 @@ import java.awt.Image;
  * @version 4/14/2026
  */
 public class MinesweeperButton extends JButton {
+    public final static Color HIDDEN_COLOR = new Color(200, 115, 115);
+    public final static Color REVEALED_COLOR = new Color(255, 175, 175);
+
+    MinesweeperBase game;
+    private int[] position;
+
     private boolean isRevealed = false;
     
     /** The number of adjacent mines */
-    private int adjacent;
+    private int numAdjacent = 0;
 
     private boolean isMine = false;
     private boolean isFlagged = false;
@@ -26,15 +32,99 @@ public class MinesweeperButton extends JButton {
     /**
      * Constructor for MinesweeperButton
      */
-    public MinesweeperButton(int index) {
-        super(" ");
+    public MinesweeperButton(MinesweeperBase game, int[] position) {
+        super((String)null);
+        // super(position[0] + " " + position[1]);
 
-        setBackground(MainMenu.PRIMARY_COLOR);
+        this.game = game;
+        this.position = position;
+
+        setBackground(HIDDEN_COLOR);
         setForeground(Color.BLACK);
         //NOTE: Temp disabled for debug purposes
         // setOpaque(true);
         // setBorderPainted(false);
     }
+
+    /**
+     * Gets the position of this button
+     * @return the position of this button
+     */
+    public int[] getPosition(){
+        //Technically this is mutable, but should be fine
+        return position;
+    }
+
+    /**
+     * Gets the number of adjacent mines
+     * @return the number of adjacent mines
+     */
+    public int getNumAdjacent() {
+        return numAdjacent;
+    }
+
+    /**
+     * Reveal the button
+     */
+    public void reveal() {
+        // TODO: HAVE FLAGS BE IMPLEMENTED AND NOT JUST BE MINES
+        if (isMine) {
+            setText("M");
+            setIcon(MINE_ICON);
+            setBackground(Color.RED);
+        } else {
+            setText(String.valueOf(numAdjacent));
+            setBackground(REVEALED_COLOR);
+        }
+        isRevealed = true;
+    }
+
+    /**
+     * Sets the flagged status
+     * @param flagged the flagged status to use
+     */
+    public void setFlagged(boolean flagged){
+        isFlagged = flagged;
+    }
+
+    /**
+     * Gets the flagged status
+     * @return the flagged status
+     */
+    public boolean getFlagged(){
+        return isFlagged;
+    }
+
+    /**
+     * Sets if the button is a mine or not
+     * @param isMine True if mine, false if not
+     */
+    public void setMine(boolean isMine) {
+        this.isMine = isMine;
+        
+        MinesweeperButton[] adjacents = game.getAdjacentButtons(getPosition());
+        for (int i = 0; i < adjacents.length; i++){
+            adjacents[i].numAdjacent++;
+        }
+    }
+
+    /**
+     * Gets if the button is a mine or not
+     * @return True if mine, false if not
+     */
+    public boolean getMine() {
+        return isMine;
+    }
+
+    /**
+     * Gets if the button has been revealed or not
+     * @return boolean on if the button has been revealed or not
+     */
+    public boolean getRevealed() {
+        return isRevealed;
+    }
+    
+
 
     private static ImageIcon loadMineIcon() {
         try {
@@ -56,54 +146,5 @@ public class MinesweeperButton extends JButton {
             System.err.println("Could not load flag image: " + e.getMessage());
             return null;
         }
-    }
-
-    /**
-     * Gets the number of adjacent mines
-     * @return the number of adjacent mines
-     */
-    public int getAdjacent() {
-        return adjacent;
-    }
-
-    /**
-     * Reveal the button
-     */
-    public void reveal() {
-        // TODO: HAVE FLAGS BE IMPLEMENTED AND NOT JUST BE MINES
-        if (isMine) {
-            setText("");
-            setIcon(MINE_ICON);
-        } else {
-            setText(String.valueOf(adjacent));
-        }
-        isRevealed = true;
-    }
-
-    /**
-     * Sets if the button is a mine or not
-     * 
-     * @param isMine True if mine, false if not
-     */
-    public void setMine(boolean isMine) {
-        this.isMine = isMine;
-    }
-
-    /**
-     * Gets if the button is a mine or not
-     * 
-     * @return True if mine, false if not
-     */
-    public boolean getMine() {
-        return isMine;
-    }
-
-    /**
-     * Gets if the button has been revealed or not
-     * 
-     * @return boolean on if the button has been revealed or not
-     */
-    public boolean getRevealed() {
-        return isRevealed;
     }
 }
