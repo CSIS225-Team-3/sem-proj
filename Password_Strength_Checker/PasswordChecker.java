@@ -60,6 +60,11 @@ public class PasswordChecker implements Runnable, ActionListener {
     private static final int MEDIUM_STRENGTH = 20;
     private static final int HIGH_STRENGTH = 30;
 
+
+    private static final Color PRIMARY_COLOR = new Color(0, 120, 255);
+    private static final Color SECONDARY_COLOR = new Color(0, 200, 0);
+    private static final Color TERTIARY_COLOR = new Color(220, 220, 0);
+
     @Override
     /**
      * Initializes the interface and sets up the components.
@@ -71,6 +76,7 @@ public class PasswordChecker implements Runnable, ActionListener {
         JFrame frame = new JFrame("Password Strength Checker");
         frame.setPreferredSize(new Dimension(450, 300));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         frame.add(mainPanel);
@@ -147,6 +153,23 @@ public class PasswordChecker implements Runnable, ActionListener {
         strengthBar.setStringPainted(true);
         mainPanel.add(strengthBar, BorderLayout.SOUTH);
 
+        showPasswordPanel.setBackground(PRIMARY_COLOR);
+        showPassword.setBackground(PRIMARY_COLOR);
+
+        passwordChecksWrapperPanel.setBackground(SECONDARY_COLOR);
+        passwordChecksPanel.setBackground(SECONDARY_COLOR);
+
+
+        centerPanel.setBackground(TERTIARY_COLOR);
+        mainPanel.setBackground(TERTIARY_COLOR);
+
+        topPanel.setBackground(TERTIARY_COLOR);
+        passwordPanel.setBackground(TERTIARY_COLOR);
+
+        frame.setBackground(PRIMARY_COLOR);
+
+        messagePanel.setBackground(PRIMARY_COLOR);
+        
         frame.pack();
         frame.setVisible(true);
 
