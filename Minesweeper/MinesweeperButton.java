@@ -3,6 +3,7 @@ package Minesweeper;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Image;
 
 /**
@@ -41,6 +42,10 @@ public class MinesweeperButton extends JButton {
 
         setBackground(HIDDEN_COLOR);
         setForeground(Color.BLACK);
+        setFocusPainted(false);
+        // setRolloverEnabled(false); //Mouse hover
+        setContentAreaFilled(false);
+        
         //NOTE: Temp disabled for debug purposes
         // setOpaque(true);
         // setBorderPainted(false);
@@ -144,6 +149,16 @@ public class MinesweeperButton extends JButton {
      */
     public boolean getRevealed() {
         return isRevealed;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        //Paint the background color manually, ignoring the pressed state
+        g.setColor(getBackground());
+        g.fillRect(0, 0, getWidth(), getHeight());
+        
+        //Paint the text and borders normally
+        super.paintComponent(g);
     }
     
 
