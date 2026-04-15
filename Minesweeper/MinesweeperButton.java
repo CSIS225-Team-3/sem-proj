@@ -26,8 +26,8 @@ public class MinesweeperButton extends JButton {
     private boolean isMine = false;
     private boolean isFlagged = false;
 
-    private static final ImageIcon MINE_ICON = loadMineIcon();
-    private static final ImageIcon FLAG_ICON = loadFlagIcon();
+    private static final ImageIcon MINE_ICON = loadIcon("MinesweeperMine.png");
+    private static final ImageIcon FLAG_ICON = loadIcon("MinesweeperFlag.png");
 
     /**
      * Constructor for MinesweeperButton
@@ -67,24 +67,34 @@ public class MinesweeperButton extends JButton {
      * Reveal the button
      */
     public void reveal() {
-        // TODO: HAVE FLAGS BE IMPLEMENTED AND NOT JUST BE MINES
+        //Block if it's flagged to avoid accidents
+        if (isFlagged)
+            return;
+
         if (isMine) {
             setText("M");
             setIcon(MINE_ICON);
             setBackground(Color.RED);
         } else {
             setText(String.valueOf(numAdjacent));
+            setIcon(null);
             setBackground(REVEALED_COLOR);
         }
         isRevealed = true;
     }
 
     /**
-     * Sets the flagged status
-     * @param flagged the flagged status to use
+     * Toggle the flagged status
      */
-    public void setFlagged(boolean flagged){
-        isFlagged = flagged;
+    public void toggleFlagged(){
+        if (isRevealed)
+            return;
+        isFlagged = !isFlagged;
+        if (isFlagged){
+            setIcon(FLAG_ICON);
+        } else{
+            setIcon(null);
+        }
     }
 
     /**
@@ -126,24 +136,13 @@ public class MinesweeperButton extends JButton {
     
 
 
-    private static ImageIcon loadMineIcon() {
+    private static ImageIcon loadIcon(String name) {
         try {
-            ImageIcon icon = new ImageIcon(MinesweeperButton.class.getResource("MinesweeperMine.png"));
+            ImageIcon icon = new ImageIcon(MinesweeperButton.class.getResource(name));
             Image scaled = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
             return new ImageIcon(scaled);
         } catch (Exception e) {
-            System.err.println("Could not load mine image: " + e.getMessage());
-            return null;
-        }
-    }
-
-    private static ImageIcon loadFlagIcon() {
-        try {
-            ImageIcon icon = new ImageIcon(MinesweeperButton.class.getResource("MinesweeperFlag.png"));
-            Image scaled = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            return new ImageIcon(scaled);
-        } catch (Exception e) {
-            System.err.println("Could not load flag image: " + e.getMessage());
+            System.err.println("Could not load \'" + name + "\' image: " + e.getMessage());
             return null;
         }
     }
