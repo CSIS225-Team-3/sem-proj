@@ -177,7 +177,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         frame.setVisible(true);
 
         //NOTE: Temp debug code since it's annoying to click
-        cards.add(new MinesweeperTwoDimensions(3, 3, cardLayout, cards), TWO_DIMENSIONS);
+        cards.add(new MinesweeperTwoDimensions(10, 10, cardLayout, cards), TWO_DIMENSIONS);
         cardLayout.show(cards, TWO_DIMENSIONS);
     }
 

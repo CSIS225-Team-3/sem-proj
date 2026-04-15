@@ -67,20 +67,32 @@ public class MinesweeperButton extends JButton {
      * Reveal the button
      */
     public void reveal() {
+        //If already revealed, do nothing
         //Block if it's flagged to avoid accidents
-        if (isFlagged)
+        if (isRevealed || isFlagged)
             return;
+        
+        isRevealed = true;
 
         if (isMine) {
             setText("M");
             setIcon(MINE_ICON);
             setBackground(Color.RED);
         } else {
-            setText(String.valueOf(numAdjacent));
             setIcon(null);
             setBackground(REVEALED_COLOR);
+            if (numAdjacent == 0){
+                setText(null);
+
+                MinesweeperButton[] adjacents = game.getAdjacentButtons(getPosition());
+                for (int i = 0; i < adjacents.length; i++){
+                    adjacents[i].reveal();
+                }
+            }
+            else{
+                setText(String.valueOf(numAdjacent));
+            }
         }
-        isRevealed = true;
     }
 
     /**

@@ -16,9 +16,6 @@ import java.util.ArrayList;
  * @version 4/14/2026
  */
 public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionListener {
-    /** The list of numbers for the game */
-    private ArrayList<Integer> nums;
-
     /** The array of buttons for the game */
     private MinesweeperButton[][] buttons;
 
@@ -98,7 +95,6 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
 
         mainPanel.add(bottomButtons, BorderLayout.SOUTH);
 
-        nums = new ArrayList<Integer>();
         Random rand = new Random();
 
         buttons = new MinesweeperButton[dims[0]][dims[1]];
@@ -120,7 +116,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         for (int j = 0; j < dims[1]; j++){
             for (int i = 0; i < dims[0]; i++){
                 MinesweeperButton button = buttons[i][j];
-                if (rand.nextInt(0, 3) == 0){
+                if (rand.nextInt(0, 7) == 0){
                     button.setMine(true);
                 }
             }
@@ -141,7 +137,6 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         mainPanel.setBackground(MainMenu.SECONDARY_COLOR);
         bottomButtons.setBackground(MainMenu.SECONDARY_COLOR);
         topText.setBackground(MainMenu.SECONDARY_COLOR);
-
     }
 
     /**
@@ -150,7 +145,6 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      * @param e The JButton to listen for
      */
     public void actionPerformed(ActionEvent e) {
-
         // Get the text of the pressed JButton
         String pressed = e.getActionCommand();
 
@@ -161,19 +155,6 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
 
         } else if (pressed.equals("Reset")) {
             reset();
-            // Do Logic
-        }
-    }
-
-    public void onTileClick(MouseEvent e){
-        MinesweeperButton pressedButton = (MinesweeperButton)e.getSource();
-        if (SwingUtilities.isRightMouseButton(e)){
-            //Right click to flag
-            pressedButton.toggleFlagged();
-        }
-        else{
-            //Normal event
-            pressedButton.reveal();
         }
     }
 
@@ -211,9 +192,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      * 
      */
     private void onWin() {
-
         // TODO: ACTUALLY CHECK AND PRINT IF COMPLETED
-
     }
 
     @Override
