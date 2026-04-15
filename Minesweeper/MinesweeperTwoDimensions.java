@@ -2,6 +2,8 @@ package Minesweeper;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 import java.util.Random;
@@ -105,7 +107,12 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
                 int[] pos = {i,j};
                 MinesweeperButton button = buttons[i][j] = new MinesweeperButton(this, pos);
                 gamePanel.add(button);
-                button.addActionListener(this);
+                button.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e){
+                        onTileClick(e);
+                    }
+                });
             }
         }
 
@@ -154,11 +161,18 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
 
         } else if (pressed.equals("Reset")) {
             reset();
-
             // Do Logic
-        } else {
-            // TODO: DO THE ACTUAL LOGIC OF THE GAME
-            MinesweeperButton pressedButton = (MinesweeperButton) e.getSource();
+        }
+    }
+
+    public void onTileClick(MouseEvent e){
+        MinesweeperButton pressedButton = (MinesweeperButton)e.getSource();
+        if (SwingUtilities.isRightMouseButton(e)){
+            //Right click to flag
+            pressedButton.toggleFlagged();
+        }
+        else{
+            //Normal event
             pressedButton.reveal();
         }
     }
