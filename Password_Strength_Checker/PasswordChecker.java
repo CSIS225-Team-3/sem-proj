@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.util.Random;
@@ -60,10 +61,11 @@ public class PasswordChecker implements Runnable, ActionListener {
     private static final int MEDIUM_STRENGTH = 20;
     private static final int HIGH_STRENGTH = 30;
 
+    private static final Color PRIMARY_COLOR = new Color(15, 30, 20);
+    private static final Color SECONDARY_COLOR = new Color(30, 55, 35);
+    private static final Color TERTIARY_COLOR = new Color(20, 40, 25);
 
-    private static final Color PRIMARY_COLOR = new Color(0, 120, 255);
-    private static final Color SECONDARY_COLOR = new Color(0, 200, 0);
-    private static final Color TERTIARY_COLOR = new Color(220, 220, 0);
+    private static final Color TEXT_COLOR = new Color(200, 200, 200);
 
     @Override
     /**
@@ -87,7 +89,8 @@ public class PasswordChecker implements Runnable, ActionListener {
         topPanel.add(title);
 
         JPanel passwordPanel = new JPanel(new FlowLayout());
-        passwordPanel.add(new JLabel("Enter Password:"));
+        JLabel passwordLabel = new JLabel("Enter Password: ");
+        passwordPanel.add(passwordLabel);
 
         passwordBox = new JPasswordField(20);
         passwordBox.getDocument().addDocumentListener(new DocumentListener() {
@@ -130,7 +133,9 @@ public class PasswordChecker implements Runnable, ActionListener {
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         // Center panel done
         JPanel passwordChecksWrapperPanel = new JPanel(new FlowLayout());
-        passwordChecksWrapperPanel.setBorder(BorderFactory.createTitledBorder("Password Requirements"));
+        TitledBorder border = BorderFactory.createTitledBorder("Password Requirements");
+        passwordChecksWrapperPanel.setBorder(border);
+
         passwordChecksPanel = new JPanel();
         passwordChecksPanel.setLayout(new BoxLayout(passwordChecksPanel, BoxLayout.Y_AXIS));
         // Populating password checking labels
@@ -153,23 +158,27 @@ public class PasswordChecker implements Runnable, ActionListener {
         strengthBar.setStringPainted(true);
         mainPanel.add(strengthBar, BorderLayout.SOUTH);
 
+        showPassword.setForeground(TEXT_COLOR);
+        strengthMessage.setForeground(TEXT_COLOR);
+        strengthBar.setForeground(TEXT_COLOR);
+        passwordLabel.setForeground(TEXT_COLOR);
+        title.setForeground(TEXT_COLOR);
+        border.setTitleColor(TEXT_COLOR);
+
+        frame.setBackground(PRIMARY_COLOR);
+        mainPanel.setBackground(PRIMARY_COLOR);
+        topPanel.setBackground(PRIMARY_COLOR);
+        passwordPanel.setBackground(PRIMARY_COLOR);
+        centerPanel.setBackground(PRIMARY_COLOR);
+        messagePanel.setBackground(PRIMARY_COLOR);
         showPasswordPanel.setBackground(PRIMARY_COLOR);
         showPassword.setBackground(PRIMARY_COLOR);
 
         passwordChecksWrapperPanel.setBackground(SECONDARY_COLOR);
         passwordChecksPanel.setBackground(SECONDARY_COLOR);
 
+        strengthBar.setBackground(PRIMARY_COLOR);
 
-        centerPanel.setBackground(TERTIARY_COLOR);
-        mainPanel.setBackground(TERTIARY_COLOR);
-
-        topPanel.setBackground(TERTIARY_COLOR);
-        passwordPanel.setBackground(TERTIARY_COLOR);
-
-        frame.setBackground(PRIMARY_COLOR);
-
-        messagePanel.setBackground(PRIMARY_COLOR);
-        
         frame.pack();
         frame.setVisible(true);
 
