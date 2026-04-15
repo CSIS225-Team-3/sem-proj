@@ -3,8 +3,8 @@ package Password_Strength_Checker;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.util.Random;
+import java.awt.GridLayout;
 
 /**
  * User Interface for the password strength checker.
@@ -39,16 +40,16 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
     /** Checkbox for showing/hiding password */
     private JCheckBox showPassword;
 
-    /** Button for checking password strength */
-    private JButton checkButton;
-
     /** Progress bar for displaying password strength */
     private JProgressBar strengthBar;
 
     /** The current password strength */
     private int strength;
 
-    /** Panel to store labels which guide the user on the qualifications of a strong password */
+    /**
+     * Panel to store labels which guide the user on the qualifications of a strong
+     * password
+     */
     private JPanel passwordChecksPanel;
 
     /** List of JLabels which reveal aspects of the password */
@@ -74,75 +75,77 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
         JPanel mainPanel = new JPanel(new BorderLayout());
         frame.add(mainPanel);
 
+        JPanel topPanel = new JPanel(new GridLayout(2, 0));
+
         JLabel title = new JLabel("Password Strength Checker", JLabel.CENTER);
-        mainPanel.add(title, BorderLayout.NORTH);
+        topPanel.add(title);
+
+        JPanel passwordPanel = new JPanel(new FlowLayout());
+        passwordPanel.add(new JLabel("Enter Password:"));
+
+        passwordBox = new JPasswordField(20);
+        passwordBox.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                getAndUpdateScore();
+                setGuides();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                getAndUpdateScore();
+                setGuides();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+        passwordPanel.add(passwordBox);
+
+        topPanel.add(passwordPanel);
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
 
         // Center panel
         JPanel centerPanel = new JPanel(new BorderLayout());
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        JPanel inputPanel = new JPanel();
-
-        inputPanel.add(new JLabel("Enter Password:"));
-        passwordBox = new JPasswordField(20);
-
-        passwordBox.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e){
-                getAndUpdateScore();
-            }
-            @Override
-            public void removeUpdate(DocumentEvent e){
-                getAndUpdateScore();
-            }
-            @Override
-            public void changedUpdate(DocumentEvent e){}
-        });
-        inputPanel.add(passwordBox);
-
-        checkButton = new JButton("Check");
-        checkButton.addActionListener(this);
-        inputPanel.add(checkButton);
-        centerPanel.add(inputPanel, BorderLayout.NORTH);
-
-        JPanel optionsPanel = new JPanel();
-
+        JPanel showPasswordPanel = new JPanel(new FlowLayout());
         showPassword = new JCheckBox("Show Password");
         showPassword.addActionListener(this);
-        optionsPanel.add(showPassword);
+        showPasswordPanel.add(showPassword);
+        centerPanel.add(showPasswordPanel, BorderLayout.NORTH);
 
+        JPanel messagePanel = new JPanel(new FlowLayout());
         strengthMessage = new JLabel(" ");
-        optionsPanel.add(strengthMessage, BorderLayout.CENTER);
-
-        centerPanel.add(optionsPanel, BorderLayout.CENTER);
+        messagePanel.add(strengthMessage);
+        centerPanel.add(messagePanel, BorderLayout.CENTER);
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         // Center panel done
-
-
+        JPanel passwordChecksWrapperPanel = new JPanel(new FlowLayout());
+        passwordChecksWrapperPanel.setBorder(BorderFactory.createTitledBorder("Password Requirements"));
         passwordChecksPanel = new JPanel();
         passwordChecksPanel.setLayout(new BoxLayout(passwordChecksPanel, BoxLayout.Y_AXIS));
-        //Populating password checking labels
+        // Populating password checking labels
         checksLabels.add(new JLabel(" Uppercase Letter (A-Z)", SwingConstants.CENTER));
         checksLabels.add(new JLabel(" Lowercase Letter (a-z)", SwingConstants.CENTER));
         checksLabels.add(new JLabel(" Symbol (!#%^?./)", SwingConstants.CENTER));
         checksLabels.add(new JLabel(" Number (0-9)", SwingConstants.CENTER));
 
-        for(JLabel label : checksLabels){ 
-            label.setPreferredSize(new Dimension(30, 10));
+        for (JLabel label : checksLabels) {
+            label.setForeground(Color.RED);
             passwordChecksPanel.add(label);
         }
-        centerPanel.add(passwordChecksPanel, BorderLayout.SOUTH);
+        passwordChecksWrapperPanel.add(passwordChecksPanel);
+        centerPanel.add(passwordChecksWrapperPanel, BorderLayout.SOUTH);
 
-
-        //Strength bar
+        // Strength bar
         strengthBar = new JProgressBar(SwingConstants.HORIZONTAL, 0, 30);
         strengthBar.setUI(new javax.swing.plaf.basic.BasicProgressBarUI());
         strengthBar.setString("");
         strengthBar.setStringPainted(true);
         mainPanel.add(strengthBar, BorderLayout.SOUTH);
-
-
 
         frame.pack();
         frame.setVisible(true);
@@ -238,7 +241,7 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
      */
     private void calculateScore() {
         String password = new String(passwordBox.getPassword());
-        
+
         int choices = 0;
 
         if (hasUpperCase(password)) {
@@ -279,8 +282,32 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
             strengthBar.setForeground(new Color(0, 200, 0));
     }
 
-    private void setGuides(){
-        
+    private void setGuides() {
+        String password = new String(passwordBox.getPassword());
+
+        if (hasUpperCase(password)) {
+            checksLabels.get(0).setForeground(new Color(0, 200, 0));
+        } else {
+            checksLabels.get(0).setForeground(Color.RED);
+        }
+
+        if (hasLowerCase(password)) {
+            checksLabels.get(1).setForeground(new Color(0, 200, 0));
+        } else {
+            checksLabels.get(1).setForeground(Color.RED);
+        }
+
+        if (hasSymbol(password)) {
+            checksLabels.get(2).setForeground(new Color(0, 200, 0));
+        } else {
+            checksLabels.get(2).setForeground(Color.RED);
+        }
+
+        if (hasNum(password)) {
+            checksLabels.get(3).setForeground(new Color(0, 200, 0));
+        } else {
+            checksLabels.get(3).setForeground(Color.RED);
+        }
     }
 
     /**
@@ -335,5 +362,9 @@ public class PasswordCheckerUI implements Runnable, ActionListener {
                     !Character.isLowerCase(password.charAt(i)))
                 return true;
         return false;
+    }
+
+    public static void main(String[] args) {
+        javax.swing.SwingUtilities.invokeLater(new PasswordCheckerUI());
     }
 }
