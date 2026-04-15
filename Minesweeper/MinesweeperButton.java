@@ -75,7 +75,7 @@ public class MinesweeperButton extends JButton {
         isRevealed = true;
 
         if (isMine) {
-            setText("M");
+            setText(null);
             setIcon(MINE_ICON);
             setBackground(Color.RED);
         } else {
