@@ -6,21 +6,19 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
- * A proper game of concentration with a mxn grid of buttons
+ * A 2D game of minesweeper
  *
- * @author Ahyaan Malik & Blue Pyle
- * @version 3/24/2026
+ * @author Ahyaan Malik & Patrick Kosmider
+ * @version 4/14/2026
  */
-public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
-
+public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionListener {
     /** The list of numbers for the game */
     private ArrayList<Integer> nums;
 
     /** The array of buttons for the game */
-    private MinesweeperButton[] buttons;
+    private MinesweeperButton[][] buttons;
 
     /** The label for the top of the window */
     private JLabel topLabel;
@@ -34,11 +32,8 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
     /** The round number for the game */
     private int roundNum;
 
-    /** The number of rows for the game */
-    private int rows;
-
-    /** The number of columns for the game */
-    private int cols;
+    /** The dimensions of the game */
+    private int[] dims;
 
     /** The size of the grid for the game (amount of buttons) */
     private int gridSize;
@@ -63,8 +58,10 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
         this.cardLayout = cardLayout;
         this.cards = cards;
 
-        this.rows = rows;
-        this.cols = cols;
+        dims = new int[] {
+            cols,
+            rows,
+        };
 
         gridSize = rows * cols;
 
@@ -86,7 +83,7 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
         topText.add(topLabel);
 
         mainPanel.add(topText, BorderLayout.NORTH);
-        JPanel gamePanel = new JPanel(new GridLayout(rows, cols));
+        JPanel gamePanel = new JPanel(new GridLayout(dims[0], dims[1]));
 
         JPanel bottomButtons = new JPanel(new FlowLayout());
         newGame = new JButton("New Game");
@@ -102,17 +99,31 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
         nums = new ArrayList<Integer>();
         Random rand = new Random();
 
-        buttons = new MinesweeperButton[gridSize];
-        for (int i = 0; i < gridSize; i++) {
-            // TODO: CHANGE LOGIC TO ACTUALLY REFLECT
-            buttons[i] = new MinesweeperButton(i);
-            if (rand.nextInt(0, 2) == 0) {
-                buttons[i].setMine(true);
+        buttons = new MinesweeperButton[dims[0]][dims[1]];
+        for (int j = 0; j < dims[1]; j++){
+            for (int i = 0; i < dims[0]; i++){
+                int[] pos = {i,j};
+                MinesweeperButton button = buttons[i][j] = new MinesweeperButton(this, pos);
+                gamePanel.add(button);
+                button.addActionListener(this);
             }
-
-            gamePanel.add(buttons[i]);
-            buttons[i].addActionListener(this);
         }
+
+        //Add mines
+        for (int j = 0; j < dims[1]; j++){
+            for (int i = 0; i < dims[0]; i++){
+                MinesweeperButton button = buttons[i][j];
+                if (rand.nextInt(0, 3) == 0){
+                    button.setMine(true);
+                }
+            }
+        }
+        
+        // for (int j = 0; j < dims[1]; j++){
+        //     for (int i = 0; i < dims[0]; i++){
+        //         buttons[i][j].reveal();
+        //     }
+        // }
         mainPanel.add(gamePanel, BorderLayout.CENTER);
 
         add(mainPanel);
@@ -189,5 +200,28 @@ public class MinesweeperTwoDimensions extends JPanel implements ActionListener {
 
         // TODO: ACTUALLY CHECK AND PRINT IF COMPLETED
 
+    }
+
+    @Override
+    public MinesweeperButton[] getAdjacentButtons(int[] position) {
+        int x = position[0];
+        int y = position[1];
+
+        int minX = Math.max(0, x-1);
+        int minY = Math.max(0, y-1);
+        
+        int maxX = Math.min(dims[0]-1, x+1);
+        int maxY = Math.min(dims[1]-1, y+1);
+
+        ArrayList<MinesweeperButton> adjs = new ArrayList<>();
+        for (int a = minX; a <= maxX; a++){
+            for (int b = minY; b <= maxY; b++){
+                if (a == x && b == y)
+                    continue;
+                adjs.add(buttons[a][b]);
+            }
+        }
+
+        return adjs.toArray(new MinesweeperButton[0]);
     }
 }
