@@ -123,6 +123,11 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         colsSpinner.setPreferredSize(new Dimension(60, 30));
         configPanel.add(colsSpinner);
 
+        configPanel.add(new JLabel("Mine Amount: "));
+        colsSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 1600, 1));
+        colsSpinner.setPreferredSize(new Dimension(60, 30));
+        configPanel.add(colsSpinner);
+
         centerPanel.add(configPanel, BorderLayout.NORTH);
 
         JPanel errorPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -176,7 +181,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         frame.pack();
         frame.setVisible(true);
 
-        //NOTE: Temp debug code since it's annoying to click
+        // NOTE: Temp debug code since it's annoying to click
         cards.add(new MinesweeperTwoDimensions(10, 10, cardLayout, cards), TWO_DIMENSIONS);
         cardLayout.show(cards, TWO_DIMENSIONS);
     }

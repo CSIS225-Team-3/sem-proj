@@ -129,7 +129,9 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         // buttons[i][j].reveal();
         // }
         // }
-        mainPanel.add(gamePanel, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(gamePanel);
+
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         add(mainPanel);
 
