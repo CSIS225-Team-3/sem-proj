@@ -58,14 +58,13 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         this.cards = cards;
 
         dims = new int[] {
-            cols,
-            rows,
+                cols,
+                rows,
         };
 
         gridSize = rows * cols;
 
-        build();
-        fullReset();
+        reset();
     }
 
     /**
@@ -98,34 +97,34 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         Random rand = new Random();
 
         buttons = new MinesweeperButton[dims[0]][dims[1]];
-        for (int j = 0; j < dims[1]; j++){
-            for (int i = 0; i < dims[0]; i++){
-                int[] pos = {i,j};
+        for (int j = 0; j < dims[1]; j++) {
+            for (int i = 0; i < dims[0]; i++) {
+                int[] pos = { i, j };
                 MinesweeperButton button = buttons[i][j] = new MinesweeperButton(this, pos);
                 gamePanel.add(button);
                 button.addMouseListener(new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent e){
+                    public void mousePressed(MouseEvent e) {
                         onTileClick(e);
                     }
                 });
             }
         }
 
-        //Add mines
-        for (int j = 0; j < dims[1]; j++){
-            for (int i = 0; i < dims[0]; i++){
+        // Add mines
+        for (int j = 0; j < dims[1]; j++) {
+            for (int i = 0; i < dims[0]; i++) {
                 MinesweeperButton button = buttons[i][j];
-                if (rand.nextInt(0, 7) == 0){
+                if (rand.nextInt(0, 7) == 0) {
                     button.setMine(true);
                 }
             }
         }
-        
+
         // for (int j = 0; j < dims[1]; j++){
-        //     for (int i = 0; i < dims[0]; i++){
-        //         buttons[i][j].reveal();
-        //     }
+        // for (int i = 0; i < dims[0]; i++){
+        // buttons[i][j].reveal();
+        // }
         // }
         mainPanel.add(gamePanel, BorderLayout.CENTER);
 
@@ -150,7 +149,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
 
         // Check text of the pressed JButton
         if (pressed.equals("New Game")) {
-            fullReset();
+            reset();
             cardLayout.show(cards, "Menu");
 
         } else if (pressed.equals("Reset")) {
@@ -167,23 +166,15 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     }
 
     /**
-     * Private method to reset the game to the start without changing the numbers
+     * Private method to  reset the game to the start
      */
     private void reset() {
-        roundNum = 1;
-        updateRoundTitleText();
+        removeAll();
+        build();
+        revalidate();
+        repaint();
+        
 
-        for (int i = 0; i < gridSize; i++) {
-            // TODO: FIX
-        }
-    }
-
-    /**
-     * Private method to fully reset the game to the start
-     */
-    private void fullReset() {
-        // TODO: ACTUALLY DO A FULL RESET
-        reset();
 
     }
 
@@ -200,15 +191,15 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         int x = position[0];
         int y = position[1];
 
-        int minX = Math.max(0, x-1);
-        int minY = Math.max(0, y-1);
-        
-        int maxX = Math.min(dims[0]-1, x+1);
-        int maxY = Math.min(dims[1]-1, y+1);
+        int minX = Math.max(0, x - 1);
+        int minY = Math.max(0, y - 1);
+
+        int maxX = Math.min(dims[0] - 1, x + 1);
+        int maxY = Math.min(dims[1] - 1, y + 1);
 
         ArrayList<MinesweeperButton> adjs = new ArrayList<>();
-        for (int a = minX; a <= maxX; a++){
-            for (int b = minY; b <= maxY; b++){
+        for (int a = minX; a <= maxX; a++) {
+            for (int b = minY; b <= maxY; b++) {
                 if (a == x && b == y)
                     continue;
                 adjs.add(buttons[a][b]);
