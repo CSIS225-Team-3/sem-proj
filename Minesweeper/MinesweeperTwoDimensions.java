@@ -108,6 +108,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
                     @Override
                     public void mousePressed(MouseEvent e) {
                         onTileClick(e);
+                        checkWin();
                     }
                 });
             }
@@ -183,25 +184,48 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         gameOver = false;
     }
 
+    private void checkWin() {
+        for (int j = 0; j < dims[1]; j++) {
+            for (int i = 0; i < dims[0]; i++) {
+                if (!buttons[i][j].getMine() && !buttons[i][j].getRevealed()) {
+                    return;
+                }
+            }
+        }
+
+        onWin();
+    }
+
+    private void revealMines() {
+        for (int j = 0; j < dims[1]; j++) {
+            for (int i = 0; i < dims[0]; i++) {
+                if (buttons[i][j].getMine()) {
+                    buttons[i][j].reveal();
+                }
+            }
+        }
+    }
+
     /**
      * Private method to check and print if the game is completed
      * 
      */
-    private void onWin() {
+    @Override
+    public void onWin() {
         // TODO: ACTUALLY CHECK AND PRINT IF COMPLETED
+        if (!gameOver) {
+            gameOver = true;
+            revealMines();
+            JOptionPane.showMessageDialog(this, "You win! Congratulations!");
+            reset();
+        }
     }
 
     @Override
     public void onLoss() {
         if (!gameOver) {
             gameOver = true;
-            for (int j = 0; j < dims[1]; j++) {
-                for (int i = 0; i < dims[0]; i++) {
-                    if (buttons[i][j].getMine()) {
-                        buttons[i][j].reveal();
-                    }
-                }
-            }
+            revealMines();
 
             JOptionPane.showMessageDialog(this, "You lose! Better luck next time.");
 
@@ -230,5 +254,9 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         }
 
         return adjs.toArray(new MinesweeperButton[0]);
+    }
+
+    public int getGridSize() {
+        return gridSize;
     }
 }
