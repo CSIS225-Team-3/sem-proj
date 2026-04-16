@@ -64,7 +64,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         this.cardLayout = cardLayout;
         this.cards = cards;
         this.mineCount = mines;
-        
+
         firstClick = true;
 
         dims = new int[] {
@@ -126,13 +126,15 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
             }
         }
 
-
         // for (int j = 0; j < dims[1]; j++){
         // for (int i = 0; i < dims[0]; i++){
         // buttons[i][j].reveal();
         // }
         // }
         JScrollPane scrollPane = new JScrollPane(gamePanel);
+
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -175,18 +177,18 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
 
     private void placeMines(int x, int y) {
         Random rand = new Random();
-        ArrayList<int[]> minePositions = new ArrayList<>();
+        ArrayList<int[]> allPositions = new ArrayList<>();
         for (int i = 0; i < dims[0]; i++) {
             for (int j = 0; j < dims[1]; j++) {
-                if (rand.nextInt(100) < 20 && !(i == x && j == y)) {
-                    minePositions.add(new int[] { i, j });
+                if (!(i == x && j == y)) {
+                    allPositions.add(new int[] { i, j });
                 }
             }
         }
-        java.util.Collections.shuffle(minePositions);
+        java.util.Collections.shuffle(allPositions);
 
         for (int i = 0; i < mineCount; i++) {
-            int[] pos = minePositions.get(i);
+            int[] pos = allPositions.get(i);
             buttons[pos[0]][pos[1]].setMine(true);
         }
     }
