@@ -19,6 +19,10 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     /** The array of buttons for the game */
     private MinesweeperButton[][] buttons;
 
+    private int mineCount;
+
+    private boolean firstClick;
+
     /** The label for the top of the window */
     private JLabel topLabel;
 
@@ -51,17 +55,21 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      * 
      * @param rows       the number of rows for the game
      * @param cols       the number of columns for the game
+     * @param mines      the number of mines for the game
      * @param cardLayout the CardLayout for managing panels
      * @param cards      the JPanel that holds the cards
      */
-    public MinesweeperTwoDimensions(int rows, int cols, CardLayout cardLayout, JPanel cards) {
+    public MinesweeperTwoDimensions(int rows, int cols, int mines, CardLayout cardLayout, JPanel cards) {
         setLayout(new BorderLayout());
         this.cardLayout = cardLayout;
         this.cards = cards;
+        this.mineCount = mines;
+        
+        firstClick = true;
 
         dims = new int[] {
-                rows,
                 cols,
+                rows,
         };
 
         gridSize = rows * cols;
@@ -83,7 +91,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         topText.add(topLabel);
 
         mainPanel.add(topText, BorderLayout.NORTH);
-        JPanel gamePanel = new JPanel(new GridLayout(dims[0], dims[1]));
+        JPanel gamePanel = new JPanel(new GridLayout(dims[1], dims[0]));
 
         JPanel bottomButtons = new JPanel(new FlowLayout());
         newGame = new JButton("New Game");
@@ -96,8 +104,6 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
 
         mainPanel.add(bottomButtons, BorderLayout.SOUTH);
 
-        Random rand = new Random();
-
         buttons = new MinesweeperButton[dims[0]][dims[1]];
         for (int j = 0; j < dims[1]; j++) {
             for (int i = 0; i < dims[0]; i++) {
@@ -107,22 +113,19 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
                 button.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
+                        if (firstClick && !SwingUtilities.isRightMouseButton(e)) {
+                            firstClick = false;
+                            int[] clickedPos = ((MinesweeperButton) e.getSource()).getPosition();
+                            placeMines(clickedPos[0], clickedPos[1]);
+                        }
                         onTileClick(e);
+                        updateTitleText();
                         checkWin();
                     }
                 });
             }
         }
 
-        // Add mines
-        for (int j = 0; j < dims[1]; j++) {
-            for (int i = 0; i < dims[0]; i++) {
-                MinesweeperButton button = buttons[i][j];
-                if (rand.nextInt(0, 7) == 0) {
-                    button.setMine(true);
-                }
-            }
-        }
 
         // for (int j = 0; j < dims[1]; j++){
         // for (int i = 0; i < dims[0]; i++){
@@ -141,6 +144,9 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         mainPanel.setBackground(MainMenu.SECONDARY_COLOR);
         bottomButtons.setBackground(MainMenu.SECONDARY_COLOR);
         topText.setBackground(MainMenu.SECONDARY_COLOR);
+        scrollPane.getViewport().setBackground(MainMenu.SECONDARY_COLOR);
+        scrollPane.getVerticalScrollBar().setBackground(MainMenu.PRIMARY_COLOR);
+        scrollPane.getHorizontalScrollBar().setBackground(MainMenu.PRIMARY_COLOR);
     }
 
     /**
@@ -167,6 +173,24 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         }
     }
 
+    private void placeMines(int x, int y) {
+        Random rand = new Random();
+        ArrayList<int[]> minePositions = new ArrayList<>();
+        for (int i = 0; i < dims[0]; i++) {
+            for (int j = 0; j < dims[1]; j++) {
+                if (rand.nextInt(100) < 20 && !(i == x && j == y)) {
+                    minePositions.add(new int[] { i, j });
+                }
+            }
+        }
+        java.util.Collections.shuffle(minePositions);
+
+        for (int i = 0; i < mineCount; i++) {
+            int[] pos = minePositions.get(i);
+            buttons[pos[0]][pos[1]].setMine(true);
+        }
+    }
+
     /**
      * Private method to update the round title text at the top of the window
      * 
@@ -183,7 +207,10 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         build();
         revalidate();
         repaint();
+
         gameOver = false;
+        firstClick = true;
+        roundNum++;
     }
 
     private void checkWin() {
@@ -214,7 +241,6 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      */
     @Override
     public void onWin() {
-        // TODO: ACTUALLY CHECK AND PRINT IF COMPLETED
         if (!gameOver) {
             gameOver = true;
             revealMines();

@@ -9,11 +9,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+
 import java.awt.CardLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
+
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.BorderFactory;
@@ -55,6 +59,11 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
     /** The spinner for configuring the number of columns */
     private JSpinner colsSpinner;
+
+    /** The spinner for configuring the number of mines */
+    private JSpinner minesSpinner;
+
+    private JCheckBox randomMines;
 
     /** The label for displaying error messages */
     private JLabel errorLabel;
@@ -123,10 +132,19 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         colsSpinner.setPreferredSize(new Dimension(60, 30));
         configPanel.add(colsSpinner);
 
-        // configPanel.add(new JLabel("Mine Amount: "));
-        // colsSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 1600, 1));
-        // colsSpinner.setPreferredSize(new Dimension(60, 30));
-        // configPanel.add(colsSpinner);
+        JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+
+        mineConfigPanel.add(new JLabel("Mine Amount: "));
+        minesSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 1600, 1));
+        minesSpinner.setPreferredSize(new Dimension(60, 30));
+        mineConfigPanel.add(minesSpinner);
+
+        mineConfigPanel.add(new JLabel("Random Mines: "));
+        randomMines = new JCheckBox();
+        randomMines.addActionListener(this);
+        mineConfigPanel.add(randomMines);
+
+        configPanel.add(mineConfigPanel);
 
         centerPanel.add(configPanel, BorderLayout.NORTH);
 
@@ -165,6 +183,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         modesPanel.setBackground(SECONDARY_COLOR);
         configPanel.setBackground(SECONDARY_COLOR);
         errorPanel.setBackground(PRIMARY_COLOR);
+        mineConfigPanel.setBackground(SECONDARY_COLOR);
 
         twoDimension.setBackground(TERTIARY_COLOR);
         threeDimension.setBackground(TERTIARY_COLOR);
@@ -182,7 +201,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         frame.setVisible(true);
 
         // NOTE: Temp debug code since it's annoying to click
-        cards.add(new MinesweeperTwoDimensions(10, 10, cardLayout, cards),
+        cards.add(new MinesweeperTwoDimensions(10, 10, 10, cardLayout, cards),
                 TWO_DIMENSIONS);
         cardLayout.show(cards, TWO_DIMENSIONS);
     }
@@ -194,14 +213,33 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
      */
     public void actionPerformed(ActionEvent e) {
 
-        int rows = (int) rowsSpinner.getValue();
-        int cols = (int) colsSpinner.getValue();
-
         Object src = e.getSource();
 
-        if (src == twoDimension) {
-            cards.add(new MinesweeperTwoDimensions(rows, cols, cardLayout, cards), TWO_DIMENSIONS);
+        if (src == randomMines) {
+            minesSpinner.setEnabled(!randomMines.isSelected());
+
+        } else if (src == twoDimension) {
+            int rows = (int) rowsSpinner.getValue();
+            int cols = (int) colsSpinner.getValue();
+            int mines;
+
+            if (randomMines.isSelected()) {
+                Random rand = new Random();
+                mines = rand.nextInt(rows * cols - 1) + 1;
+            } else {
+                mines = (int) minesSpinner.getValue();
+
+                if (mines >= rows * cols) {
+                    errorLabel.setText("Too many mines, reduce the number of mines.");
+                    return;
+                }
+            }
+            
+
+            cards.add(new MinesweeperTwoDimensions(rows, cols, mines, cardLayout, cards), TWO_DIMENSIONS);
             cardLayout.show(cards, TWO_DIMENSIONS);
+        }
+        if (src == twoDimension) {
         } else if (src == threeDimension) {
             System.out.println("3D Minesweeper coming soon!");
         } else if (src == fourDimension) {
