@@ -85,7 +85,6 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
     /** The tertiary color for the UI */
     public final static Color TERTIARY_COLOR = new Color(255, 190, 200);
 
-
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
     public final static int MAX_MINES = MAX_ROWS * MAX_COLS - 1;
@@ -161,7 +160,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
         JPanel modesPanel = new JPanel(new GridLayout(6, 1, 0, 5));
 
-        twoDimension = new JButton("2D Minesweeper (WIP)");
+        twoDimension = new JButton("2D Minesweeper");
         twoDimension.addActionListener(this);
         threeDimension = new JButton("3D Minesweeper (Coming Soon!)");
         threeDimension.addActionListener(this);
@@ -205,10 +204,6 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         frame.pack();
         frame.setVisible(true);
 
-        // NOTE: Temp debug code since it's annoying to click
-        cards.add(new MinesweeperTwoDimensions(10, 10, 10, cardLayout, cards),
-                TWO_DIMENSIONS);
-        cardLayout.show(cards, TWO_DIMENSIONS);
     }
 
     /**
@@ -239,7 +234,6 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
                     return;
                 }
             }
-            
 
             cards.add(new MinesweeperTwoDimensions(rows, cols, mines, cardLayout, cards), TWO_DIMENSIONS);
             cardLayout.show(cards, TWO_DIMENSIONS);
@@ -259,6 +253,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
      * that will construct and show the GUI.
      */
     public static void main(String[] args) {
+        // 64 MB stack
         SwingUtilities.invokeLater(new MainMenu(null, null));
     }
 }
