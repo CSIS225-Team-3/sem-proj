@@ -32,6 +32,9 @@ public class PasswordChecker implements Runnable, ActionListener {
     /** Array of phrases for very strong passwords */
     private String[] phrasesVeryStrong;
 
+    /** Array of common passwords */
+    private String[] commonPasswords;
+
     /** Label for displaying password strength message */
     private JLabel strengthMessage;
 
@@ -183,6 +186,7 @@ public class PasswordChecker implements Runnable, ActionListener {
         frame.setVisible(true);
 
         initPhrases();
+        initCommonPasswords();
     }
 
     @Override
@@ -242,6 +246,22 @@ public class PasswordChecker implements Runnable, ActionListener {
     }
 
     /**
+     * Initializes the arrays of phrases for different password strength levels.
+     */
+    private void initCommonPasswords() {
+        commonPasswords = new String[] {
+            "password", "password1", "password123", "passw0rd",
+            "qwerty", "qwerty123", "qwertyuiop",
+            "abc123", "111111", "000000", "123123", "654321",
+            "admin", "admin123", "root", "letmein", "welcome", "login",
+            "test", "test123", "guest", "user",
+            "iloveyou", "dragon", "baseball", "football",
+            "superman", "batman", "trustno1", "asdfgh", "asdfghjkl", "zxcvbnm",
+            "1q2w3e4r", "qazwsx", "hello", "sunshine"
+        };
+    }
+
+    /**
      * Sets the strength message based on password strength randomly.
      */
     private void setStrengthMessage() {
@@ -273,8 +293,9 @@ public class PasswordChecker implements Runnable, ActionListener {
      */
     private void calculateScore() {
         String password = new String(passwordBox.getPassword());
-
+        
         int choices = 0;
+
 
         if (hasUpperCase(password)) {
             choices += 26; // 26 uppercase letters
@@ -297,7 +318,19 @@ public class PasswordChecker implements Runnable, ActionListener {
         double combinations = Math.pow(choices, password.length());
 
         // Scale down the massive number
-        strength = (int) Math.log(combinations) / 2;
+        strength = (int) Math.log(combinations) / 2 -2;
+
+        //checking for sequence or common password
+        if (isCommonPassword(password) || isSequential(password)) {
+            strength = strength - 10;
+            if (strength < 2 ){
+                strength = 2;
+            }
+        }
+
+        if (strength < 0){
+            strength = 0;
+        }
     }
 
     /**
@@ -394,6 +427,45 @@ public class PasswordChecker implements Runnable, ActionListener {
                     !Character.isLowerCase(password.charAt(i)))
                 return true;
         return false;
+    }
+
+    /**
+     * Check if password is common
+     * 
+     * @param password the password to check
+     * @return true if the password is included in the list of common passwords, false otherwise
+     */
+    private boolean isCommonPassword(String password) {
+        String lower = password.toLowerCase();
+        for (String p : commonPasswords) {
+            if (lower.equals(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check for if password is ascending or descending string of numbers.
+     * 
+     * @param password the password to check
+     * @return true if the password is sequence, false otherwise
+     */
+    private boolean isSequential(String password) {
+        if (password.length() < 3) return false;
+        boolean ascending = true;
+        boolean descending = true;
+
+        for (int i = 1; i < password.length(); i++) {
+            if (password.charAt(i) != password.charAt(i - 1) + 1) {
+                ascending = false;
+            }
+            if (password.charAt(i) != password.charAt(i - 1) - 1) {
+                descending = false;
+            }
+        }
+
+        return ascending || descending;
     }
 
     public static void main(String[] args) {
