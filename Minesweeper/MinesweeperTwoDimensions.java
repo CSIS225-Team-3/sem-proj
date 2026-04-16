@@ -60,8 +60,8 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         this.cards = cards;
 
         dims = new int[] {
-                cols,
                 rows,
+                cols,
         };
 
         gridSize = rows * cols;

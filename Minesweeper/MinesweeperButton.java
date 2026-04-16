@@ -3,6 +3,7 @@ package Minesweeper;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -45,6 +46,8 @@ public class MinesweeperButton extends JButton {
         setFocusPainted(false);
         // setRolloverEnabled(false); //Mouse hover
         setContentAreaFilled(false);
+        setPreferredSize(new Dimension(50, 50));
+        setMinimumSize(new Dimension(50, 50));
 
         // NOTE: Temp disabled for debug purposes
         // setOpaque(true);
