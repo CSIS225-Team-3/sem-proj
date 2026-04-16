@@ -85,6 +85,7 @@ public class MinesweeperButton extends JButton {
             setText(null);
             setIcon(MINE_ICON);
             setBackground(Color.RED);
+            game.onLoss();
         } else {
             setIcon(null);
             setBackground(REVEALED_COLOR);

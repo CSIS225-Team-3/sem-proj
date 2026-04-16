@@ -43,6 +43,8 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     /** The JPanel that holds the cards */
     private JPanel cards;
 
+    private boolean gameOver = false;
+
     /**
      * Constructor for the ConcentrationBonus class that initializes the game with
      * the given parameters.
@@ -77,7 +79,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         JPanel topText = new JPanel(new FlowLayout());
 
         topLabel = new JLabel("Welcome to Minesweeper!");
-        updateRoundTitleText();
+        updateTitleText();
         topText.add(topLabel);
 
         mainPanel.add(topText, BorderLayout.NORTH);
@@ -154,6 +156,11 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
 
         } else if (pressed.equals("Reset")) {
             reset();
+        } else {
+            if (e.getSource() instanceof MinesweeperButton) {
+                MinesweeperButton button = (MinesweeperButton) e.getSource();
+                button.reveal();
+            }
         }
     }
 
@@ -161,21 +168,19 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      * Private method to update the round title text at the top of the window
      * 
      */
-    private void updateRoundTitleText() {
+    private void updateTitleText() {
         topLabel.setText("Round " + roundNum);
     }
 
     /**
-     * Private method to  reset the game to the start
+     * Private method to reset the game to the start
      */
     private void reset() {
         removeAll();
         build();
         revalidate();
         repaint();
-        
-
-
+        gameOver = false;
     }
 
     /**
@@ -184,6 +189,24 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      */
     private void onWin() {
         // TODO: ACTUALLY CHECK AND PRINT IF COMPLETED
+    }
+
+    @Override
+    public void onLoss() {
+        if (!gameOver) {
+            gameOver = true;
+            for (int j = 0; j < dims[1]; j++) {
+                for (int i = 0; i < dims[0]; i++) {
+                    if (buttons[i][j].getMine()) {
+                        buttons[i][j].reveal();
+                    }
+                }
+            }
+
+            JOptionPane.showMessageDialog(this, "You lose! Better luck next time.");
+
+            reset();
+        }
     }
 
     @Override
