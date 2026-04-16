@@ -85,6 +85,11 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
     /** The tertiary color for the UI */
     public final static Color TERTIARY_COLOR = new Color(255, 190, 200);
 
+
+    public final static int MAX_ROWS = 100;
+    public final static int MAX_COLS = 100;
+    public final static int MAX_MINES = MAX_ROWS * MAX_COLS - 1;
+
     /**
      * Constructor for the MainMenu class.
      * 
@@ -123,19 +128,19 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         configPanel.setBorder(BorderFactory.createTitledBorder("Game Settings"));
 
         configPanel.add(new JLabel("Rows: "));
-        rowsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, 40, 1));
+        rowsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_ROWS, 1));
         rowsSpinner.setPreferredSize(new Dimension(60, 30));
         configPanel.add(rowsSpinner);
 
         configPanel.add(new JLabel("Columns: "));
-        colsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, 40, 1));
+        colsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
         colsSpinner.setPreferredSize(new Dimension(60, 30));
         configPanel.add(colsSpinner);
 
         JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 
         mineConfigPanel.add(new JLabel("Mine Amount: "));
-        minesSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 1600, 1));
+        minesSpinner = new JSpinner(new SpinnerNumberModel(10, 0, MAX_MINES, 1));
         minesSpinner.setPreferredSize(new Dimension(60, 30));
         mineConfigPanel.add(minesSpinner);
 
