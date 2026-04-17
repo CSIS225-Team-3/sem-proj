@@ -143,12 +143,12 @@ public class PasswordChecker implements Runnable, ActionListener {
         passwordChecksPanel = new JPanel();
         passwordChecksPanel.setLayout(new BoxLayout(passwordChecksPanel, BoxLayout.Y_AXIS));
         // Populating password checking labels
-        checksLabels.add(new JLabel(" Uppercase Letter (A-Z)", SwingConstants.CENTER));
-        checksLabels.add(new JLabel(" Lowercase Letter (a-z)", SwingConstants.CENTER));
-        checksLabels.add(new JLabel(" Symbol (!#%^?./)", SwingConstants.CENTER));
-        checksLabels.add(new JLabel(" Number (0-9)", SwingConstants.CENTER));
-        checksLabels.add(new JLabel(" Has a commonly used password phrase", SwingConstants.CENTER));
-        checksLabels.add(new JLabel(" Has an ascending or descending seqence of numbers", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" ✗ Uppercase Letter (A-Z)", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" ✗ Lowercase Letter (a-z)", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" ✗ Symbol (!#%^?./)", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" ✗ Number (0-9)", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" ✓ Doesn't have a commonly used password phrase", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" ✓ Doesn't an ascending or descending seqence of numbers", SwingConstants.CENTER));
 
 
 
@@ -156,6 +156,9 @@ public class PasswordChecker implements Runnable, ActionListener {
             label.setForeground(Color.RED);
             passwordChecksPanel.add(label);
         }
+        checksLabels.get(4).setForeground(Color.GREEN);
+        checksLabels.get(5).setForeground(Color.GREEN);
+
         passwordChecksWrapperPanel.add(passwordChecksPanel);
         centerPanel.add(passwordChecksWrapperPanel, BorderLayout.SOUTH);
 
@@ -357,38 +360,51 @@ public class PasswordChecker implements Runnable, ActionListener {
 
         if (hasUpperCase(password)) {
             checksLabels.get(0).setForeground(new Color(0, 200, 0));
+            checksLabels.get(0).setText(" ✓ Uppercase Letter (A-Z)");
         } else {
             checksLabels.get(0).setForeground(Color.RED);
+            checksLabels.get(0).setText(" ✗ Uppercase Letter (A-Z)");
         }
 
         if (hasLowerCase(password)) {
             checksLabels.get(1).setForeground(new Color(0, 200, 0));
+            checksLabels.get(1).setText(" ✓ Lowercase Letter (a-z)");
         } else {
             checksLabels.get(1).setForeground(Color.RED);
+            checksLabels.get(1).setText(" ✗ Lowercase Letter (a-z)");
         }
 
         if (hasSymbol(password)) {
             checksLabels.get(2).setForeground(new Color(0, 200, 0));
+            checksLabels.get(2).setText(" ✓ Symbol (!#%^?./)");
         } else {
             checksLabels.get(2).setForeground(Color.RED);
+            checksLabels.get(2).setText(" ✗ Symbol (!#%^?./)");
         }
 
         if (hasNum(password)) {
             checksLabels.get(3).setForeground(new Color(0, 200, 0));
+            checksLabels.get(3).setText(" ✓ Number (0-9)");
+            
         } else {
             checksLabels.get(3).setForeground(Color.RED);
+            checksLabels.get(3).setText(" ✗ Number (0-9)");
         }
 
         if(isCommonPassword(password)) {
             checksLabels.get(4).setForeground(Color.RED);
+            checksLabels.get(4).setText(" ✗ Has a commonly used password phrase");
         } else{
             checksLabels.get(4).setForeground(new Color(0, 200, 0));
+            checksLabels.get(4).setText(" ✓ Doesn't have a commonly used password phrase");
         }
 
         if(isSequential(password)) {
             checksLabels.get(5).setForeground(Color.RED);
+            checksLabels.get(5).setText(" ✗ Has an ascending or descending seqence of numbers");
         } else{
             checksLabels.get(5).setForeground(new Color(0, 200, 0));
+            checksLabels.get(5).setText(" ✓ Doesn't have an ascending or descending seqence of numbers");        
         }
     }
 
