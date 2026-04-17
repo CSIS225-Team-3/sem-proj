@@ -19,8 +19,10 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 
 import javax.swing.JSpinner;
+import javax.swing.JRadioButton;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 
 /**
  * Main Game to show the options for type of modes.
@@ -75,6 +77,11 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
     private JButton fourDimension;
 
     private JButton hyperbolic;
+
+    private JRadioButton easyBtn;
+    private JRadioButton mediumBtn;
+    private JRadioButton hardBtn;
+    private JRadioButton extremeBtn;
 
     /** The primary color for the UI */
     public final static Color PRIMARY_COLOR = Color.PINK;
@@ -152,11 +159,51 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
         centerPanel.add(configPanel, BorderLayout.NORTH);
 
+        JPanel difficultyPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+        difficultyPanel.setBorder(BorderFactory.createTitledBorder("Preset Difficulties"));
+        difficultyPanel.setBackground(SECONDARY_COLOR);
+
+        easyBtn = new JRadioButton("Easy");
+        mediumBtn = new JRadioButton("Medium");
+        hardBtn = new JRadioButton("Hard");
+        extremeBtn = new JRadioButton("Extreme");
+
+        ButtonGroup difficultyGroup = new ButtonGroup();
+        difficultyGroup.add(easyBtn);
+        difficultyGroup.add(mediumBtn);
+        difficultyGroup.add(hardBtn);
+        difficultyGroup.add(extremeBtn);
+
+        String[] infos = { "9x9, 10 mines", "16x16, 40 mines", "16x30, 99 mines", "30x50, 400 mines" };
+        JRadioButton[] btns = { easyBtn, mediumBtn, hardBtn, extremeBtn };
+
+        for (int i = 0; i < btns.length; i++) {
+            btns[i].setBackground(SECONDARY_COLOR);
+
+            JPanel each = new JPanel(new BorderLayout());
+            each.setBackground(SECONDARY_COLOR);
+
+            JLabel info = new JLabel(infos[i], SwingConstants.CENTER);
+            info.setFont(info.getFont().deriveFont(10f));
+
+            each.add(btns[i], BorderLayout.CENTER);
+            each.add(info, BorderLayout.SOUTH);
+            difficultyPanel.add(each);
+        }
+
+        centerPanel.add(difficultyPanel, BorderLayout.CENTER);
+        centerPanel.add(new JLabel(), BorderLayout.SOUTH);
+
+        easyBtn.addActionListener(this);
+        mediumBtn.addActionListener(this);
+        hardBtn.addActionListener(this);
+        extremeBtn.addActionListener(this);
+
         JPanel errorPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         errorLabel = new JLabel(" ", SwingConstants.CENTER);
         errorLabel.setForeground(Color.RED);
         errorPanel.add(errorLabel);
-        centerPanel.add(errorPanel, BorderLayout.CENTER);
+        centerPanel.add(errorPanel, BorderLayout.SOUTH);
 
         JPanel modesPanel = new JPanel(new GridLayout(6, 1, 0, 5));
 
@@ -188,6 +235,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         configPanel.setBackground(SECONDARY_COLOR);
         errorPanel.setBackground(PRIMARY_COLOR);
         mineConfigPanel.setBackground(SECONDARY_COLOR);
+        randomMines.setBackground(SECONDARY_COLOR);
 
         twoDimension.setBackground(TERTIARY_COLOR);
         threeDimension.setBackground(TERTIARY_COLOR);
@@ -214,6 +262,24 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
     public void actionPerformed(ActionEvent e) {
 
         Object src = e.getSource();
+
+        if (src == easyBtn) {
+            rowsSpinner.setValue(9);
+            colsSpinner.setValue(9);
+            minesSpinner.setValue(10);
+        } else if (src == mediumBtn) {
+            rowsSpinner.setValue(16);
+            colsSpinner.setValue(16);
+            minesSpinner.setValue(40);
+        } else if (src == hardBtn) {
+            rowsSpinner.setValue(16);
+            colsSpinner.setValue(30);
+            minesSpinner.setValue(99);
+        } else if (src == extremeBtn) {
+            rowsSpinner.setValue(30);
+            colsSpinner.setValue(50);
+            minesSpinner.setValue(400);
+        }
 
         if (src == randomMines) {
             minesSpinner.setEnabled(!randomMines.isSelected());
