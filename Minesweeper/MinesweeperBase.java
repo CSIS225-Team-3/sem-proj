@@ -14,6 +14,8 @@ public abstract class MinesweeperBase extends JPanel {
      */
     public abstract MinesweeperButton[] getAdjacentButtons(int[] position);
 
+    public abstract void reset();
+
     public abstract void onWin();
 
     public abstract void onLoss();

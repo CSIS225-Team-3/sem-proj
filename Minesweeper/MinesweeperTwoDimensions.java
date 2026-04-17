@@ -230,7 +230,8 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     /**
      * Private method to reset the game to the start
      */
-    private void reset() {
+    @Override
+    public void reset() {
         removeAll();
 
         if (timer != null) {

@@ -231,7 +231,8 @@ public class MinesweeperThreeDimensions extends MinesweeperBase implements Actio
     /**
      * Private method to reset the game to the start
      */
-    private void reset() {
+    @Override
+    public void reset() {
         removeAll();
 
         if (timer != null) {
