@@ -3,6 +3,7 @@ package Minesweeper;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.CardLayout;
@@ -24,6 +25,7 @@ import javax.swing.JRadioButton;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.Timer;
 
 /**
  * Main Game to show the options for type of modes.
@@ -92,13 +94,15 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
     private JLabel splicesLabel;
 
     /** The primary color for the UI */
-    public final static Color PRIMARY_COLOR = Color.PINK;
+    public static Color PRIMARY_COLOR = Color.PINK;
 
     /** The secondary color for the UI */
-    public final static Color SECONDARY_COLOR = new Color(207, 125, 151);
+    public static Color SECONDARY_COLOR = new Color(207, 125, 151);
 
     /** The tertiary color for the UI */
-    public final static Color TERTIARY_COLOR = new Color(255, 190, 200);
+    public static Color TERTIARY_COLOR = new Color(255, 190, 200);
+
+    private float rainbowHue = 0;
 
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
@@ -234,6 +238,8 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
             each.setBackground(SECONDARY_COLOR);
 
             infoLabels[i].setFont(infoLabels[i].getFont().deriveFont(10f));
+            infoLabels[i].setOpaque(true);
+            infoLabels[i].setBackground(SECONDARY_COLOR);
 
             each.add(btns[i], BorderLayout.CENTER);
             each.add(infoLabels[i], BorderLayout.SOUTH);
@@ -277,9 +283,56 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         cardLayout.show(cards, MENU_CARD);
         frame.add(cards);
         // frame.pack();
+
+        // WACKY RAINBOW TESTING
+        Timer rainbowTimer = new Timer(50, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rainbowHue = (rainbowHue + 0.002f) % 1f;
+
+                PRIMARY_COLOR = Color.getHSBColor(rainbowHue, 0.3f, 1.0f);
+                SECONDARY_COLOR = Color.getHSBColor((rainbowHue + 0.05f) % 1f, 0.5f, 0.85f);
+                TERTIARY_COLOR = Color.getHSBColor((rainbowHue + 0.02f) % 1f, 0.25f, 1.0f);
+
+                frame.setBackground(PRIMARY_COLOR);
+                centerPanel.setBackground(PRIMARY_COLOR);
+                configPanel.setBackground(PRIMARY_COLOR);
+                bottomPanel.setBackground(PRIMARY_COLOR);
+                errorPanel.setBackground(PRIMARY_COLOR);
+                startPanel.setBackground(PRIMARY_COLOR);
+
+                modePanel.setBackground(SECONDARY_COLOR);
+                settingsPanel.setBackground(SECONDARY_COLOR);
+                mineConfigPanel.setBackground(SECONDARY_COLOR);
+                difficultyPanel.setBackground(SECONDARY_COLOR);
+
+                easyBtn.setBackground(SECONDARY_COLOR);
+                mediumBtn.setBackground(SECONDARY_COLOR);
+                hardBtn.setBackground(SECONDARY_COLOR);
+                extremeBtn.setBackground(SECONDARY_COLOR);
+
+                randomMines.setBackground(SECONDARY_COLOR);
+
+                easyInfo.setBackground(SECONDARY_COLOR);
+                mediumInfo.setBackground(SECONDARY_COLOR);
+                hardInfo.setBackground(SECONDARY_COLOR);
+                extremeInfo.setBackground(SECONDARY_COLOR);
+
+                twoDimension.setBackground(TERTIARY_COLOR);
+                threeDimension.setBackground(TERTIARY_COLOR);
+                fourDimension.setBackground(TERTIARY_COLOR);
+                hyperbolic.setBackground(TERTIARY_COLOR);
+
+                startButton.setBackground(TERTIARY_COLOR);
+
+            }
+        });
+        rainbowTimer.start();
+
         frame.setVisible(true);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
 
@@ -318,6 +371,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
             } else {
                 selectedMode = "";
             }
+            mainText.setText("Mode: " + selectedMode);
             revalidate();
             repaint();
             return;
@@ -346,18 +400,22 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
                 if (src == easyBtn) {
                     rowsSpinner.setValue(5);
                     colsSpinner.setValue(5);
+                    splicesSpinner.setValue(3);
                     minesSpinner.setValue(15);
                 } else if (src == mediumBtn) {
                     rowsSpinner.setValue(7);
                     colsSpinner.setValue(7);
+                    splicesSpinner.setValue(4);
                     minesSpinner.setValue(60);
                 } else if (src == hardBtn) {
                     rowsSpinner.setValue(9);
                     colsSpinner.setValue(9);
+                    splicesSpinner.setValue(5);
                     minesSpinner.setValue(150);
                 } else if (src == extremeBtn) {
                     rowsSpinner.setValue(12);
                     colsSpinner.setValue(12);
+                    splicesSpinner.setValue(6);
                     minesSpinner.setValue(400);
                 }
                 break;
@@ -376,13 +434,15 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
             int rows = (int) rowsSpinner.getValue();
             int cols = (int) colsSpinner.getValue();
+            int splices;
             int mines;
 
+            // TODO: Fix logic to work for other dimensions
             if (randomMines.isSelected()) {
                 mines = new Random().nextInt(rows * cols - 1) + 1;
             } else {
                 mines = (int) minesSpinner.getValue();
-                if (mines >= rows * cols) {
+                if (mines > MAX_MINES_2D) {
                     errorLabel.setText("Too many mines!");
                     return;
                 }
@@ -396,6 +456,13 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
                 // TODO: add 3D
             }
         }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        setBackground(PRIMARY_COLOR);
+
+        super.paintComponent(g);
     }
 
     /**
