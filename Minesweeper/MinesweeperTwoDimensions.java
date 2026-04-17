@@ -281,7 +281,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
             if (timer != null) {
                 timer.stop();
             }
-            JOptionPane.showMessageDialog(this, "You win! Congratulations!");
+            JOptionPane.showMessageDialog(this, "You win! Congratulations! \n Time spent: " + timerLabel.getText());
             reset();
         }
     }
@@ -295,7 +295,8 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
             if (timer != null) {
                 timer.stop();
             }
-            JOptionPane.showMessageDialog(this, "You lose! Better luck next time.");
+            JOptionPane.showMessageDialog(this,
+                    "You lose! Better luck next time. \n Time spent: " + timerLabel.getText());
             reset();
         }
     }
