@@ -349,6 +349,8 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
             if (src == twoDimension) {
 
                 selectedMode = TWO_DIMENSIONS;
+                twoDimension.setEnabled(false);
+                threeDimension.setEnabled(true);
 
                 splicesLabel.setVisible(false);
                 splicesSpinner.setVisible(false);
@@ -360,6 +362,8 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
             } else if (src == threeDimension) {
 
                 selectedMode = THREE_DIMENSIONS;
+                twoDimension.setEnabled(true);
+                threeDimension.setEnabled(false);
 
                 splicesLabel.setVisible(true);
                 splicesSpinner.setVisible(true);
