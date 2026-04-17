@@ -472,7 +472,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 mines = new Random().nextInt(rows * cols - 1) + 1;
             } else {
                 mines = (int) minesSpinner.getValue();
-                if (mines > MAX_MINES_2D) {
+                if (mines > rows * cols - 1) {
                     errorLabel.setText("Too many mines!");
                     return;
                 }
