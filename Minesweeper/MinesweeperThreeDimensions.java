@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionListener {
+public class MinesweeperThreeDimensions extends MinesweeperBase implements ActionListener {
     /** The array of buttons for the game */
     private MinesweeperButton[][] buttons;
 
@@ -58,11 +58,12 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      * 
      * @param rows       the number of rows for the game
      * @param cols       the number of columns for the game
+     * @param splices    the number of splices for the game
      * @param mines      the number of mines for the game
      * @param cardLayout the CardLayout for managing panels
      * @param cards      the JPanel that holds the cards
      */
-    public MinesweeperTwoDimensions(int rows, int cols, int mines, CardLayout cardLayout, JPanel cards) {
+    public MinesweeperThreeDimensions(int rows, int cols, int splices, int mines, CardLayout cardLayout, JPanel cards) {
         setLayout(new BorderLayout());
         this.cardLayout = cardLayout;
         this.cards = cards;

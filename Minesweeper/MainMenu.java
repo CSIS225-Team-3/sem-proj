@@ -83,6 +83,10 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
     private JRadioButton hardBtn;
     private JRadioButton extremeBtn;
 
+    private JButton startButton;
+    private String selectedMode;
+    private JLabel[] difficultyInfoLabels;
+
     /** The primary color for the UI */
     public final static Color PRIMARY_COLOR = Color.PINK;
 
@@ -114,7 +118,6 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
      */
     @Override
     public void run() {
-        // Our basic GUI setup, a JFrame with a JPanel inside it.
         frame = new JFrame("Minesweeper");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(800, 800));
@@ -130,34 +133,56 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        JPanel configPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
-        configPanel.setBorder(BorderFactory.createTitledBorder("Game Settings"));
+        JPanel modePanel = new JPanel(new GridLayout(4, 1, 0, 5));
+        modePanel.setBorder(BorderFactory.createTitledBorder("Select Mode"));
+        modePanel.setBackground(SECONDARY_COLOR);
 
-        configPanel.add(new JLabel("Rows: "));
+        twoDimension = new JButton("2D Minesweeper");
+        threeDimension = new JButton("3D Minesweeper (Coming Soon!)");
+        fourDimension = new JButton("4D Minesweeper (Coming Soon!)");
+        hyperbolic = new JButton("Hyperbolic Minesweeper (Coming Soon!)");
+
+        JButton[] dimensions = { twoDimension, threeDimension, fourDimension, hyperbolic };
+        for (JButton b : dimensions) {
+            b.setBackground(TERTIARY_COLOR);
+            b.addActionListener(this);
+            modePanel.add(b);
+        }
+
+        centerPanel.add(modePanel, BorderLayout.NORTH);
+
+        JPanel configPanel = new JPanel(new BorderLayout(0, 10));
+        configPanel.setBackground(PRIMARY_COLOR);
+        configPanel.setVisible(false);
+
+        JPanel settingsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
+        settingsPanel.setBorder(BorderFactory.createTitledBorder("Game Settings"));
+        settingsPanel.setBackground(SECONDARY_COLOR);
+
+        settingsPanel.add(new JLabel("Rows: "));
         rowsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_ROWS, 1));
         rowsSpinner.setPreferredSize(new Dimension(60, 30));
-        configPanel.add(rowsSpinner);
+        settingsPanel.add(rowsSpinner);
 
-        configPanel.add(new JLabel("Columns: "));
+        settingsPanel.add(new JLabel("Columns: "));
         colsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
         colsSpinner.setPreferredSize(new Dimension(60, 30));
-        configPanel.add(colsSpinner);
+        settingsPanel.add(colsSpinner);
 
         JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
-
+        mineConfigPanel.setBackground(SECONDARY_COLOR);
         mineConfigPanel.add(new JLabel("Mine Amount: "));
         minesSpinner = new JSpinner(new SpinnerNumberModel(10, 0, MAX_MINES, 1));
         minesSpinner.setPreferredSize(new Dimension(60, 30));
         mineConfigPanel.add(minesSpinner);
-
-        mineConfigPanel.add(new JLabel("Random Mines: "));
+        mineConfigPanel.add(new JLabel("Random # of Mines: "));
         randomMines = new JCheckBox();
+        randomMines.setBackground(SECONDARY_COLOR);
         randomMines.addActionListener(this);
         mineConfigPanel.add(randomMines);
+        settingsPanel.add(mineConfigPanel);
 
-        configPanel.add(mineConfigPanel);
-
-        centerPanel.add(configPanel, BorderLayout.NORTH);
+        configPanel.add(settingsPanel, BorderLayout.NORTH);
 
         JPanel difficultyPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
         difficultyPanel.setBorder(BorderFactory.createTitledBorder("Preset Difficulties"));
@@ -174,143 +199,176 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         difficultyGroup.add(hardBtn);
         difficultyGroup.add(extremeBtn);
 
-        String[] infos = { "9x9, 10 mines", "16x16, 40 mines", "16x30, 99 mines", "30x50, 400 mines" };
+        JLabel easyInfo = new JLabel("", SwingConstants.CENTER);
+        JLabel mediumInfo = new JLabel("", SwingConstants.CENTER);
+        JLabel hardInfo = new JLabel("", SwingConstants.CENTER);
+        JLabel extremeInfo = new JLabel("", SwingConstants.CENTER);
+
         JRadioButton[] btns = { easyBtn, mediumBtn, hardBtn, extremeBtn };
+        JLabel[] infoLabels = { easyInfo, mediumInfo, hardInfo, extremeInfo };
 
         for (int i = 0; i < btns.length; i++) {
             btns[i].setBackground(SECONDARY_COLOR);
+            btns[i].addActionListener(this);
 
             JPanel each = new JPanel(new BorderLayout());
             each.setBackground(SECONDARY_COLOR);
 
-            JLabel info = new JLabel(infos[i], SwingConstants.CENTER);
-            info.setFont(info.getFont().deriveFont(10f));
+            infoLabels[i].setFont(infoLabels[i].getFont().deriveFont(10f));
 
             each.add(btns[i], BorderLayout.CENTER);
-            each.add(info, BorderLayout.SOUTH);
+            each.add(infoLabels[i], BorderLayout.SOUTH);
+
             difficultyPanel.add(each);
         }
 
-        centerPanel.add(difficultyPanel, BorderLayout.CENTER);
-        centerPanel.add(new JLabel(), BorderLayout.SOUTH);
+        configPanel.add(difficultyPanel, BorderLayout.CENTER);
 
-        easyBtn.addActionListener(this);
-        mediumBtn.addActionListener(this);
-        hardBtn.addActionListener(this);
-        extremeBtn.addActionListener(this);
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBackground(PRIMARY_COLOR);
 
         JPanel errorPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        errorPanel.setBackground(PRIMARY_COLOR);
         errorLabel = new JLabel(" ", SwingConstants.CENTER);
         errorLabel.setForeground(Color.RED);
         errorPanel.add(errorLabel);
-        centerPanel.add(errorPanel, BorderLayout.SOUTH);
 
-        JPanel modesPanel = new JPanel(new GridLayout(6, 1, 0, 5));
+        startButton = new JButton("Start Game");
+        startButton.setBackground(TERTIARY_COLOR);
+        startButton.addActionListener(this);
+        JPanel startPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        startPanel.setBackground(PRIMARY_COLOR);
+        startPanel.add(startButton);
 
-        twoDimension = new JButton("2D Minesweeper");
-        twoDimension.addActionListener(this);
-        threeDimension = new JButton("3D Minesweeper (Coming Soon!)");
-        threeDimension.addActionListener(this);
-        fourDimension = new JButton("4D Minesweeper (Coming Soon!)");
-        fourDimension.addActionListener(this);
-        hyperbolic = new JButton("Hyperbolic Minesweeper (Coming Soon!)");
-        hyperbolic.addActionListener(this);
+        bottomPanel.add(errorPanel, BorderLayout.NORTH);
+        bottomPanel.add(startPanel, BorderLayout.SOUTH);
 
-        modesPanel.add(twoDimension);
-        modesPanel.add(threeDimension);
-        modesPanel.add(fourDimension);
-        modesPanel.add(hyperbolic);
+        configPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        centerPanel.add(modesPanel, BorderLayout.SOUTH);
+        centerPanel.add(configPanel, BorderLayout.CENTER);
+
+        difficultyInfoLabels = infoLabels;
 
         add(centerPanel, BorderLayout.CENTER);
-
-        // CardLayout
-        cards.add(this, MENU_CARD);
-
-        cardLayout.show(cards, MENU_CARD);
-
         centerPanel.setBackground(PRIMARY_COLOR);
-        modesPanel.setBackground(SECONDARY_COLOR);
-        configPanel.setBackground(SECONDARY_COLOR);
-        errorPanel.setBackground(PRIMARY_COLOR);
-        mineConfigPanel.setBackground(SECONDARY_COLOR);
-        randomMines.setBackground(SECONDARY_COLOR);
-
-        twoDimension.setBackground(TERTIARY_COLOR);
-        threeDimension.setBackground(TERTIARY_COLOR);
-        fourDimension.setBackground(TERTIARY_COLOR);
-        hyperbolic.setBackground(TERTIARY_COLOR);
-
-        rowsSpinner.setBackground(TERTIARY_COLOR);
-        colsSpinner.setBackground(TERTIARY_COLOR);
-
+        modePanel.setBackground(SECONDARY_COLOR);
         setBackground(PRIMARY_COLOR);
 
+        cards.add(this, MENU_CARD);
+        cardLayout.show(cards, MENU_CARD);
         frame.add(cards);
-        // Display the window we've created.
         frame.pack();
         frame.setVisible(true);
-
     }
 
-    /**
-     * Listens for JButton actions and responds
-     * 
-     * @param e The JButton to listen for
-     */
     public void actionPerformed(ActionEvent e) {
-
         Object src = e.getSource();
 
-        if (src == easyBtn) {
-            rowsSpinner.setValue(9);
-            colsSpinner.setValue(9);
-            minesSpinner.setValue(10);
-        } else if (src == mediumBtn) {
-            rowsSpinner.setValue(16);
-            colsSpinner.setValue(16);
-            minesSpinner.setValue(40);
-        } else if (src == hardBtn) {
-            rowsSpinner.setValue(16);
-            colsSpinner.setValue(30);
-            minesSpinner.setValue(99);
-        } else if (src == extremeBtn) {
-            rowsSpinner.setValue(30);
-            colsSpinner.setValue(50);
-            minesSpinner.setValue(400);
+        // Mode buttons
+        if (src == twoDimension || src == threeDimension || src == fourDimension || src == hyperbolic) {
+            if (src == fourDimension || src == hyperbolic) {
+                System.out.println("Coming soon!");
+                return;
+            }
+            if (src == twoDimension) {
+
+                selectedMode = TWO_DIMENSIONS;
+
+                difficultyInfoLabels[0].setText("9x9, 10 mines");
+                difficultyInfoLabels[1].setText("16x16, 40 mines");
+                difficultyInfoLabels[2].setText("16x30, 99 mines");
+                difficultyInfoLabels[3].setText("30x50, 400 mines");
+            } else if (src == threeDimension) {
+
+                selectedMode = THREE_DIMENSIONS;
+
+                difficultyInfoLabels[0].setText("5x5x3, 15 mines");
+                difficultyInfoLabels[1].setText("7x7x4, 60 mines");
+                difficultyInfoLabels[2].setText("9x9x5, 150 mines");
+                difficultyInfoLabels[3].setText("12x12x6, 400 mines");
+            } else {
+                selectedMode = "";
+            }
+
+            JPanel configPanel = (JPanel) ((JPanel) getComponent(1)).getComponent(1);
+            configPanel.setVisible(true);
+            revalidate();
+            repaint();
+            return;
+        }
+        switch (selectedMode) {
+            case TWO_DIMENSIONS:
+                if (src == easyBtn) {
+                    rowsSpinner.setValue(9);
+                    colsSpinner.setValue(9);
+                    minesSpinner.setValue(10);
+                } else if (src == mediumBtn) {
+                    rowsSpinner.setValue(16);
+                    colsSpinner.setValue(16);
+                    minesSpinner.setValue(40);
+                } else if (src == hardBtn) {
+                    rowsSpinner.setValue(16);
+                    colsSpinner.setValue(30);
+                    minesSpinner.setValue(99);
+                } else if (src == extremeBtn) {
+                    rowsSpinner.setValue(30);
+                    colsSpinner.setValue(50);
+                    minesSpinner.setValue(400);
+                }
+                break;
+            case THREE_DIMENSIONS:
+                if (src == easyBtn) {
+                    rowsSpinner.setValue(5);
+                    colsSpinner.setValue(5);
+                    minesSpinner.setValue(15);
+                } else if (src == mediumBtn) {
+                    rowsSpinner.setValue(7);
+                    colsSpinner.setValue(7);
+                    minesSpinner.setValue(60);
+                } else if (src == hardBtn) {
+                    rowsSpinner.setValue(9);
+                    colsSpinner.setValue(9);
+                    minesSpinner.setValue(150);
+                } else if (src == extremeBtn) {
+                    rowsSpinner.setValue(12);
+                    colsSpinner.setValue(12);
+                    minesSpinner.setValue(400);
+                }
+                break;
+            default:
+                return;
         }
 
         if (src == randomMines) {
             minesSpinner.setEnabled(!randomMines.isSelected());
+        }
 
-        } else if (src == twoDimension) {
+        if (src == startButton) {
+            if (selectedMode == null) {
+                return;
+            }
+
             int rows = (int) rowsSpinner.getValue();
             int cols = (int) colsSpinner.getValue();
             int mines;
 
             if (randomMines.isSelected()) {
-                Random rand = new Random();
-                mines = rand.nextInt(rows * cols - 1) + 1;
+                mines = new Random().nextInt(rows * cols - 1) + 1;
             } else {
                 mines = (int) minesSpinner.getValue();
-
                 if (mines >= rows * cols) {
-                    errorLabel.setText("Too many mines, reduce the number of mines.");
+                    errorLabel.setText("Too many mines!");
                     return;
                 }
             }
+            errorLabel.setText(" ");
 
-            cards.add(new MinesweeperTwoDimensions(rows, cols, mines, cardLayout, cards), TWO_DIMENSIONS);
-            cardLayout.show(cards, TWO_DIMENSIONS);
-        }
-        if (src == twoDimension) {
-        } else if (src == threeDimension) {
-            System.out.println("3D Minesweeper coming soon!");
-        } else if (src == fourDimension) {
-            System.out.println("4D Minesweeper coming soon!");
-        } else if (src == hyperbolic) {
-            System.out.println("Hyperbolic Minesweeper coming soon!");
+            if (selectedMode.equals(TWO_DIMENSIONS)) {
+                cards.add(new MinesweeperTwoDimensions(rows, cols, mines, cardLayout, cards), TWO_DIMENSIONS);
+                cardLayout.show(cards, TWO_DIMENSIONS);
+            } else if (selectedMode.equals(THREE_DIMENSIONS)) {
+                // TODO: add 3D
+            }
         }
     }
 
@@ -319,7 +377,6 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
      * that will construct and show the GUI.
      */
     public static void main(String[] args) {
-        // 64 MB stack
         SwingUtilities.invokeLater(new MainMenu(null, null));
     }
 }
