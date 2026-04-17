@@ -358,6 +358,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
             configPanel.setVisible(true);
 
+            // USER SELECTING DIMENSION
+
             if (src == twoDimension) {
 
                 selectedMode = TWO_DIMENSIONS;
@@ -393,7 +395,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             return;
         }
 
+        // USER SELECTING DIFFICULTY
         if (src == easyBtn || src == mediumBtn || src == hardBtn || src == extremeBtn) {
+
+            randomMines.setSelected(false);
+            minesSpinner.setEnabled(true);
             difficultyAdjusted = true;
 
             switch (selectedMode) {
