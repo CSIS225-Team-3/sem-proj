@@ -131,7 +131,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setLocationRelativeTo(null);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //frame.setUndecorated(true);
+        // frame.setUndecorated(true);
 
         cardLayout = new CardLayout();
         cards = new JPanel(cardLayout);
@@ -179,10 +179,14 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         colsSpinner.setPreferredSize(new Dimension(60, 30));
         settingsPanel.add(colsSpinner);
 
-        settingsPanel.add(new JLabel("Splices: "));
+        splicesLabel = new JLabel("Splices: ");
+        settingsPanel.add(splicesLabel);
         splicesSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
         splicesSpinner.setPreferredSize(new Dimension(60, 30));
         settingsPanel.add(splicesSpinner);
+
+        splicesLabel.setVisible(false);
+        splicesSpinner.setVisible(false);
 
         JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         mineConfigPanel.setBackground(SECONDARY_COLOR);
@@ -272,7 +276,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         cards.add(this, MENU_CARD);
         cardLayout.show(cards, MENU_CARD);
         frame.add(cards);
-        //frame.pack();
+        // frame.pack();
         frame.setVisible(true);
     }
 
@@ -285,9 +289,16 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
                 System.out.println("Coming soon!");
                 return;
             }
+
+            JPanel configPanel = (JPanel) ((JPanel) getComponent(1)).getComponent(1);
+            configPanel.setVisible(true);
+
             if (src == twoDimension) {
 
                 selectedMode = TWO_DIMENSIONS;
+
+                splicesLabel.setVisible(false);
+                splicesSpinner.setVisible(false);
 
                 difficultyInfoLabels[0].setText("9x9, 10 mines");
                 difficultyInfoLabels[1].setText("16x16, 40 mines");
@@ -297,6 +308,9 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
                 selectedMode = THREE_DIMENSIONS;
 
+                splicesLabel.setVisible(true);
+                splicesSpinner.setVisible(true);
+
                 difficultyInfoLabels[0].setText("5x5x3, 15 mines");
                 difficultyInfoLabels[1].setText("7x7x4, 60 mines");
                 difficultyInfoLabels[2].setText("9x9x5, 150 mines");
@@ -304,9 +318,6 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
             } else {
                 selectedMode = "";
             }
-
-            JPanel configPanel = (JPanel) ((JPanel) getComponent(1)).getComponent(1);
-            configPanel.setVisible(true);
             revalidate();
             repaint();
             return;
