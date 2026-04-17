@@ -176,18 +176,20 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     }
 
     private void placeMines(int x, int y) {
-        Random rand = new Random();
+
         ArrayList<int[]> allPositions = new ArrayList<>();
         for (int i = 0; i < dims[0]; i++) {
             for (int j = 0; j < dims[1]; j++) {
-                if (!(i == x && j == y)) {
+                if (Math.abs(i - x) > 1 || Math.abs(j - y) > 1) {
                     allPositions.add(new int[] { i, j });
                 }
             }
         }
         java.util.Collections.shuffle(allPositions);
 
-        for (int i = 0; i < mineCount; i++) {
+        int actualMineCount = Math.min(mineCount, allPositions.size());
+
+        for (int i = 0; i < actualMineCount; i++) {
             int[] pos = allPositions.get(i);
             buttons[pos[0]][pos[1]].setMine(true);
         }
