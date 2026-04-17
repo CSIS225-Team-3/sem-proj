@@ -152,7 +152,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         modePanel.setBackground(SECONDARY_COLOR);
 
         twoDimension = new JButton("2D Minesweeper");
-        threeDimension = new JButton("3D Minesweeper (Coming Soon!)");
+        threeDimension = new JButton("3D Minesweeper (WIP)");
         fourDimension = new JButton("4D Minesweeper (Coming Soon!)");
         hyperbolic = new JButton("Hyperbolic Minesweeper (Coming Soon!)");
 
