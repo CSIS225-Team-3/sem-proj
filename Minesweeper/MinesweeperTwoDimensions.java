@@ -278,10 +278,10 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         if (!gameOver) {
             gameOver = true;
             revealMines();
-            JOptionPane.showMessageDialog(this, "You win! Congratulations!");
             if (timer != null) {
                 timer.stop();
             }
+            JOptionPane.showMessageDialog(this, "You win! Congratulations!");
             reset();
         }
     }
@@ -292,10 +292,10 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
             gameOver = true;
             revealMines();
 
-            JOptionPane.showMessageDialog(this, "You lose! Better luck next time.");
             if (timer != null) {
                 timer.stop();
             }
+            JOptionPane.showMessageDialog(this, "You lose! Better luck next time.");
             reset();
         }
     }
