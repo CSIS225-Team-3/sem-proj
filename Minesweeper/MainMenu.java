@@ -215,7 +215,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         randomMines = new JCheckBox();
         randomMines.setBackground(SECONDARY_COLOR);
         randomMines.addActionListener(this);
-        randomMines.addChangeListener(this);
         mineConfigPanel.add(randomMines);
         settingsPanel.add(mineConfigPanel);
 
@@ -449,6 +448,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         if (src == randomMines) {
             minesSpinner.setEnabled(!randomMines.isSelected());
+            difficultyGroup.clearSelection();
         }
 
         if (src == startButton) {
