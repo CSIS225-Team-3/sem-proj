@@ -26,6 +26,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Main Game to show the options for type of modes.
@@ -33,7 +35,7 @@ import javax.swing.Timer;
  * @author Ahyaan Malik (so far)
  * @version 4/14/2026
  */
-public class MainMenu extends JPanel implements ActionListener, Runnable {
+public class MainMenu extends JPanel implements ActionListener, ChangeListener, Runnable {
 
     /** The name of the menu card */
     private static final String MENU_CARD = "Menu";
@@ -92,6 +94,12 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
     private JSpinner splicesSpinner;
     private JLabel splicesLabel;
+
+    private ButtonGroup difficultyGroup;
+
+    private boolean difficultyAdjusted;
+
+    private JPanel configPanel;
 
     /** The primary color for the UI */
     public static Color PRIMARY_COLOR = Color.PINK;
@@ -165,7 +173,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
         centerPanel.add(modePanel, BorderLayout.NORTH);
 
-        JPanel configPanel = new JPanel(new BorderLayout(0, 10));
+        configPanel = new JPanel(new BorderLayout(0, 10));
         configPanel.setBackground(PRIMARY_COLOR);
         configPanel.setVisible(false);
 
@@ -176,17 +184,20 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         settingsPanel.add(new JLabel("Rows: "));
         rowsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_ROWS, 1));
         rowsSpinner.setPreferredSize(new Dimension(60, 30));
+        rowsSpinner.addChangeListener(this);
         settingsPanel.add(rowsSpinner);
 
         settingsPanel.add(new JLabel("Columns: "));
         colsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
         colsSpinner.setPreferredSize(new Dimension(60, 30));
+        colsSpinner.addChangeListener(this);
         settingsPanel.add(colsSpinner);
 
         splicesLabel = new JLabel("Splices: ");
         settingsPanel.add(splicesLabel);
         splicesSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
         splicesSpinner.setPreferredSize(new Dimension(60, 30));
+        splicesSpinner.addChangeListener(this);
         settingsPanel.add(splicesSpinner);
 
         splicesLabel.setVisible(false);
@@ -197,11 +208,14 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         mineConfigPanel.add(new JLabel("Mine Amount: "));
         minesSpinner = new JSpinner(new SpinnerNumberModel(10, 0, MAX_MINES_2D, 1));
         minesSpinner.setPreferredSize(new Dimension(60, 30));
+        minesSpinner.addChangeListener(this);
+
         mineConfigPanel.add(minesSpinner);
         mineConfigPanel.add(new JLabel("Random # of Mines: "));
         randomMines = new JCheckBox();
         randomMines.setBackground(SECONDARY_COLOR);
         randomMines.addActionListener(this);
+        randomMines.addChangeListener(this);
         mineConfigPanel.add(randomMines);
         settingsPanel.add(mineConfigPanel);
 
@@ -216,7 +230,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         hardBtn = new JRadioButton("Hard");
         extremeBtn = new JRadioButton("Extreme");
 
-        ButtonGroup difficultyGroup = new ButtonGroup();
+        difficultyGroup = new ButtonGroup();
         difficultyGroup.add(easyBtn);
         difficultyGroup.add(mediumBtn);
         difficultyGroup.add(hardBtn);
@@ -343,7 +357,6 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
                 return;
             }
 
-            JPanel configPanel = (JPanel) ((JPanel) getComponent(1)).getComponent(1);
             configPanel.setVisible(true);
 
             if (src == twoDimension) {
@@ -380,51 +393,58 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
             repaint();
             return;
         }
-        switch (selectedMode) {
-            case TWO_DIMENSIONS:
-                if (src == easyBtn) {
-                    rowsSpinner.setValue(9);
-                    colsSpinner.setValue(9);
-                    minesSpinner.setValue(10);
-                } else if (src == mediumBtn) {
-                    rowsSpinner.setValue(16);
-                    colsSpinner.setValue(16);
-                    minesSpinner.setValue(40);
-                } else if (src == hardBtn) {
-                    rowsSpinner.setValue(16);
-                    colsSpinner.setValue(30);
-                    minesSpinner.setValue(99);
-                } else if (src == extremeBtn) {
-                    rowsSpinner.setValue(30);
-                    colsSpinner.setValue(50);
-                    minesSpinner.setValue(400);
-                }
-                break;
-            case THREE_DIMENSIONS:
-                if (src == easyBtn) {
-                    rowsSpinner.setValue(5);
-                    colsSpinner.setValue(5);
-                    splicesSpinner.setValue(3);
-                    minesSpinner.setValue(15);
-                } else if (src == mediumBtn) {
-                    rowsSpinner.setValue(7);
-                    colsSpinner.setValue(7);
-                    splicesSpinner.setValue(4);
-                    minesSpinner.setValue(60);
-                } else if (src == hardBtn) {
-                    rowsSpinner.setValue(9);
-                    colsSpinner.setValue(9);
-                    splicesSpinner.setValue(5);
-                    minesSpinner.setValue(150);
-                } else if (src == extremeBtn) {
-                    rowsSpinner.setValue(12);
-                    colsSpinner.setValue(12);
-                    splicesSpinner.setValue(6);
-                    minesSpinner.setValue(400);
-                }
-                break;
-            default:
-                return;
+
+        if (src == easyBtn || src == mediumBtn || src == hardBtn || src == extremeBtn) {
+            difficultyAdjusted = true;
+
+            switch (selectedMode) {
+                case TWO_DIMENSIONS:
+                    if (src == easyBtn) {
+                        rowsSpinner.setValue(9);
+                        colsSpinner.setValue(9);
+                        minesSpinner.setValue(10);
+                    } else if (src == mediumBtn) {
+                        rowsSpinner.setValue(16);
+                        colsSpinner.setValue(16);
+                        minesSpinner.setValue(40);
+                    } else if (src == hardBtn) {
+                        rowsSpinner.setValue(16);
+                        colsSpinner.setValue(30);
+                        minesSpinner.setValue(99);
+                    } else if (src == extremeBtn) {
+                        rowsSpinner.setValue(30);
+                        colsSpinner.setValue(50);
+                        minesSpinner.setValue(400);
+                    }
+                    break;
+                case THREE_DIMENSIONS:
+                    if (src == easyBtn) {
+                        rowsSpinner.setValue(5);
+                        colsSpinner.setValue(5);
+                        splicesSpinner.setValue(3);
+                        minesSpinner.setValue(15);
+                    } else if (src == mediumBtn) {
+                        rowsSpinner.setValue(7);
+                        colsSpinner.setValue(7);
+                        splicesSpinner.setValue(4);
+                        minesSpinner.setValue(60);
+                    } else if (src == hardBtn) {
+                        rowsSpinner.setValue(9);
+                        colsSpinner.setValue(9);
+                        splicesSpinner.setValue(5);
+                        minesSpinner.setValue(150);
+                    } else if (src == extremeBtn) {
+                        rowsSpinner.setValue(12);
+                        colsSpinner.setValue(12);
+                        splicesSpinner.setValue(6);
+                        minesSpinner.setValue(400);
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+            difficultyAdjusted = false;
         }
 
         if (src == randomMines) {
@@ -459,6 +479,13 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
             } else if (selectedMode.equals(THREE_DIMENSIONS)) {
                 // TODO: add 3D
             }
+        }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (!difficultyAdjusted) {
+            difficultyGroup.clearSelection();
         }
     }
 
