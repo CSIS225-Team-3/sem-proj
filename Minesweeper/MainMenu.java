@@ -5,19 +5,20 @@ import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.CardLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import java.util.Random;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-
-import java.awt.CardLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Random;
-
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
 import javax.swing.SpinnerNumberModel;
@@ -87,6 +88,9 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
     private String selectedMode;
     private JLabel[] difficultyInfoLabels;
 
+    private JSpinner splicesSpinner;
+    private JLabel splicesLabel;
+
     /** The primary color for the UI */
     public final static Color PRIMARY_COLOR = Color.PINK;
 
@@ -98,7 +102,10 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
 
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
-    public final static int MAX_MINES = MAX_ROWS * MAX_COLS - 1;
+    public final static int MAX_SPLICES = 100;
+
+    public final static int MAX_MINES_2D = MAX_ROWS * MAX_COLS - 1;
+    public final static int MAX_MINES_3D = MAX_ROWS * MAX_COLS * MAX_SPLICES - 1;
 
     /**
      * Constructor for the MainMenu class.
@@ -120,8 +127,11 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
     public void run() {
         frame = new JFrame("Minesweeper");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(800, 800));
-        frame.setResizable(true);
+        // frame.setPreferredSize(new Dimension(800, 800));
+        frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        frame.setLocationRelativeTo(null);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //frame.setUndecorated(true);
 
         cardLayout = new CardLayout();
         cards = new JPanel(cardLayout);
@@ -169,10 +179,15 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         colsSpinner.setPreferredSize(new Dimension(60, 30));
         settingsPanel.add(colsSpinner);
 
+        settingsPanel.add(new JLabel("Splices: "));
+        splicesSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
+        splicesSpinner.setPreferredSize(new Dimension(60, 30));
+        settingsPanel.add(splicesSpinner);
+
         JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         mineConfigPanel.setBackground(SECONDARY_COLOR);
         mineConfigPanel.add(new JLabel("Mine Amount: "));
-        minesSpinner = new JSpinner(new SpinnerNumberModel(10, 0, MAX_MINES, 1));
+        minesSpinner = new JSpinner(new SpinnerNumberModel(10, 0, MAX_MINES_2D, 1));
         minesSpinner.setPreferredSize(new Dimension(60, 30));
         mineConfigPanel.add(minesSpinner);
         mineConfigPanel.add(new JLabel("Random # of Mines: "));
@@ -257,7 +272,7 @@ public class MainMenu extends JPanel implements ActionListener, Runnable {
         cards.add(this, MENU_CARD);
         cardLayout.show(cards, MENU_CARD);
         frame.add(cards);
-        frame.pack();
+        //frame.pack();
         frame.setVisible(true);
     }
 
