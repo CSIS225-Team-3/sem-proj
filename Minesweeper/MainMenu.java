@@ -304,8 +304,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 rainbowHue = (rainbowHue + 0.002f) % 1f;
 
                 PRIMARY_COLOR = Color.getHSBColor(rainbowHue, 0.3f, 1.0f);
-                SECONDARY_COLOR = Color.getHSBColor((rainbowHue + 0.05f) % 1f, 0.5f, 0.85f);
-                TERTIARY_COLOR = Color.getHSBColor((rainbowHue + 0.02f) % 1f, 0.25f, 1.0f);
+                SECONDARY_COLOR = Color.getHSBColor((rainbowHue + 0.09f) % 1f, 0.5f, 0.85f);
+                TERTIARY_COLOR = Color.getHSBColor((rainbowHue + 0.05f) % 1f, 0.25f, 1.0f);
 
                 frame.setBackground(PRIMARY_COLOR);
                 centerPanel.setBackground(PRIMARY_COLOR);
