@@ -78,6 +78,7 @@ public class PasswordChecker implements Runnable, ActionListener {
         // Doesn't apply to existing JFrames, so must be called first
         JFrame.setDefaultLookAndFeelDecorated(true);
 
+
         JFrame frame = new JFrame("Password Strength Checker");
         frame.setPreferredSize(new Dimension(450, 320));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
