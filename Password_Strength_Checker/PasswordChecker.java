@@ -79,7 +79,7 @@ public class PasswordChecker implements Runnable, ActionListener {
         JFrame.setDefaultLookAndFeelDecorated(true);
 
         JFrame frame = new JFrame("Password Strength Checker");
-        frame.setPreferredSize(new Dimension(450, 300));
+        frame.setPreferredSize(new Dimension(450, 320));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
@@ -146,6 +146,10 @@ public class PasswordChecker implements Runnable, ActionListener {
         checksLabels.add(new JLabel(" Lowercase Letter (a-z)", SwingConstants.CENTER));
         checksLabels.add(new JLabel(" Symbol (!#%^?./)", SwingConstants.CENTER));
         checksLabels.add(new JLabel(" Number (0-9)", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" Has a commonly used password phrase", SwingConstants.CENTER));
+        checksLabels.add(new JLabel(" Has an ascending or descending seqence of numbers", SwingConstants.CENTER));
+
+
 
         for (JLabel label : checksLabels) {
             label.setForeground(Color.RED);
@@ -372,6 +376,18 @@ public class PasswordChecker implements Runnable, ActionListener {
             checksLabels.get(3).setForeground(new Color(0, 200, 0));
         } else {
             checksLabels.get(3).setForeground(Color.RED);
+        }
+
+        if(isCommonPassword(password)) {
+            checksLabels.get(4).setForeground(Color.RED);
+        } else{
+            checksLabels.get(4).setForeground(new Color(0, 200, 0));
+        }
+
+        if(isSequential(password)) {
+            checksLabels.get(5).setForeground(Color.RED);
+        } else{
+            checksLabels.get(5).setForeground(new Color(0, 200, 0));
         }
     }
 
