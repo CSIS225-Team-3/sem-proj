@@ -13,17 +13,17 @@ import java.security.NoSuchAlgorithmException;
  */
 public class AccountManager {
 
-    private String password;
 
-    public void hashPassword() {
+    public String hashPassword(String password) {
 
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(password.getBytes());
 
-            String hashedPassword = new String(hash);
+            return new String(hash);
         } catch (NoSuchAlgorithmException e) {
             System.out.println(e.getMessage());
         }
+        return "";
     }
 }
