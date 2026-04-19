@@ -14,6 +14,11 @@ import java.security.NoSuchAlgorithmException;
 public class AccountManager {
 
 
+
+    public AccountManager() {
+
+    }
+
     public String hashPassword(String password) {
 
         try {
@@ -25,5 +30,18 @@ public class AccountManager {
             System.out.println(e.getMessage());
         }
         return "";
+    }
+
+    public Account login(String username, String password) {
+        //TODO: Implement a way to load accounts
+        Account account = null;
+
+        if (account == null) {
+            return null;
+        }
+        if (!(account.getPasswordHash().equals(hashPassword(password)))) {
+            return account;
+        } 
+        return null;
     }
 }
