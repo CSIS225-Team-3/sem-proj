@@ -64,8 +64,7 @@ public class AccountManager {
     }
 
     public Account login(String username, String password) {
-        // TODO: Implement a way to load accounts
-        Account account = null;
+        Account account = accounts.get(username);
 
         if (account == null) {
             return null;
