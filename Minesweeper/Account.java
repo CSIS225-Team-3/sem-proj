@@ -9,19 +9,22 @@ import java.io.Serializable;
  */
 public class Account implements Serializable {
 
-    private final String username;
-    private final String passwordHashed;
+    private final String USERNAME;
+    private final String PASSWORD_HASHED;
+
+    // Needed according to API
+    private static final long serialVersionUID  = 1L;
     
     public Account(String username, String passwordHashed) {
-        this.username = username;
-        this.passwordHashed = passwordHashed;
+        this.USERNAME = username;
+        this.PASSWORD_HASHED = passwordHashed;
     }
 
     public String getUsername() {
-        return username;
+        return USERNAME;
     }
 
     public String getPasswordHash() {
-        return passwordHashed;
+        return PASSWORD_HASHED;
     }
 }
