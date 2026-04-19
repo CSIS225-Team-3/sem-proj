@@ -1,8 +1,11 @@
 package Minesweeper;
 
-import java.security.DigestException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 /**
  * Account Manager for all Accounts
@@ -13,7 +16,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public class AccountManager {
 
+    private HashMap<String, Account> accounts;
 
+    private static final String SAVE_FILE = "accounts.dat";
 
     public AccountManager() {
 
@@ -30,6 +35,23 @@ public class AccountManager {
             System.out.println(e.getMessage());
         }
         return "";
+    }
+
+    private HashMap<String, Account> loadAccounts() {
+
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))){
+            // funny unchecked cast
+            return (HashMap<String, Account>)in.readObject();
+
+        } catch (IOException e) {
+            // none exists yet
+            return new HashMap<String, Account>();
+        }
+
+    }
+
+    public void register(String username, String password) {
+
     }
 
     public Account login(String username, String password) {
