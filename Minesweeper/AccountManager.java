@@ -22,6 +22,7 @@ public class AccountManager {
 
     public AccountManager() {
 
+        accounts = loadAccounts();
     }
 
     public String hashPassword(String password) {
@@ -39,9 +40,9 @@ public class AccountManager {
 
     private HashMap<String, Account> loadAccounts() {
 
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))){
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
             // funny unchecked cast
-            return (HashMap<String, Account>)in.readObject();
+            return (HashMap<String, Account>) in.readObject();
 
         } catch (IOException e) {
             // none exists yet
@@ -50,12 +51,20 @@ public class AccountManager {
 
     }
 
-    public void register(String username, String password) {
+    public boolean register(String username, String password) {
+        if (accounts.containsKey(username)) {
+            return false;
+        } else {
+            accounts.put(username, new Account(username, hashPassword(password)));
 
+            //TODO: SAVE HERE
+
+            return true;
+        }
     }
 
     public Account login(String username, String password) {
-        //TODO: Implement a way to load accounts
+        // TODO: Implement a way to load accounts
         Account account = null;
 
         if (account == null) {
@@ -63,7 +72,7 @@ public class AccountManager {
         }
         if (!(account.getPasswordHash().equals(hashPassword(password)))) {
             return account;
-        } 
+        }
         return null;
     }
 }
