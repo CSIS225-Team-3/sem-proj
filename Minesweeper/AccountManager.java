@@ -44,7 +44,7 @@ public class AccountManager {
             // funny unchecked cast
             return (HashMap<String, Account>) in.readObject();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             // none exists yet
             return new HashMap<String, Account>();
         }
@@ -57,7 +57,7 @@ public class AccountManager {
         } else {
             accounts.put(username, new Account(username, hashPassword(password)));
 
-            //TODO: SAVE HERE
+            // TODO: SAVE HERE
 
             return true;
         }
