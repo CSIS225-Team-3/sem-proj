@@ -4,8 +4,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * Account Manager for all Accounts
@@ -33,7 +35,7 @@ public class AccountManager {
 
             return new String(hash);
         } catch (NoSuchAlgorithmException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         return "";
     }
@@ -51,13 +53,22 @@ public class AccountManager {
 
     }
 
+    private void saveAccounts() {
+
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
+            out.writeObject(accounts);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     public boolean register(String username, String password) {
         if (accounts.containsKey(username)) {
             return false;
         } else {
             accounts.put(username, new Account(username, hashPassword(password)));
 
-            // TODO: SAVE HERE
+            saveAccounts();
 
             return true;
         }
@@ -73,5 +84,13 @@ public class AccountManager {
             return account;
         }
         return null;
+    }
+
+
+
+
+    public static void main(String[] args) {
+        AccountManager am = new AccountManager();
+
     }
 }
