@@ -66,7 +66,7 @@ public class AccountManager {
         if (accounts.containsKey(username)) {
             return false;
         } else {
-            
+
             accounts.put(username, new Account(username, hashPassword(password)));
 
             saveAccounts();
@@ -87,22 +87,19 @@ public class AccountManager {
         return null;
     }
 
+    public void listAccounts() {
+        if (accounts.isEmpty()) {
+            System.out.println("No accounts registered!");
+            return;
+        }
+        System.out.println("=== Registered Accounts (" + accounts.size() + ") ===");
+        for (String username : accounts.keySet()) {
+            System.out.println("- " + username);
+        }
+    }
 
-
-
-    // public static void main(String[] args) {
-    //     AccountManager am = new AccountManager();
-        
-    //     am.register("John", "123");
-    //     am.register("JavaUser2", "JavaDocIsTheBest!");
-    //     Account acc1 = am.login("John", "123");
-    //     Account acc2 = am.login("John", "456");
-
-    //     System.out.println("Username for Account 1: " + acc1.getUsername() + " | Password for Account 1 (Hashed): " + acc1.getPasswordHash());
-
-    //     // should be null
-    //     System.out.println("Username for Account 2: " + acc2.getUsername() + " | Password for Account 2 (Hashed): " + acc2.getPasswordHash());
-
-
-    // }
+    public static void main(String[] args) {
+        AccountManager am = new AccountManager();
+        am.listAccounts();
+    }
 }
