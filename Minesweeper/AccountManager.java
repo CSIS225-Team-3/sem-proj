@@ -62,17 +62,29 @@ public class AccountManager {
         }
     }
 
-    public boolean register(String username, String password) {
-        if (accounts.containsKey(username)) {
-            return false;
-        } else {
-
-            accounts.put(username, new Account(username, hashPassword(password)));
-
-            saveAccounts();
-
-            return true;
+    public String register(String username, String password) {
+        // min 3, max 10
+        if (username.length() < 3 || username.length() > 10) {
+            return "Username must be 3-10 characters!";
         }
+        if (!username.matches("[a-zA-Z0-9_]+")) {
+            return "Username can only have letters, numbers, underscores!";
+        }
+
+        if (password.length() < 6) {
+            return "Password must be at least 6 characters!";
+        }
+
+        if (accounts.containsKey(username)) {
+            return "Username taken!";
+        }
+
+        accounts.put(username, new Account(username, hashPassword(password)));
+
+        saveAccounts();
+
+        // success
+        return null;
     }
 
     public Account login(String username, String password) {
