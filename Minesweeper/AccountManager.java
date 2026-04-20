@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -21,7 +20,7 @@ public class AccountManager {
 
     private HashMap<String, Account> accounts;
 
-    private static final String SAVE_FILE = "accounts.dat";
+    private static final String SAVE_FILE = "Minesweeper//accounts.dat";
 
     public AccountManager() {
 
