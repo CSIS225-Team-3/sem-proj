@@ -15,6 +15,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -26,6 +27,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.Timer;
+import javax.swing.JTextField;
+import javax.swing.BoxLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -101,6 +104,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     private JPanel configPanel;
 
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+
+    private JButton registerButton;
+    private JButton loginButton;
+    private JButton logoutButton;
+
+    private JLabel loginStatus;
+
+    private AccountManager accountManager;
+    private Account loggedInAccount;
+
     /** The primary color for the UI */
     public static Color PRIMARY_COLOR = Color.PINK;
 
@@ -129,6 +144,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         this.cardLayout = cardLayout;
         this.cards = cards;
 
+        accountManager = new AccountManager();
+
         setLayout(new BorderLayout());
     }
 
@@ -148,9 +165,45 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         cardLayout = new CardLayout();
         cards = new JPanel(cardLayout);
 
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        usernameField = new JTextField();
+        passwordField = new JPasswordField();
+
+        registerButton = new JButton("Register");
+        loginButton = new JButton("Login");
+
+        registerButton.addActionListener(this);
+        loginButton.addActionListener(this);
+
+        JPanel loginMainPanel = new JPanel(new FlowLayout());
+        JPanel loginSubPanel = new JPanel(new GridLayout(4, 2));
+
+        loginSubPanel.add(new JLabel("Enter Username: "));
+        loginSubPanel.add(usernameField);
+
+        loginSubPanel.add(new JLabel("Enter Password: "));
+        loginSubPanel.add(passwordField);
+
+        loginSubPanel.add(registerButton);
+        loginSubPanel.add(loginButton);
+
+        logoutButton = new JButton("Log Out");
+        logoutButton.setEnabled(false);
+        logoutButton.addActionListener(this);
+        loginSubPanel.add(logoutButton);
+
+        loginStatus = new JLabel(" ");
+        loginMainPanel.add(loginStatus);
+
+        loginMainPanel.add(loginSubPanel);
+        topPanel.add(loginMainPanel, BorderLayout.EAST);
+
         mainText = new JLabel("Welcome to Minesweeper!", SwingConstants.CENTER);
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
-        add(mainText, BorderLayout.NORTH);
+        topPanel.add(mainText, BorderLayout.NORTH);
+
+        add(topPanel, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
@@ -348,6 +401,54 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
+
+        // Register or Login Buttons
+        if (src == logoutButton) {
+            loggedInAccount = null;
+            loginStatus.setForeground(Color.BLACK);
+            loginStatus.setText("Logged out.");
+            loginButton.setEnabled(true);
+            registerButton.setEnabled(true);
+            logoutButton.setEnabled(false);
+            usernameField.setText("");
+            passwordField.setText("");
+        }
+
+        if (src == registerButton || src == loginButton) {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+
+            if (username.isEmpty() || password.isEmpty()) {
+                loginStatus.setForeground(Color.RED);
+                loginStatus.setText("Username/password cannot be empty.");
+                return;
+            }
+
+            if (src == registerButton) {
+                if (accountManager.register(username, password)) {
+                    loginStatus.setForeground(Color.GREEN);
+                    loginStatus.setText("Registered! Please log in now.");
+                } else {
+                    loginStatus.setForeground(Color.RED);
+                    loginStatus.setText("Username taken!");
+                }
+
+            } else {
+                Account account = accountManager.login(username, password);
+                if (account != null) {
+                    loggedInAccount = account;
+                    loginStatus.setForeground(Color.GREEN);
+                    loginStatus.setText("Welcome, " + account.getUsername() + "!");
+                    loginButton.setEnabled(false);
+                    registerButton.setEnabled(false);
+                    logoutButton.setEnabled(true);
+                } else {
+                    loginStatus.setForeground(Color.RED);
+                    loginStatus.setText("Wrong username or password!");
+                }
+            }
+
+        }
 
         // Mode buttons
         if (src == twoDimension || src == threeDimension || src == fourDimension || src == hyperbolic) {
