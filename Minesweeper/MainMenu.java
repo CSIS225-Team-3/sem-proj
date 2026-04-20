@@ -181,7 +181,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         logoutButton.setEnabled(false);
 
         JPanel loginMainPanel = new JPanel(new BorderLayout(5, 5));
-        loginMainPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
         JPanel fieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         fieldsPanel.add(new JLabel("Username:", SwingConstants.RIGHT));
@@ -207,7 +206,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         loginMainPanel.add(buttonsPanel, BorderLayout.CENTER);
         loginMainPanel.add(loginStatus, BorderLayout.SOUTH);
 
-        loginMainPanel.setBorder(BorderFactory.createTitledBorder("Login"));
+        loginMainPanel.setBorder(BorderFactory.createTitledBorder("Account"));
 
         topPanel.add(loginMainPanel, BorderLayout.EAST);
 
