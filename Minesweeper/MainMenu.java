@@ -116,6 +116,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private AccountManager accountManager;
     private Account loggedInAccount;
 
+    private JCheckBox showPassword;
+
     /** The primary color for the UI */
     public static Color PRIMARY_COLOR = Color.PINK;
 
@@ -182,11 +184,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         JPanel loginMainPanel = new JPanel(new BorderLayout(5, 5));
 
-        JPanel fieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        JPanel fieldsPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         fieldsPanel.add(new JLabel("Username:", SwingConstants.RIGHT));
         fieldsPanel.add(usernameField);
+
         fieldsPanel.add(new JLabel("Password:", SwingConstants.RIGHT));
         fieldsPanel.add(passwordField);
+
+        showPassword = new JCheckBox();
+        showPassword.addActionListener(this);
+
+        fieldsPanel.add(new JLabel("Show Password", SwingConstants.RIGHT));
+        fieldsPanel.add(showPassword);
 
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
 
@@ -387,6 +396,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 fieldsPanel.setBackground(SECONDARY_COLOR);
                 topButtons.setBackground(SECONDARY_COLOR);
                 bottomButtons.setBackground(SECONDARY_COLOR);
+                showPassword.setBackground(SECONDARY_COLOR);
 
                 modePanel.setBackground(SECONDARY_COLOR);
                 settingsPanel.setBackground(SECONDARY_COLOR);
@@ -426,6 +436,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
+
+        // Password visibility
+        if (src == showPassword) {
+            togglePasswordVisibility();
+        }
 
         // Register or Login Buttons
         if (src == logoutButton) {
@@ -633,6 +648,19 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         setBackground(PRIMARY_COLOR);
 
         super.paintComponent(g);
+    }
+
+    /**
+     * Toggles password visability based on the state of the showPassword checkbox.
+     */
+    private void togglePasswordVisibility() {
+        if (showPassword.isSelected()) {
+            // Show password
+            passwordField.setEchoChar((char) 0);
+        } else {
+            // Hide password
+            passwordField.setEchoChar('*');
+        }
     }
 
     /**
