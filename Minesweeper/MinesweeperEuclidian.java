@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionListener {
+public class MinesweeperEuclidian extends MinesweeperBase implements ActionListener {
     /** The array of buttons for the game */
     private MinesweeperButton[][] buttons;
 
@@ -46,14 +46,12 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     /** The JPanel that holds the cards */
     private JPanel cards;
 
-    private boolean gameOver = false;
-
     private Timer timer;
     private int secondsElapsed;
     private JLabel timerLabel;
 
     /**
-     * Constructor for the ConcentrationBonus class that initializes the game with
+     * Constructor for the MinesweeperEuclidian class that initializes the game with
      * the given parameters.
      * 
      * @param rows       the number of rows for the game
@@ -62,7 +60,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      * @param cardLayout the CardLayout for managing panels
      * @param cards      the JPanel that holds the cards
      */
-    public MinesweeperTwoDimensions(int rows, int cols, int mines, CardLayout cardLayout, JPanel cards) {
+    public MinesweeperEuclidian(int rows, int cols, int mines, CardLayout cardLayout, JPanel cards) {
         setLayout(new BorderLayout());
         this.cardLayout = cardLayout;
         this.cards = cards;
@@ -81,10 +79,9 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     }
 
     /**
-     * Private method to build the GUI for the game since run isn't used anymore
+     * Builds the GUI for the game
      */
     private void build() {
-
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel topText = new JPanel(new FlowLayout());
@@ -200,7 +197,6 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     }
 
     private void placeMines(int x, int y) {
-
         ArrayList<int[]> allPositions = new ArrayList<>();
         for (int i = 0; i < dims[0]; i++) {
             for (int j = 0; j < dims[1]; j++) {
@@ -220,18 +216,19 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     }
 
     /**
-     * Private method to update the round title text at the top of the window
-     * 
+     * Updates the round title text at the top of the window
      */
     private void updateTitleText() {
         topLabel.setText("Round " + roundNum);
     }
 
     /**
-     * Private method to reset the game to the start
+     * Resets the game to the starting state
      */
     @Override
     public void reset() {
+        super.reset();
+
         removeAll();
 
         if (timer != null) {
@@ -242,7 +239,6 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         revalidate();
         repaint();
 
-        gameOver = false;
         firstClick = true;
         roundNum++;
     }
@@ -259,45 +255,14 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         onWin();
     }
 
-    private void revealMines() {
+    @Override
+    protected void revealMines() {
         for (int j = 0; j < dims[1]; j++) {
             for (int i = 0; i < dims[0]; i++) {
                 if (buttons[i][j].getMine()) {
                     buttons[i][j].reveal();
                 }
             }
-        }
-    }
-
-    /**
-     * Private method to check and print if the game is completed
-     * 
-     */
-    @Override
-    public void onWin() {
-        if (!gameOver) {
-            gameOver = true;
-            revealMines();
-            if (timer != null) {
-                timer.stop();
-            }
-            JOptionPane.showMessageDialog(this, "You win! Congratulations! \n Time spent: " + timerLabel.getText());
-            reset();
-        }
-    }
-
-    @Override
-    public void onLoss() {
-        if (!gameOver) {
-            gameOver = true;
-            revealMines();
-
-            if (timer != null) {
-                timer.stop();
-            }
-            JOptionPane.showMessageDialog(this,
-                    "You lose! Better luck next time. \n Time spent: " + timerLabel.getText());
-            reset();
         }
     }
 
@@ -324,7 +289,8 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
         return adjs.toArray(new MinesweeperButton[0]);
     }
 
-    public int getGridSize() {
+    @Override
+    public int numTiles(){
         return gridSize;
     }
 }

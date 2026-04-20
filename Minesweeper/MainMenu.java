@@ -581,7 +581,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             errorLabel.setText(" ");
 
             if (selectedMode.equals(TWO_DIMENSIONS)) {
-                cards.add(new MinesweeperTwoDimensions(rows, cols, mines, cardLayout, cards), TWO_DIMENSIONS);
+                cards.add(new MinesweeperEuclidian(rows, cols, mines, cardLayout, cards), TWO_DIMENSIONS);
                 cardLayout.show(cards, TWO_DIMENSIONS);
             } else if (selectedMode.equals(THREE_DIMENSIONS)) {
                 // TODO: add 3D
