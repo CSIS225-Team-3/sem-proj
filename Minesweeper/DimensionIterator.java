@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 /**
  * Iterates over an array representing any number of dimensions using a range selector lambda
- * Note: This only works for euclidian space, not hyperbolic
+ * Note: This only works for euclidean space, not hyperbolic
  * @author Patrick Kosmider
  */
 public class DimensionIterator<D> implements Iterator<D> {
@@ -99,7 +99,7 @@ interface AxisRangeSelector {
      * @param axis The axis being decided for
      * @param length How long that dimension is
      * @param context Arbitrary context
-     * @return A 2d array [low, high]
+     * @return A 2d array [low, high] representing [low, high)
      */
     int[] selectRange(int axis, int length, Object context);
 }

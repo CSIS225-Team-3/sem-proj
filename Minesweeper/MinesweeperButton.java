@@ -18,7 +18,7 @@ public class MinesweeperButton extends JButton {
     public final static Color REVEALED_COLOR = new Color(255, 175, 175);
 
     MinesweeperBase game;
-    private int[] position;
+    private int idx;
 
     private boolean isRevealed = false;
 
@@ -34,12 +34,12 @@ public class MinesweeperButton extends JButton {
     /**
      * Constructor for MinesweeperButton
      */
-    public MinesweeperButton(MinesweeperBase game, int[] position) {
+    public MinesweeperButton(MinesweeperBase game, int idx) {
         super((String) null);
         // super(position[0] + " " + position[1]);
 
         this.game = game;
-        this.position = position;
+        this.idx = idx;
 
         setBackground(HIDDEN_COLOR);
         setForeground(Color.BLACK);
@@ -55,18 +55,15 @@ public class MinesweeperButton extends JButton {
     }
 
     /**
-     * Gets the position of this button
-     * 
-     * @return the position of this button
+     * Gets the index of this button
+     * @return the index of this button
      */
-    public int[] getPosition() {
-        // Technically this is mutable, but should be fine
-        return position;
+    public int getIdx() {
+        return idx;
     }
 
     /**
      * Gets the number of adjacent mines
-     * 
      * @return the number of adjacent mines
      */
     public int getNumAdjacent() {
@@ -95,7 +92,7 @@ public class MinesweeperButton extends JButton {
             if (numAdjacent == 0) {
                 setText(null);
 
-                MinesweeperButton[] adjacents = game.getAdjacentButtons(getPosition());
+                MinesweeperButton[] adjacents = game.getAdjacentButtons(getIdx());
                 for (int i = 0; i < adjacents.length; i++) {
                     adjacents[i].reveal();
                 }
@@ -136,7 +133,7 @@ public class MinesweeperButton extends JButton {
     public void setMine(boolean isMine) {
         this.isMine = isMine;
 
-        MinesweeperButton[] adjacents = game.getAdjacentButtons(getPosition());
+        MinesweeperButton[] adjacents = game.getAdjacentButtons(getIdx());
         for (int i = 0; i < adjacents.length; i++) {
             adjacents[i].numAdjacent++;
         }

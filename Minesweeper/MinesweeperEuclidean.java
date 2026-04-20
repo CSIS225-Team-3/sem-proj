@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.InvalidParameterException;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -14,13 +15,13 @@ import java.util.ArrayList;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperEuclidian extends MinesweeperBase implements ActionListener {
+public class MinesweeperEuclidean extends MinesweeperBase implements ActionListener {
     /** The array of buttons for the game */
-    private MinesweeperButton[][] buttons;
+    private MinesweeperButton[] buttons;
 
     private int mineCount;
 
-    private boolean firstClick;
+    private boolean firstClick = true;
 
     /** The label for the top of the window */
     private JLabel topLabel;
@@ -38,7 +39,7 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
     private int[] dims;
 
     /** The size of the grid for the game (amount of buttons) */
-    private int gridSize;
+    private int gridVolume;
 
     /** The CardLayout for managing panels */
     private CardLayout cardLayout;
@@ -46,12 +47,8 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
     /** The JPanel that holds the cards */
     private JPanel cards;
 
-    private Timer timer;
-    private int secondsElapsed;
-    private JLabel timerLabel;
-
     /**
-     * Constructor for the MinesweeperEuclidian class that initializes the game with
+     * Constructor for the MinesweeperEuclidean class that initializes the game with
      * the given parameters.
      * 
      * @param rows       the number of rows for the game
@@ -60,20 +57,23 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
      * @param cardLayout the CardLayout for managing panels
      * @param cards      the JPanel that holds the cards
      */
-    public MinesweeperEuclidian(int rows, int cols, int mines, CardLayout cardLayout, JPanel cards) {
-        setLayout(new BorderLayout());
+    public MinesweeperEuclidean(int[] dims, int mines, CardLayout cardLayout, JPanel cards) {
+        super();
+        
+        if (dims.length == 0)
+            throw new InvalidParameterException("0-dimensional space not supported");
+        
+        this.dims = dims;
+        this.mineCount = mines;
         this.cardLayout = cardLayout;
         this.cards = cards;
-        this.mineCount = mines;
 
-        firstClick = true;
+        setLayout(new BorderLayout());
 
-        dims = new int[] {
-                cols,
-                rows,
-        };
-
-        gridSize = rows * cols;
+        gridVolume = 1;
+        for (int i = 0; i < dims.length; i++){
+            gridVolume *= dims[i];
+        }
 
         reset();
     }
@@ -112,39 +112,36 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
 
         mainPanel.add(bottomButtons, BorderLayout.SOUTH);
 
-        buttons = new MinesweeperButton[dims[0]][dims[1]];
-        for (int j = 0; j < dims[1]; j++) {
-            for (int i = 0; i < dims[0]; i++) {
-                int[] pos = { i, j };
-                MinesweeperButton button = buttons[i][j] = new MinesweeperButton(this, pos);
-                gamePanel.add(button);
-                button.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        if (firstClick && !SwingUtilities.isRightMouseButton(e)) {
-                            firstClick = false;
+        buttons = new MinesweeperButton[gridVolume];
+        for (int i = 0; i < gridVolume; i++) {
+            MinesweeperButton button = buttons[i] = new MinesweeperButton(this, i);
+            gamePanel.add(button);
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (firstClick && !SwingUtilities.isRightMouseButton(e)) {
+                        firstClick = false;
 
-                            ActionListener timerListener = new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    secondsElapsed++;
-                                    int m = secondsElapsed / 60;
-                                    int s = secondsElapsed % 60;
-                                    timerLabel.setText(String.format("%02d:%02d", m, s));
-                                }
-                            };
-                            timer = new Timer(1000, timerListener);
-                            timer.start();
+                        ActionListener timerListener = new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                secondsElapsed++;
+                                int m = secondsElapsed / 60;
+                                int s = secondsElapsed % 60;
+                                timerLabel.setText(String.format("%02d:%02d", m, s));
+                            }
+                        };
+                        timer = new Timer(1000, timerListener);
+                        timer.start();
 
-                            int[] clickedPos = ((MinesweeperButton) e.getSource()).getPosition();
-                            placeMines(clickedPos[0], clickedPos[1]);
-                        }
-                        onTileClick(e);
-                        updateTitleText();
-                        checkWin();
+                        int clickedIdx = ((MinesweeperButton) e.getSource()).getIdx();
+                        placeMines(clickedIdx);
                     }
-                });
-            }
+                    onTileClick(e);
+                    updateTitleText();
+                    checkWin();
+                }
+            });
         }
 
         // for (int j = 0; j < dims[1]; j++){
@@ -196,22 +193,36 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
         }
     }
 
-    private void placeMines(int x, int y) {
+    private void placeMines(int clickIdx) {
+        int[] clickPos = idxToPos(clickIdx);
+        
+        DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
+            return new int[] {0, length};
+        }, null);
+        
         ArrayList<int[]> allPositions = new ArrayList<>();
-        for (int i = 0; i < dims[0]; i++) {
-            for (int j = 0; j < dims[1]; j++) {
-                if (Math.abs(i - x) > 1 || Math.abs(j - y) > 1) {
-                    allPositions.add(new int[] { i, j });
+        while (iter.hasNext()) {
+            MinesweeperButton b = iter.next();
+            int[] pos = idxToPos(b.getIdx());
+            for (int d = 0; d < pos.length; d++) {
+                //If the point is more than 1 unit away in any dimension
+                if (Math.abs(pos[d] - clickPos[d]) > 1) {
+                    allPositions.add(pos);
+                    break;
                 }
             }
         }
+
         java.util.Collections.shuffle(allPositions);
 
         int actualMineCount = Math.min(mineCount, allPositions.size());
 
         for (int i = 0; i < actualMineCount; i++) {
             int[] pos = allPositions.get(i);
-            buttons[pos[0]][pos[1]].setMine(true);
+            int idx = posToIdx(pos);
+            if (buttons[idx].getMine())
+                throw new IllegalStateException("Placing mine on existing mine");
+            buttons[idx].setMine(true);
         }
     }
 
@@ -244,11 +255,14 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
     }
 
     private void checkWin() {
-        for (int j = 0; j < dims[1]; j++) {
-            for (int i = 0; i < dims[0]; i++) {
-                if (!buttons[i][j].getMine() && !buttons[i][j].getRevealed()) {
-                    return;
-                }
+        DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
+            return new int[] {0, length};
+        }, null);
+
+        while (iter.hasNext()) {
+            MinesweeperButton b = iter.next();
+            if (!b.getMine() && !b.getRevealed()) {
+                return;
             }
         }
 
@@ -257,33 +271,44 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
 
     @Override
     protected void revealMines() {
-        for (int j = 0; j < dims[1]; j++) {
-            for (int i = 0; i < dims[0]; i++) {
-                if (buttons[i][j].getMine()) {
-                    buttons[i][j].reveal();
-                }
+        DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
+            return new int[] {0, length};
+        }, null);
+
+        while (iter.hasNext()) {
+            MinesweeperButton b = iter.next();
+            if (b.getMine()) {
+                b.reveal();
             }
         }
     }
 
     @Override
-    public MinesweeperButton[] getAdjacentButtons(int[] position) {
-        int x = position[0];
-        int y = position[1];
+    public MinesweeperButton[] getAdjacentButtons(int idx) {
+        int[] targetPos = idxToPos(idx);
 
-        int minX = Math.max(0, x - 1);
-        int minY = Math.max(0, y - 1);
-
-        int maxX = Math.min(dims[0] - 1, x + 1);
-        int maxY = Math.min(dims[1] - 1, y + 1);
-
+        DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
+            int[] ctx = (int[])context;            
+            int min = Math.max(0, ctx[axis] - 1);
+            int max = Math.min(length - 1, ctx[axis] + 1) + 1; // +1 because max is exclusive
+            return new int[] {min, max};
+        }, targetPos);
+        
         ArrayList<MinesweeperButton> adjs = new ArrayList<>();
-        for (int a = minX; a <= maxX; a++) {
-            for (int b = minY; b <= maxY; b++) {
-                if (a == x && b == y)
-                    continue;
-                adjs.add(buttons[a][b]);
+        while (iter.hasNext()) {
+            MinesweeperButton b = iter.next();
+            int[] pos = idxToPos(b.getIdx());
+
+            boolean equal = true;
+            for (int i = 0; i < pos.length; i++) {
+                if (pos[i] != targetPos[i]) {
+                    equal = false;
+                    break;
+                }
             }
+
+            if (!equal)
+                adjs.add(b);
         }
 
         return adjs.toArray(new MinesweeperButton[0]);
@@ -291,6 +316,28 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
 
     @Override
     public int numTiles(){
-        return gridSize;
+        return gridVolume;
+    }
+
+    private int[] idxToPos(int idx) {
+        int[] pos = new int[dims.length];
+        int tempIdx = idx;
+        
+        for (int i = 0; i < dims.length; i++) {
+            pos[i] = tempIdx % dims[i];
+            tempIdx /= dims[i];
+        }
+        return pos;
+    }
+
+    private int posToIdx(int[] pos) {
+        int idx = 0;
+        int stride = 1;
+        
+        for (int i = 0; i < dims.length; i++) {
+            idx += pos[i] * stride;
+            stride *= dims[i];
+        }
+        return idx;
     }
 }

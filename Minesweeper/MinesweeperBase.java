@@ -2,20 +2,25 @@ package Minesweeper;
 
 import java.awt.event.MouseEvent;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 public abstract class MinesweeperBase extends JPanel {
     private boolean gameOver = false;
+    
+    protected Timer timer;
+    protected int secondsElapsed;
+    protected JLabel timerLabel;
 
     /**
      * Gets the list of buttons adjacent to one
-     * 
-     * @param position The position of the reference button
+     * @param position The index of the reference button
      * @return the list of buttons adjacent to one
      */
-    public abstract MinesweeperButton[] getAdjacentButtons(int[] position);
+    public abstract MinesweeperButton[] getAdjacentButtons(int idx);
 
     public void reset(){
         gameOver = false;
