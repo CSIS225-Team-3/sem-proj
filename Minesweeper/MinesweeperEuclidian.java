@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionListener {
+public class MinesweeperEuclidian extends MinesweeperBase implements ActionListener {
     /** The array of buttons for the game */
     private MinesweeperButton[][] buttons;
 
@@ -62,7 +62,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
      * @param cardLayout the CardLayout for managing panels
      * @param cards      the JPanel that holds the cards
      */
-    public MinesweeperTwoDimensions(int rows, int cols, int mines, CardLayout cardLayout, JPanel cards) {
+    public MinesweeperEuclidian(int rows, int cols, int mines, CardLayout cardLayout, JPanel cards) {
         setLayout(new BorderLayout());
         this.cardLayout = cardLayout;
         this.cards = cards;
@@ -220,15 +220,14 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     }
 
     /**
-     * Private method to update the round title text at the top of the window
-     * 
+     * Updates the round title text at the top of the window
      */
     private void updateTitleText() {
         topLabel.setText("Round " + roundNum);
     }
 
     /**
-     * Private method to reset the game to the start
+     * Resets the game to the starting state
      */
     @Override
     public void reset() {
@@ -270,8 +269,7 @@ public class MinesweeperTwoDimensions extends MinesweeperBase implements ActionL
     }
 
     /**
-     * Private method to check and print if the game is completed
-     * 
+     * Checks and prints if the game is completed
      */
     @Override
     public void onWin() {
