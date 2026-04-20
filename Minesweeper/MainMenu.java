@@ -172,31 +172,43 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         registerButton = new JButton("Register");
         loginButton = new JButton("Login");
+        logoutButton = new JButton("Log Out");
 
         registerButton.addActionListener(this);
         loginButton.addActionListener(this);
-
-        JPanel loginMainPanel = new JPanel(new FlowLayout());
-        JPanel loginSubPanel = new JPanel(new GridLayout(4, 2));
-
-        loginSubPanel.add(new JLabel("Enter Username: "));
-        loginSubPanel.add(usernameField);
-
-        loginSubPanel.add(new JLabel("Enter Password: "));
-        loginSubPanel.add(passwordField);
-
-        loginSubPanel.add(registerButton);
-        loginSubPanel.add(loginButton);
-
-        logoutButton = new JButton("Log Out");
-        logoutButton.setEnabled(false);
         logoutButton.addActionListener(this);
-        loginSubPanel.add(logoutButton);
 
-        loginStatus = new JLabel(" ");
-        loginMainPanel.add(loginStatus);
+        logoutButton.setEnabled(false);
 
-        loginMainPanel.add(loginSubPanel);
+        JPanel loginMainPanel = new JPanel(new BorderLayout(5, 5));
+        loginMainPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+
+        JPanel fieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        fieldsPanel.add(new JLabel("Username:", SwingConstants.RIGHT));
+        fieldsPanel.add(usernameField);
+        fieldsPanel.add(new JLabel("Password:", SwingConstants.RIGHT));
+        fieldsPanel.add(passwordField);
+
+        JPanel buttonsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+
+        JPanel topButtons = new JPanel(new GridLayout(1, 2, 5, 5));
+        topButtons.add(registerButton);
+        topButtons.add(loginButton);
+
+        JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        bottomButtons.add(logoutButton);
+
+        buttonsPanel.add(topButtons);
+        buttonsPanel.add(bottomButtons);
+
+        loginStatus = new JLabel("Not logged in.", SwingConstants.CENTER);
+
+        loginMainPanel.add(fieldsPanel, BorderLayout.NORTH);
+        loginMainPanel.add(buttonsPanel, BorderLayout.CENTER);
+        loginMainPanel.add(loginStatus, BorderLayout.SOUTH);
+
+        loginMainPanel.setBorder(BorderFactory.createTitledBorder("Login"));
+
         topPanel.add(loginMainPanel, BorderLayout.EAST);
 
         mainText = new JLabel("Welcome to Minesweeper!", SwingConstants.CENTER);
@@ -366,6 +378,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 bottomPanel.setBackground(PRIMARY_COLOR);
                 errorPanel.setBackground(PRIMARY_COLOR);
                 startPanel.setBackground(PRIMARY_COLOR);
+                topPanel.setBackground(PRIMARY_COLOR);
+
+                loginMainPanel.setBackground(SECONDARY_COLOR);
+                buttonsPanel.setBackground(SECONDARY_COLOR);
+                fieldsPanel.setBackground(SECONDARY_COLOR);
+                topButtons.setBackground(SECONDARY_COLOR);
+                bottomButtons.setBackground(SECONDARY_COLOR);
 
                 modePanel.setBackground(SECONDARY_COLOR);
                 settingsPanel.setBackground(SECONDARY_COLOR);
@@ -383,6 +402,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 mediumInfo.setBackground(SECONDARY_COLOR);
                 hardInfo.setBackground(SECONDARY_COLOR);
                 extremeInfo.setBackground(SECONDARY_COLOR);
+
+                registerButton.setBackground(TERTIARY_COLOR);
+                loginButton.setBackground(TERTIARY_COLOR);
+                logoutButton.setBackground(TERTIARY_COLOR);
 
                 twoDimension.setBackground(TERTIARY_COLOR);
                 threeDimension.setBackground(TERTIARY_COLOR);
@@ -502,6 +525,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             randomMines.setSelected(false);
             minesSpinner.setEnabled(true);
             difficultyAdjusted = true;
+
+            if (loggedInAccount == null) {
+                errorLabel.setText("Progress will not save. Login to save progress.");
+            } else {
+                errorLabel.setText(" ");
+            }
 
             switch (selectedMode) {
                 case TWO_DIMENSIONS:
