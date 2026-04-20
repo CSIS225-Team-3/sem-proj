@@ -116,6 +116,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private AccountManager accountManager;
     private Account loggedInAccount;
 
+    private JCheckBox showPassword;
+
     /** The primary color for the UI */
     public static Color PRIMARY_COLOR = Color.PINK;
 
@@ -172,32 +174,52 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         registerButton = new JButton("Register");
         loginButton = new JButton("Login");
+        logoutButton = new JButton("Log Out");
 
         registerButton.addActionListener(this);
         loginButton.addActionListener(this);
-
-        JPanel loginMainPanel = new JPanel(new FlowLayout());
-        JPanel loginSubPanel = new JPanel(new GridLayout(4, 2));
-
-        loginSubPanel.add(new JLabel("Enter Username: "));
-        loginSubPanel.add(usernameField);
-
-        loginSubPanel.add(new JLabel("Enter Password: "));
-        loginSubPanel.add(passwordField);
-
-        loginSubPanel.add(registerButton);
-        loginSubPanel.add(loginButton);
-
-        logoutButton = new JButton("Log Out");
-        logoutButton.setEnabled(false);
         logoutButton.addActionListener(this);
-        loginSubPanel.add(logoutButton);
 
-        loginStatus = new JLabel(" ");
-        loginMainPanel.add(loginStatus);
+        logoutButton.setEnabled(false);
 
-        loginMainPanel.add(loginSubPanel);
+        JPanel loginMainPanel = new JPanel(new BorderLayout(5, 5));
+
+        JPanel fieldsPanel = new JPanel(new GridLayout(4, 2, 5, 5));
+        fieldsPanel.add(new JLabel("Username:", SwingConstants.RIGHT));
+        fieldsPanel.add(usernameField);
+
+        fieldsPanel.add(new JLabel("Password:", SwingConstants.RIGHT));
+        fieldsPanel.add(passwordField);
+
+        showPassword = new JCheckBox();
+        showPassword.addActionListener(this);
+
+        fieldsPanel.add(new JLabel("Show Password", SwingConstants.RIGHT));
+        fieldsPanel.add(showPassword);
+
+        JPanel buttonsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+
+        JPanel topButtons = new JPanel(new GridLayout(1, 2, 5, 5));
+        topButtons.add(registerButton);
+        topButtons.add(loginButton);
+
+        JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        bottomButtons.add(logoutButton);
+
+        buttonsPanel.add(topButtons);
+        buttonsPanel.add(bottomButtons);
+
+        loginStatus = new JLabel("Not logged in.", SwingConstants.CENTER);
+
+        loginMainPanel.add(fieldsPanel, BorderLayout.NORTH);
+        loginMainPanel.add(buttonsPanel, BorderLayout.CENTER);
+        loginMainPanel.add(loginStatus, BorderLayout.SOUTH);
+
+        loginMainPanel.setBorder(BorderFactory.createTitledBorder("Account"));
+
         topPanel.add(loginMainPanel, BorderLayout.EAST);
+
+        // TODO: Higher the location of it
 
         mainText = new JLabel("Welcome to Minesweeper!", SwingConstants.CENTER);
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
@@ -351,6 +373,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         // frame.pack();
 
         // WACKY RAINBOW TESTING
+        // TODO: Make into its own method
         Timer rainbowTimer = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -366,6 +389,14 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 bottomPanel.setBackground(PRIMARY_COLOR);
                 errorPanel.setBackground(PRIMARY_COLOR);
                 startPanel.setBackground(PRIMARY_COLOR);
+                topPanel.setBackground(PRIMARY_COLOR);
+
+                loginMainPanel.setBackground(SECONDARY_COLOR);
+                buttonsPanel.setBackground(SECONDARY_COLOR);
+                fieldsPanel.setBackground(SECONDARY_COLOR);
+                topButtons.setBackground(SECONDARY_COLOR);
+                bottomButtons.setBackground(SECONDARY_COLOR);
+                showPassword.setBackground(SECONDARY_COLOR);
 
                 modePanel.setBackground(SECONDARY_COLOR);
                 settingsPanel.setBackground(SECONDARY_COLOR);
@@ -384,6 +415,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 hardInfo.setBackground(SECONDARY_COLOR);
                 extremeInfo.setBackground(SECONDARY_COLOR);
 
+                registerButton.setBackground(TERTIARY_COLOR);
+                loginButton.setBackground(TERTIARY_COLOR);
+                logoutButton.setBackground(TERTIARY_COLOR);
+
                 twoDimension.setBackground(TERTIARY_COLOR);
                 threeDimension.setBackground(TERTIARY_COLOR);
                 fourDimension.setBackground(TERTIARY_COLOR);
@@ -401,6 +436,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
+
+        // Password visibility
+        if (src == showPassword) {
+            togglePasswordVisibility();
+        }
 
         // Register or Login Buttons
         if (src == logoutButton) {
@@ -425,19 +465,20 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             }
 
             if (src == registerButton) {
-                if (accountManager.register(username, password)) {
-                    loginStatus.setForeground(Color.GREEN);
+                String err = accountManager.register(username, password);
+                if (err == null) {
+                    loginStatus.setForeground(Color.GREEN.darker());
                     loginStatus.setText("Registered! Please log in now.");
                 } else {
                     loginStatus.setForeground(Color.RED);
-                    loginStatus.setText("Username taken!");
+                    loginStatus.setText(err);
                 }
 
             } else {
                 Account account = accountManager.login(username, password);
                 if (account != null) {
                     loggedInAccount = account;
-                    loginStatus.setForeground(Color.GREEN);
+                    loginStatus.setForeground(Color.GREEN.darker());
                     loginStatus.setText("Welcome, " + account.getUsername() + "!");
                     loginButton.setEnabled(false);
                     registerButton.setEnabled(false);
@@ -502,6 +543,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             randomMines.setSelected(false);
             minesSpinner.setEnabled(true);
             difficultyAdjusted = true;
+
+            if (loggedInAccount == null) {
+                errorLabel.setText("Progress will not save. Login to save progress.");
+            } else {
+                errorLabel.setText(" ");
+            }
 
             switch (selectedMode) {
                 case TWO_DIMENSIONS:
@@ -602,6 +649,19 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         setBackground(PRIMARY_COLOR);
 
         super.paintComponent(g);
+    }
+
+    /**
+     * Toggles password visability based on the state of the showPassword checkbox.
+     */
+    private void togglePasswordVisibility() {
+        if (showPassword.isSelected()) {
+            // Show password
+            passwordField.setEchoChar((char) 0);
+        } else {
+            // Hide password
+            passwordField.setEchoChar('*');
+        }
     }
 
     /**
