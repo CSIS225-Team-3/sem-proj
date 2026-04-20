@@ -46,14 +46,12 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
     /** The JPanel that holds the cards */
     private JPanel cards;
 
-    private boolean gameOver = false;
-
     private Timer timer;
     private int secondsElapsed;
     private JLabel timerLabel;
 
     /**
-     * Constructor for the ConcentrationBonus class that initializes the game with
+     * Constructor for the MinesweeperEuclidian class that initializes the game with
      * the given parameters.
      * 
      * @param rows       the number of rows for the game
@@ -81,10 +79,9 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
     }
 
     /**
-     * Private method to build the GUI for the game since run isn't used anymore
+     * Builds the GUI for the game
      */
     private void build() {
-
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel topText = new JPanel(new FlowLayout());
@@ -200,7 +197,6 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
     }
 
     private void placeMines(int x, int y) {
-
         ArrayList<int[]> allPositions = new ArrayList<>();
         for (int i = 0; i < dims[0]; i++) {
             for (int j = 0; j < dims[1]; j++) {
@@ -231,6 +227,8 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
      */
     @Override
     public void reset() {
+        super.reset();
+
         removeAll();
 
         if (timer != null) {
@@ -241,7 +239,6 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
         revalidate();
         repaint();
 
-        gameOver = false;
         firstClick = true;
         roundNum++;
     }
@@ -258,44 +255,14 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
         onWin();
     }
 
-    private void revealMines() {
+    @Override
+    protected void revealMines() {
         for (int j = 0; j < dims[1]; j++) {
             for (int i = 0; i < dims[0]; i++) {
                 if (buttons[i][j].getMine()) {
                     buttons[i][j].reveal();
                 }
             }
-        }
-    }
-
-    /**
-     * Checks and prints if the game is completed
-     */
-    @Override
-    public void onWin() {
-        if (!gameOver) {
-            gameOver = true;
-            revealMines();
-            if (timer != null) {
-                timer.stop();
-            }
-            JOptionPane.showMessageDialog(this, "You win! Congratulations! \n Time spent: " + timerLabel.getText());
-            reset();
-        }
-    }
-
-    @Override
-    public void onLoss() {
-        if (!gameOver) {
-            gameOver = true;
-            revealMines();
-
-            if (timer != null) {
-                timer.stop();
-            }
-            JOptionPane.showMessageDialog(this,
-                    "You lose! Better luck next time. \n Time spent: " + timerLabel.getText());
-            reset();
         }
     }
 
@@ -322,7 +289,8 @@ public class MinesweeperEuclidian extends MinesweeperBase implements ActionListe
         return adjs.toArray(new MinesweeperButton[0]);
     }
 
-    public int getGridSize() {
+    @Override
+    public int numTiles(){
         return gridSize;
     }
 }
