@@ -66,6 +66,7 @@ public class AccountManager {
         if (accounts.containsKey(username)) {
             return false;
         } else {
+            
             accounts.put(username, new Account(username, hashPassword(password)));
 
             saveAccounts();
