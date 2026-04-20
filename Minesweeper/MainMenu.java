@@ -211,6 +211,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         topPanel.add(loginMainPanel, BorderLayout.EAST);
 
+        //TODO: Higher the location of it
+
         mainText = new JLabel("Welcome to Minesweeper!", SwingConstants.CENTER);
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
         topPanel.add(mainText, BorderLayout.NORTH);
@@ -363,6 +365,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         // frame.pack();
 
         // WACKY RAINBOW TESTING
+        //TODO: Make into its own method
         Timer rainbowTimer = new Timer(50, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
