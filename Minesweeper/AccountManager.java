@@ -89,19 +89,19 @@ public class AccountManager {
 
 
 
-    public static void main(String[] args) {
-        AccountManager am = new AccountManager();
+    // public static void main(String[] args) {
+    //     AccountManager am = new AccountManager();
         
-        am.register("John", "123");
-        am.register("JavaUser2", "JavaDocIsTheBest!");
-        Account acc1 = am.login("John", "123");
-        Account acc2 = am.login("John", "456");
+    //     am.register("John", "123");
+    //     am.register("JavaUser2", "JavaDocIsTheBest!");
+    //     Account acc1 = am.login("John", "123");
+    //     Account acc2 = am.login("John", "456");
 
-        System.out.println("Username for Account 1: " + acc1.getUsername() + " | Password for Account 1 (Hashed): " + acc1.getPasswordHash());
+    //     System.out.println("Username for Account 1: " + acc1.getUsername() + " | Password for Account 1 (Hashed): " + acc1.getPasswordHash());
 
-        // should be null
-        System.out.println("Username for Account 2: " + acc2.getUsername() + " | Password for Account 2 (Hashed): " + acc2.getPasswordHash());
+    //     // should be null
+    //     System.out.println("Username for Account 2: " + acc2.getUsername() + " | Password for Account 2 (Hashed): " + acc2.getPasswordHash());
 
 
-    }
+    // }
 }
