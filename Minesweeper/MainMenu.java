@@ -449,7 +449,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
             if (src == registerButton) {
                 if (accountManager.register(username, password)) {
-                    loginStatus.setForeground(Color.GREEN);
+                    loginStatus.setForeground(Color.GREEN.darker());
                     loginStatus.setText("Registered! Please log in now.");
                 } else {
                     loginStatus.setForeground(Color.RED);
@@ -460,7 +460,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 Account account = accountManager.login(username, password);
                 if (account != null) {
                     loggedInAccount = account;
-                    loginStatus.setForeground(Color.GREEN);
+                    loginStatus.setForeground(Color.GREEN.darker());
                     loginStatus.setText("Welcome, " + account.getUsername() + "!");
                     loginButton.setEnabled(false);
                     registerButton.setEnabled(false);
