@@ -104,10 +104,11 @@ public class AccountManager {
             return "Account doesn't exist.";
         }
         accounts.remove(username);
+        saveAccounts();
 
-        //remember: remove leaderboard saves too
-        
-        //success
+        // remember: remove leaderboard saves too
+
+        // success
         return null;
     }
 
