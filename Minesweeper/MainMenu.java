@@ -689,6 +689,15 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             registerButton.setEnabled(false);
             logoutButton.setEnabled(true);
             deleteButton.setEnabled(true);
+
+            usernameField.setText("");
+            passwordField.setText("");
+            usernameField.setEnabled(false);
+            passwordField.setEnabled(false);
+            showPassword.setEnabled(false);
+
+            usernameField.setBackground(Color.LIGHT_GRAY);
+            passwordField.setBackground(Color.LIGHT_GRAY);
         } else {
             loginStatus.setForeground(Color.RED);
             loginStatus.setText("Wrong username or password!");
@@ -704,8 +713,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         registerButton.setEnabled(true);
         logoutButton.setEnabled(false);
         deleteButton.setEnabled(false);
-        usernameField.setText("");
-        passwordField.setText("");
+        usernameField.setEnabled(true);
+        passwordField.setEnabled(true);
+        showPassword.setEnabled(true);
+
+        usernameField.setBackground(Color.WHITE);
+        passwordField.setBackground(Color.WHITE);
     }
 
     private void deleteAccount() {
@@ -718,11 +731,20 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 loginStatus.setForeground(Color.RED);
                 loginStatus.setText("Account deleted.");
 
+                loggedInAccount = null;
+
                 registerButton.setEnabled(true);
                 loginButton.setEnabled(true);
 
                 logoutButton.setEnabled(false);
                 deleteButton.setEnabled(false);
+
+                usernameField.setEnabled(true);
+                passwordField.setEnabled(true);
+                showPassword.setEnabled(true);
+
+                usernameField.setBackground(Color.WHITE);
+                passwordField.setBackground(Color.WHITE);
             } else {
                 loginStatus.setText(accountManager.deleteAccount(loggedInAccount.getUsername(), loggedInAccount));
             }
