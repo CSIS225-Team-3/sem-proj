@@ -333,6 +333,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             each.add(infoLabels[i], BorderLayout.SOUTH);
 
             difficultyPanel.add(each);
+
         }
 
         configPanel.add(difficultyPanel, BorderLayout.CENTER);
@@ -628,7 +629,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             errorLabel.setText(" ");
 
             if (selectedMode.equals(TWO_DIMENSIONS)) {
-                int[] dims = {cols, rows};
+                int[] dims = { cols, rows };
                 cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), TWO_DIMENSIONS);
                 cardLayout.show(cards, TWO_DIMENSIONS);
             } else if (selectedMode.equals(THREE_DIMENSIONS)) {

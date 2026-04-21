@@ -71,8 +71,8 @@ public class AccountManager {
             return "Username can only have letters, numbers, underscores!";
         }
 
-        if (password.length() < 6) {
-            return "Password must be at least 6 characters!";
+        if (password.length() < 3) {
+            return "Password must be at least 3 characters!";
         }
 
         if (accounts.containsKey(username)) {
@@ -96,6 +96,18 @@ public class AccountManager {
         if (account.getPasswordHash().equals(hashPassword(password))) {
             return account;
         }
+        return null;
+    }
+
+    public String deleteAccount(String username, Account account) {
+        if (!accounts.containsKey(username)) {
+            return "Account doesn't exist.";
+        }
+        accounts.remove(username);
+
+        //remember: remove leaderboard saves too
+        
+        //success
         return null;
     }
 
