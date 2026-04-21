@@ -17,10 +17,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
 import javax.swing.SpinnerNumberModel;
@@ -110,13 +112,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private JButton registerButton;
     private JButton loginButton;
     private JButton logoutButton;
+    private JButton deleteButton;
 
     private JLabel loginStatus;
+
+    private boolean deleteConfirmed;
 
     private AccountManager accountManager;
     private Account loggedInAccount;
 
     private JCheckBox showPassword;
+
+    JOptionPane deleteConfirmation;
 
     /** The primary color for the UI */
     public static Color PRIMARY_COLOR = Color.PINK;
@@ -148,6 +155,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         accountManager = new AccountManager();
 
+        deleteConfirmed = false;
+
         setLayout(new BorderLayout());
     }
 
@@ -175,12 +184,15 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         registerButton = new JButton("Register");
         loginButton = new JButton("Login");
         logoutButton = new JButton("Log Out");
+        deleteButton = new JButton("Delete Account");
 
         registerButton.addActionListener(this);
         loginButton.addActionListener(this);
         logoutButton.addActionListener(this);
+        deleteButton.addActionListener(this);
 
         logoutButton.setEnabled(false);
+        deleteButton.setEnabled(false);
 
         JPanel loginMainPanel = new JPanel(new BorderLayout(5, 5));
 
@@ -203,8 +215,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         topButtons.add(registerButton);
         topButtons.add(loginButton);
 
-        JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        JPanel bottomButtons = new JPanel(new GridLayout(1, 2, 5, 5));
         bottomButtons.add(logoutButton);
+        bottomButtons.add(deleteButton);
 
         buttonsPanel.add(topButtons);
         buttonsPanel.add(bottomButtons);
@@ -419,6 +432,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 registerButton.setBackground(TERTIARY_COLOR);
                 loginButton.setBackground(TERTIARY_COLOR);
                 logoutButton.setBackground(TERTIARY_COLOR);
+                deleteButton.setBackground(TERTIARY_COLOR);
 
                 twoDimension.setBackground(TERTIARY_COLOR);
                 threeDimension.setBackground(TERTIARY_COLOR);
@@ -441,63 +455,31 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         // Password visibility
         if (src == showPassword) {
             togglePasswordVisibility();
+            return;
         }
 
-        // Register or Login Buttons
+        if (src == registerButton) {
+            register();
+            return;
+        }
+
+        if (src == loginButton) {
+            login();
+            return;
+        }
+
         if (src == logoutButton) {
-            loggedInAccount = null;
-            loginStatus.setForeground(Color.BLACK);
-            loginStatus.setText("Logged out.");
-            loginButton.setEnabled(true);
-            registerButton.setEnabled(true);
-            logoutButton.setEnabled(false);
-            usernameField.setText("");
-            passwordField.setText("");
+            logout();
+            return;
         }
 
-        if (src == registerButton || src == loginButton) {
-            String username = usernameField.getText();
-            String password = new String(passwordField.getPassword());
-
-            if (username.isEmpty() || password.isEmpty()) {
-                loginStatus.setForeground(Color.RED);
-                loginStatus.setText("Username/password cannot be empty.");
-                return;
-            }
-
-            if (src == registerButton) {
-                String err = accountManager.register(username, password);
-                if (err == null) {
-                    loginStatus.setForeground(Color.GREEN.darker());
-                    loginStatus.setText("Registered! Please log in now.");
-                } else {
-                    loginStatus.setForeground(Color.RED);
-                    loginStatus.setText(err);
-                }
-
-            } else {
-                Account account = accountManager.login(username, password);
-                if (account != null) {
-                    loggedInAccount = account;
-                    loginStatus.setForeground(Color.GREEN.darker());
-                    loginStatus.setText("Welcome, " + account.getUsername() + "!");
-                    loginButton.setEnabled(false);
-                    registerButton.setEnabled(false);
-                    logoutButton.setEnabled(true);
-                } else {
-                    loginStatus.setForeground(Color.RED);
-                    loginStatus.setText("Wrong username or password!");
-                }
-            }
-
+        if (src == deleteButton) {
+            deleteAccount();
+            return;
         }
 
         // Mode buttons
         if (src == twoDimension || src == threeDimension || src == fourDimension || src == hyperbolic) {
-            if (src == fourDimension || src == hyperbolic) {
-                System.out.println("Coming soon!");
-                return;
-            }
 
             configPanel.setVisible(true);
 
@@ -663,6 +645,103 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             // Hide password
             passwordField.setEchoChar('*');
         }
+    }
+
+    private void register() {
+
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+
+        if (username.isEmpty() || password.isEmpty()) {
+            loginStatus.setForeground(Color.RED);
+            loginStatus.setText("Username/password cannot be empty.");
+            return;
+        }
+
+        String err = accountManager.register(username, password);
+        if (err == null) {
+            loginStatus.setForeground(Color.GREEN.darker());
+            loginStatus.setText("Registered! Please log in now.");
+        } else {
+            loginStatus.setForeground(Color.RED);
+            loginStatus.setText(err);
+        }
+
+    }
+
+    private void login() {
+
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+
+        if (username.isEmpty() || password.isEmpty()) {
+            loginStatus.setForeground(Color.RED);
+            loginStatus.setText("Username/password cannot be empty.");
+            return;
+        }
+
+        Account account = accountManager.login(username, password);
+        if (account != null) {
+            loggedInAccount = account;
+            loginStatus.setForeground(Color.GREEN.darker());
+            loginStatus.setText("Welcome, " + account.getUsername() + "!");
+            loginButton.setEnabled(false);
+            registerButton.setEnabled(false);
+            logoutButton.setEnabled(true);
+            deleteButton.setEnabled(true);
+        } else {
+            loginStatus.setForeground(Color.RED);
+            loginStatus.setText("Wrong username or password!");
+        }
+
+    }
+
+    private void logout() {
+        loggedInAccount = null;
+        loginStatus.setForeground(Color.BLACK);
+        loginStatus.setText("Logged out.");
+        loginButton.setEnabled(true);
+        registerButton.setEnabled(true);
+        logoutButton.setEnabled(false);
+        deleteButton.setEnabled(false);
+        usernameField.setText("");
+        passwordField.setText("");
+    }
+
+    private void deleteAccount() {
+
+        if (!deleteConfirmed) {
+            deleteConfirmation();
+        } else {
+            if (accountManager.deleteAccount(loggedInAccount.getUsername(), loggedInAccount) == null) {
+                deleteConfirmed = false;
+                loginStatus.setForeground(Color.RED);
+                loginStatus.setText("Account deleted.");
+
+                registerButton.setEnabled(true);
+                loginButton.setEnabled(true);
+
+                logoutButton.setEnabled(false);
+                deleteButton.setEnabled(false);
+            } else {
+                loginStatus.setText(accountManager.deleteAccount(loggedInAccount.getUsername(), loggedInAccount));
+            }
+        }
+    }
+
+    private void deleteConfirmation() {
+        int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to permenantly delete this account?",
+                "Confirm Deletion", JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (response == JOptionPane.YES_OPTION) {
+            deleteConfirmed = true;
+            deleteAccount();
+        } else {
+            loginStatus.setForeground(Color.BLACK);
+            loginStatus.setText("Deletion Cancelled");
+        }
+
     }
 
     /**
