@@ -665,6 +665,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         // 20k cell before it gives warning
         if (gridVolume > 20000) {
             errorLabel.setText("Current grid size may cause game to crash. Proceed with caution.");
+            
         }
     }
 
