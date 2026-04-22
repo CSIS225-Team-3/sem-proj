@@ -147,6 +147,16 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
                         updateTitleText();
                         checkWin();
                     }
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        MinesweeperButton b = (MinesweeperButton) e.getSource();
+                        highlightNeighbors(b);
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        clearHighlights();
+                    }
                 });
             }
             splices = new JPanel[dims[2]];
@@ -187,6 +197,16 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
                         onTileClick(e);
                         updateTitleText();
                         checkWin();
+                    }
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        MinesweeperButton b = (MinesweeperButton) e.getSource();
+                        highlightNeighbors(b);
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        clearHighlights();
                     }
                 });
             }
@@ -364,6 +384,22 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
 
         return adjs.toArray(new MinesweeperButton[0]);
+    }
+
+    private void highlightNeighbors(MinesweeperButton button) {
+        MinesweeperButton[] adj = getAdjacentButtons(button.getIdx());
+
+        for (MinesweeperButton b : adj) {
+            if (!b.getRevealed()) {
+                b.setBorder(BorderFactory.createLineBorder(new Color(160,160,160), 3));
+            }
+        }
+    }
+    
+    private void clearHighlights() {
+        for (MinesweeperButton b : buttons) {
+            b.setBorder(UIManager.getBorder("Button.border"));
+        }
     }
 
     @Override
