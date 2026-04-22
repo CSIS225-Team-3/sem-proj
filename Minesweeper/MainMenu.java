@@ -143,6 +143,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public final static int MAX_MINES_2D = MAX_ROWS * MAX_COLS - 1;
     public final static int MAX_MINES_3D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D - 1;
 
+    private int dimensionsSelected;
+
     /**
      * Constructor for the MainMenu class.
      * 
@@ -490,6 +492,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             if (src == twoDimension) {
 
                 selectedMode = TWO_DIMENSIONS;
+                dimensionsSelected = 2;
+
                 twoDimension.setEnabled(false);
                 threeDimension.setEnabled(true);
 
@@ -505,6 +509,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             } else if (src == threeDimension) {
 
                 selectedMode = THREE_DIMENSIONS;
+                dimensionsSelected = 3;
+
                 twoDimension.setEnabled(true);
                 threeDimension.setEnabled(false);
 
@@ -607,7 +613,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
             errorLabel.setText(" ");
 
-            if (selectedMode.equals(TWO_DIMENSIONS)) {
+            if (dimensionsSelected == 2) {
                 int[] dims = { cols, rows };
 
                 if (randomMines.isSelected()) {
@@ -622,7 +628,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), TWO_DIMENSIONS);
                 cardLayout.show(cards, TWO_DIMENSIONS);
-            } else if (selectedMode.equals(THREE_DIMENSIONS)) {
+            } else if (dimensionsSelected == 3) {
 
                 splices = (int) splicesSpinner.getValue();
 
@@ -648,6 +654,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public void stateChanged(ChangeEvent e) {
         if (!difficultyAdjusted) {
             difficultyGroup.clearSelection();
+        }
+        int gridVolume = -1;
+        if (dimensionsSelected == 2) {
+            gridVolume = (int)colsSpinner.getValue() * (int)rowsSpinner.getValue();
+        } else if (dimensionsSelected == 3) {
+            gridVolume = (int)colsSpinner.getValue() * (int)rowsSpinner.getValue() * (int)splicesSpinner.getValue();
+        }
+
+        // 20k cell before it gives warning
+        if (gridVolume > 20000) {
+            errorLabel.setText("Current grid size may cause game to crash. Proceed with caution.");
         }
     }
 
