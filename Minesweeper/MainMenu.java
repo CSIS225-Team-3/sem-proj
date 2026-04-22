@@ -73,6 +73,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The spinner for configuring the number of mines */
     private JSpinner minesSpinner;
 
+    private SpinnerNumberModel minesModel;
+
     private JCheckBox randomMines;
 
     /** The label for displaying error messages */
@@ -136,10 +138,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
-    public final static int MAX_SPLICES = 100;
+    public final static int MAX_SPLICES3D = 100;
 
     public final static int MAX_MINES_2D = MAX_ROWS * MAX_COLS - 1;
-    public final static int MAX_MINES_3D = MAX_ROWS * MAX_COLS * MAX_SPLICES - 1;
+    public final static int MAX_MINES_3D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D - 1;
+
+    private int dimensionsSelected;
 
     /**
      * Constructor for the MainMenu class.
@@ -246,7 +250,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         modePanel.setBackground(SECONDARY_COLOR);
 
         twoDimension = new JButton("2D Minesweeper");
-        threeDimension = new JButton("3D Minesweeper (WIP)");
+        threeDimension = new JButton("3D Minesweeper");
         fourDimension = new JButton("4D Minesweeper (Coming Soon!)");
         hyperbolic = new JButton("Hyperbolic Minesweeper (Coming Soon!)");
 
@@ -281,7 +285,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         splicesLabel = new JLabel("Splices: ");
         settingsPanel.add(splicesLabel);
-        splicesSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
+        splicesSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_SPLICES3D, 1));
         splicesSpinner.setPreferredSize(new Dimension(60, 30));
         splicesSpinner.addChangeListener(this);
         settingsPanel.add(splicesSpinner);
@@ -292,7 +296,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         mineConfigPanel.setBackground(SECONDARY_COLOR);
         mineConfigPanel.add(new JLabel("Mine Amount: "));
-        minesSpinner = new JSpinner(new SpinnerNumberModel(10, 0, MAX_MINES_2D, 1));
+
+        minesModel = new SpinnerNumberModel(10, 0, MAX_MINES_2D, 1);
+        minesSpinner = new JSpinner(minesModel);
         minesSpinner.setPreferredSize(new Dimension(60, 30));
         minesSpinner.addChangeListener(this);
 
@@ -486,6 +492,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             if (src == twoDimension) {
 
                 selectedMode = TWO_DIMENSIONS;
+                dimensionsSelected = 2;
+
                 twoDimension.setEnabled(false);
                 threeDimension.setEnabled(true);
 
@@ -496,9 +504,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 difficultyInfoLabels[1].setText("16x16, 40 mines");
                 difficultyInfoLabels[2].setText("16x30, 99 mines");
                 difficultyInfoLabels[3].setText("30x50, 400 mines");
+
+                minesModel.setMaximum(MAX_MINES_2D);
             } else if (src == threeDimension) {
 
                 selectedMode = THREE_DIMENSIONS;
+                dimensionsSelected = 3;
+
                 twoDimension.setEnabled(true);
                 threeDimension.setEnabled(false);
 
@@ -509,6 +521,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 difficultyInfoLabels[1].setText("7x7x4, 60 mines");
                 difficultyInfoLabels[2].setText("9x9x5, 150 mines");
                 difficultyInfoLabels[3].setText("12x12x6, 400 mines");
+
+                minesModel.setMaximum(MAX_MINES_3D);
+
             } else {
                 selectedMode = "";
             }
@@ -596,28 +611,42 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             int splices;
             int mines;
 
-            // TODO: Fix logic to work for other dimensions
-            if (randomMines.isSelected()) {
-                mines = new Random().nextInt(rows * cols - 1) + 1;
-            } else {
-                mines = (int) minesSpinner.getValue();
-                if (mines > rows * cols - 1) {
-                    errorLabel.setText("Too many mines!");
-                    return;
-                }
-            }
             errorLabel.setText(" ");
 
-            if (selectedMode.equals(TWO_DIMENSIONS)) {
+            if (dimensionsSelected == 2) {
                 int[] dims = { cols, rows };
+
+                if (randomMines.isSelected()) {
+                    mines = new Random().nextInt(MAX_MINES_2D) + 1;
+                } else {
+                    mines = (int) minesSpinner.getValue();
+                    if (mines > MAX_MINES_2D) {
+                        errorLabel.setText("Too many mines!");
+                        return;
+                    }
+                }
+
                 cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), TWO_DIMENSIONS);
                 cardLayout.show(cards, TWO_DIMENSIONS);
-            } else if (selectedMode.equals(THREE_DIMENSIONS)) {
-                 splices = 5;
+            } else if (dimensionsSelected == 3) {
+
+                splices = (int) splicesSpinner.getValue();
+
                 int[] dims = { cols, rows, splices };
+
+                if (randomMines.isSelected()) {
+                    mines = new Random().nextInt(MAX_MINES_3D) + 1;
+                } else {
+                    mines = (int) minesSpinner.getValue();
+                    if (mines > MAX_MINES_3D) {
+                        errorLabel.setText("Too many mines!");
+                        return;
+                    }
+                }
                 cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), THREE_DIMENSIONS);
                 cardLayout.show(cards, THREE_DIMENSIONS);
             }
+
         }
     }
 
@@ -625,6 +654,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public void stateChanged(ChangeEvent e) {
         if (!difficultyAdjusted) {
             difficultyGroup.clearSelection();
+        }
+        int gridVolume = -1;
+        if (dimensionsSelected == 2) {
+            gridVolume = (int)colsSpinner.getValue() * (int)rowsSpinner.getValue();
+        } else if (dimensionsSelected == 3) {
+            gridVolume = (int)colsSpinner.getValue() * (int)rowsSpinner.getValue() * (int)splicesSpinner.getValue();
+        }
+
+        // 20k cell before it gives warning
+        if (gridVolume > 20000) {
+            errorLabel.setText("Current grid size may cause game to crash. Proceed with caution.");
+            
         }
     }
 
