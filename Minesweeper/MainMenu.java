@@ -519,8 +519,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 difficultyInfoLabels[0].setText("5x5x3, 15 mines");
                 difficultyInfoLabels[1].setText("7x7x4, 60 mines");
-                difficultyInfoLabels[2].setText("9x9x5, 150 mines");
-                difficultyInfoLabels[3].setText("12x12x6, 400 mines");
+                difficultyInfoLabels[2].setText("11x11x6, 150 mines");
+                difficultyInfoLabels[3].setText("18x18x8, 400 mines");
 
                 minesModel.setMaximum(MAX_MINES_3D);
 
@@ -578,14 +578,14 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                         splicesSpinner.setValue(4);
                         minesSpinner.setValue(60);
                     } else if (src == hardBtn) {
-                        rowsSpinner.setValue(9);
-                        colsSpinner.setValue(9);
-                        splicesSpinner.setValue(5);
+                        rowsSpinner.setValue(11);
+                        colsSpinner.setValue(11);
+                        splicesSpinner.setValue(6);
                         minesSpinner.setValue(150);
                     } else if (src == extremeBtn) {
-                        rowsSpinner.setValue(12);
-                        colsSpinner.setValue(12);
-                        splicesSpinner.setValue(6);
+                        rowsSpinner.setValue(18);
+                        colsSpinner.setValue(18);
+                        splicesSpinner.setValue(8);
                         minesSpinner.setValue(400);
                     }
                     break;
