@@ -255,8 +255,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             MinesweeperButton b = iter.next();
             int[] pos = idxToPos(b.getIdx());
             for (int d = 0; d < pos.length; d++) {
-                // If the point is more than 1 unit away in any dimension
-                if (Math.abs(pos[d] - clickPos[d]) > 1) {
+                // If the point is more than 2 units away in any dimension
+                if (Math.abs(pos[d] - clickPos[d]) > 2) {
                     allPositions.add(pos);
                     break;
                 }
