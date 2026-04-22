@@ -1,4 +1,4 @@
-package Password_Strength_Checker;
+//package Password_Strength_Checker;
 
 import java.util.List;
 import java.util.ArrayList;

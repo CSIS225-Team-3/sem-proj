@@ -22,7 +22,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
 import javax.swing.SpinnerNumberModel;
@@ -30,7 +29,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.Timer;
 import javax.swing.JTextField;
-import javax.swing.BoxLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -615,7 +613,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), TWO_DIMENSIONS);
                 cardLayout.show(cards, TWO_DIMENSIONS);
             } else if (selectedMode.equals(THREE_DIMENSIONS)) {
-                // TODO: add 3D
+                 splices = 5;
+                int[] dims = { cols, rows, splices };
+                cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), THREE_DIMENSIONS);
+                cardLayout.show(cards, THREE_DIMENSIONS);
             }
         }
     }

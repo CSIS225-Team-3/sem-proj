@@ -38,6 +38,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     /** The dimensions of the game */
     private int[] dims;
 
+    private JPanel[] splices;
+
     /** The size of the grid for the game (amount of buttons) */
     private int gridVolume;
 
@@ -59,10 +61,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
      */
     public MinesweeperEuclidean(int[] dims, int mines, CardLayout cardLayout, JPanel cards) {
         super();
-        
+
         if (dims.length == 0)
             throw new InvalidParameterException("0-dimensional space not supported");
-        
+
         this.dims = dims;
         this.mineCount = mines;
         this.cardLayout = cardLayout;
@@ -71,7 +73,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         setLayout(new BorderLayout());
 
         gridVolume = 1;
-        for (int i = 0; i < dims.length; i++){
+        for (int i = 0; i < dims.length; i++) {
             gridVolume *= dims[i];
         }
 
@@ -99,7 +101,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         topText.add(timerLabel, BorderLayout.EAST);
 
         mainPanel.add(topText, BorderLayout.NORTH);
-        JPanel gamePanel = new JPanel(new GridLayout(dims[1], dims[0]));
+        JPanel gamePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
 
         JPanel bottomButtons = new JPanel(new FlowLayout());
         newGame = new JButton("New Game");
@@ -115,7 +117,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         buttons = new MinesweeperButton[gridVolume];
         for (int i = 0; i < gridVolume; i++) {
             MinesweeperButton button = buttons[i] = new MinesweeperButton(this, i);
-            gamePanel.add(button);
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -143,6 +144,15 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
                 }
             });
         }
+        splices = new JPanel[dims[2]];
+        for (int i = 0; i < splices.length; i++) {
+            splices[i] = new JPanel(new GridLayout(dims[1], dims[0]));
+            splices[i].setBackground(getBackground());
+            gamePanel.add(splices[i]);
+            for (int j = 0; j < gridVolume / dims[2]; j++) {
+                splices[i].add(buttons[i * dims[0] * dims[1] + j]);
+            }
+        }
 
         // for (int j = 0; j < dims[1]; j++){
         // for (int i = 0; i < dims[0]; i++){
@@ -167,6 +177,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         scrollPane.getViewport().setBackground(MainMenu.SECONDARY_COLOR);
         scrollPane.getVerticalScrollBar().setBackground(MainMenu.PRIMARY_COLOR);
         scrollPane.getHorizontalScrollBar().setBackground(MainMenu.PRIMARY_COLOR);
+        gamePanel.setBackground(MainMenu.PRIMARY_COLOR);
     }
 
     /**
@@ -195,17 +206,17 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private void placeMines(int clickIdx) {
         int[] clickPos = idxToPos(clickIdx);
-        
+
         DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
-            return new int[] {0, length};
+            return new int[] { 0, length };
         }, null);
-        
+
         ArrayList<int[]> allPositions = new ArrayList<>();
         while (iter.hasNext()) {
             MinesweeperButton b = iter.next();
             int[] pos = idxToPos(b.getIdx());
             for (int d = 0; d < pos.length; d++) {
-                //If the point is more than 1 unit away in any dimension
+                // If the point is more than 1 unit away in any dimension
                 if (Math.abs(pos[d] - clickPos[d]) > 1) {
                     allPositions.add(pos);
                     break;
@@ -256,7 +267,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private void checkWin() {
         DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
-            return new int[] {0, length};
+            return new int[] { 0, length };
         }, null);
 
         while (iter.hasNext()) {
@@ -272,7 +283,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     @Override
     protected void revealMines() {
         DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
-            return new int[] {0, length};
+            return new int[] { 0, length };
         }, null);
 
         while (iter.hasNext()) {
@@ -288,12 +299,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         int[] targetPos = idxToPos(idx);
 
         DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
-            int[] ctx = (int[])context;            
+            int[] ctx = (int[]) context;
             int min = Math.max(0, ctx[axis] - 1);
             int max = Math.min(length - 1, ctx[axis] + 1) + 1; // +1 because max is exclusive
-            return new int[] {min, max};
+            return new int[] { min, max };
         }, targetPos);
-        
+
         ArrayList<MinesweeperButton> adjs = new ArrayList<>();
         while (iter.hasNext()) {
             MinesweeperButton b = iter.next();
@@ -315,14 +326,14 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     }
 
     @Override
-    public int numTiles(){
+    public int numTiles() {
         return gridVolume;
     }
 
     private int[] idxToPos(int idx) {
         int[] pos = new int[dims.length];
         int tempIdx = idx;
-        
+
         for (int i = 0; i < dims.length; i++) {
             pos[i] = tempIdx % dims[i];
             tempIdx /= dims[i];
@@ -333,7 +344,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     private int posToIdx(int[] pos) {
         int idx = 0;
         int stride = 1;
-        
+
         for (int i = 0; i < dims.length; i++) {
             idx += pos[i] * stride;
             stride *= dims[i];
