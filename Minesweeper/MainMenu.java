@@ -50,7 +50,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The name of the gamble mode card */
     private static final String FOUR_DIMENSIONS = "4D Minesweeper";
 
-    private static final String HYPERBOLIC = "Hyperbolic Minesweeper";
+    private static final String FIVE_DIMENSIONS = "5D+ Minesweeper";
 
     /** The CardLayout for managing panels */
     private CardLayout cardLayout;
@@ -86,7 +86,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     private JButton fourDimension;
 
-    private JButton hyperbolic;
+    private JButton fiveDimension;
 
     private JRadioButton easyBtn;
     private JRadioButton mediumBtn;
@@ -106,6 +106,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     // 5D+
     private JSpinner splices5dSpinner;
     private JLabel splices5dLabel;
+
+    private JSpinner dimensionsSpinner;
+    private JLabel dimensionsLabel;
 
     private ButtonGroup difficultyGroup;
 
@@ -149,8 +152,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public final static int MAX_SPLICES4D = 100;
     public final static int MAX_SPLICES5D = 100;
 
+    //TODO: Generalize
     public final static int MAX_MINES_2D = MAX_ROWS * MAX_COLS - 1;
     public final static int MAX_MINES_3D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D - 1;
+    public final static int MAX_MINES_4D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D - 1;
+    public final static int MAX_MINES_5D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D * MAX_SPLICES5D - 1;
+
+    public final static int MAX_DIMENSIONS = 100;
 
     private int dimensionsSelected;
 
@@ -260,10 +268,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         twoDimension = new JButton("2D Minesweeper");
         threeDimension = new JButton("3D Minesweeper");
-        fourDimension = new JButton("4D Minesweeper (Coming Soon!)");
-        hyperbolic = new JButton("Hyperbolic Minesweeper (Coming Soon!)");
+        fourDimension = new JButton("4D Minesweeper (WIP)");
+        fiveDimension = new JButton("5D+ Minesweeper (Coming Soon!)");
 
-        JButton[] dimensions = { twoDimension, threeDimension, fourDimension, hyperbolic };
+        JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension };
         for (JButton b : dimensions) {
             b.setBackground(TERTIARY_COLOR);
             b.addActionListener(this);
@@ -321,6 +329,16 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         splices5dLabel.setVisible(false);
         splices5dSpinner.setVisible(false);
+
+        dimensionsLabel = new JLabel("Dimension Count: ");
+        settingsPanel.add(dimensionsLabel);
+        dimensionsSpinner = new JSpinner(new SpinnerNumberModel(5, 5, MAX_DIMENSIONS, 1));
+        dimensionsSpinner.setPreferredSize(new Dimension(60, 30));
+        dimensionsSpinner.addChangeListener(this);
+        settingsPanel.add(dimensionsSpinner);
+
+        dimensionsLabel.setVisible(false);
+        dimensionsSpinner.setVisible(false);
 
         JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         mineConfigPanel.setBackground(SECONDARY_COLOR);
@@ -469,7 +487,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     twoDimension.setBackground(TERTIARY_COLOR);
                     threeDimension.setBackground(TERTIARY_COLOR);
                     fourDimension.setBackground(TERTIARY_COLOR);
-                    hyperbolic.setBackground(TERTIARY_COLOR);
+                    fiveDimension.setBackground(TERTIARY_COLOR);
 
                     startButton.setBackground(TERTIARY_COLOR);
 
@@ -520,7 +538,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
 
         // Mode buttons
-        if (src == twoDimension || src == threeDimension || src == fourDimension || src == hyperbolic) {
+        if (src == twoDimension || src == threeDimension || src == fourDimension || src == fiveDimension) {
 
             configPanel.setVisible(true);
 
@@ -533,6 +551,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 twoDimension.setEnabled(false);
                 threeDimension.setEnabled(true);
+                fourDimension.setEnabled(true);
+                fiveDimension.setEnabled(true);
 
                 splices3dLabel.setVisible(false);
                 splices3dSpinner.setVisible(false);
@@ -542,6 +562,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 splices5dLabel.setVisible(false);
                 splices5dSpinner.setVisible(false);
+
+                dimensionsLabel.setVisible(false);
+                dimensionsSpinner.setVisible(false);
 
                 difficultyInfoLabels[0].setText("9x9, 10 mines");
                 difficultyInfoLabels[1].setText("16x16, 40 mines");
@@ -556,6 +579,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 twoDimension.setEnabled(true);
                 threeDimension.setEnabled(false);
+                fourDimension.setEnabled(true);
+                fiveDimension.setEnabled(true);
 
                 splices3dLabel.setVisible(true);
                 splices3dSpinner.setVisible(true);
@@ -566,6 +591,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 splices5dLabel.setVisible(false);
                 splices5dSpinner.setVisible(false);
 
+                dimensionsLabel.setVisible(false);
+                dimensionsSpinner.setVisible(false);
+
                 difficultyInfoLabels[0].setText("5x5x3, 15 mines");
                 difficultyInfoLabels[1].setText("7x7x4, 60 mines");
                 difficultyInfoLabels[2].setText("11x11x6, 150 mines");
@@ -574,12 +602,14 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 minesModel.setMaximum(MAX_MINES_3D);
 
             } else if (src == fourDimension) {
-                
+
                 selectedMode = FOUR_DIMENSIONS;
                 dimensionsSelected = 4;
 
                 twoDimension.setEnabled(true);
-                threeDimension.setEnabled(false);
+                threeDimension.setEnabled(true);
+                fourDimension.setEnabled(false);
+                fiveDimension.setEnabled(true);
 
                 splices3dLabel.setVisible(true);
                 splices3dSpinner.setVisible(true);
@@ -590,7 +620,30 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 splices5dLabel.setVisible(false);
                 splices5dSpinner.setVisible(false);
 
-                //TODO: add 4d difficulty
+                dimensionsLabel.setVisible(false);
+                dimensionsSpinner.setVisible(false);
+
+                // TODO: add 4d difficultys and 4d max mines
+            } else if (src == fiveDimension) {
+                selectedMode = FIVE_DIMENSIONS;
+                dimensionsSelected = 5;
+
+                twoDimension.setEnabled(true);
+                threeDimension.setEnabled(true);
+                fourDimension.setEnabled(true);
+                fiveDimension.setEnabled(false);
+
+                splices3dLabel.setVisible(true);
+                splices3dSpinner.setVisible(true);
+
+                splices4dLabel.setVisible(true);
+                splices4dSpinner.setVisible(true);
+
+                splices5dLabel.setVisible(true);
+                splices5dSpinner.setVisible(true);
+
+                dimensionsLabel.setVisible(true);
+                dimensionsSpinner.setVisible(true);
             } else {
                 selectedMode = "";
             }
@@ -726,7 +779,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         if (dimensionsSelected == 2) {
             gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue();
         } else if (dimensionsSelected == 3) {
-            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue() * (int) splices3dSpinner.getValue();
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue();
         }
 
         // 20k cell before it gives warning
