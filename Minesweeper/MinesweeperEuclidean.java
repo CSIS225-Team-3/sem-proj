@@ -177,7 +177,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             for (int i = 0; i < numSplices; i++) {
                 splices[i] = new JPanel(new GridLayout(dims[1], dims[0]));
                 splices[i].setBackground(MainMenu.PRIMARY_COLOR);
-                // splices[i].setBorder(BorderFactory.createTitledBorder("Splice " + (i+1)));
+                //splices[i].setBorder(BorderFactory.createTitledBorder("Splice " + (i+1)));
                 gamePanel.add(splices[i]);
                 for (int j = 0; j < dims[1]; j++) {
                     for (int k = 0; k < dims[0]; k++) {
@@ -247,6 +247,11 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         } else if (pressed.equals("Reset")) {
             reset();
+        } else {
+            if (e.getSource() instanceof MinesweeperButton) {
+                MinesweeperButton button = (MinesweeperButton) e.getSource();
+                button.reveal();
+            }
         }
     }
 
