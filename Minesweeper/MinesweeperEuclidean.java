@@ -117,100 +117,88 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         JPanel gamePanel;
 
+        for (int i = 0; i < gridVolume; i++) {
+            MinesweeperButton button = buttons[i] = new MinesweeperButton(this, i);
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (firstClick && !SwingUtilities.isRightMouseButton(e)) {
+                        firstClick = false;
+
+                        ActionListener timerListener = new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                secondsElapsed++;
+                                int m = secondsElapsed / 60;
+                                int s = secondsElapsed % 60;
+                                timerLabel.setText(String.format("%02d:%02d", m, s));
+                            }
+                        };
+                        timer = new Timer(1000, timerListener);
+                        timer.start();
+
+                        int clickedIdx = ((MinesweeperButton) e.getSource()).getIdx();
+                        placeMines(clickedIdx);
+                    }
+                    onTileClick(e);
+                    updateTitleText();
+                    checkWin();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    MinesweeperButton b = (MinesweeperButton) e.getSource();
+                    highlightNeighbors(b);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    clearHighlights();
+                }
+            });
+        }
+
+        int numSplices;
+        int outerCols;
+        int outerRows;
+
         if (dims.length >= 3) {
-            gamePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+            numSplices = gridVolume / (dims[0] * dims[1]);
+            outerCols = dims[2];
+        } else {
+            numSplices = 1;
+            outerCols = 1;
+        }
+        outerRows = numSplices / outerCols;
 
-            for (int i = 0; i < gridVolume; i++) {
-                MinesweeperButton button = buttons[i] = new MinesweeperButton(this, i);
-                button.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        if (firstClick && !SwingUtilities.isRightMouseButton(e)) {
-                            firstClick = false;
-
-                            ActionListener timerListener = new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    secondsElapsed++;
-                                    int m = secondsElapsed / 60;
-                                    int s = secondsElapsed % 60;
-                                    timerLabel.setText(String.format("%02d:%02d", m, s));
-                                }
-                            };
-                            timer = new Timer(1000, timerListener);
-                            timer.start();
-
-                            int clickedIdx = ((MinesweeperButton) e.getSource()).getIdx();
-                            placeMines(clickedIdx);
-                        }
-                        onTileClick(e);
-                        updateTitleText();
-                        checkWin();
-                    }
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        MinesweeperButton b = (MinesweeperButton) e.getSource();
-                        highlightNeighbors(b);
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        clearHighlights();
-                    }
-                });
-            }
-            splices = new JPanel[dims[2]];
-            for (int i = 0; i < splices.length; i++) {
+        if (dims.length >= 3) {
+            gamePanel = new JPanel(new GridLayout(outerRows, outerCols, 15, 10));
+            splices = new JPanel[numSplices];
+            for (int i = 0; i < numSplices; i++) {
                 splices[i] = new JPanel(new GridLayout(dims[1], dims[0]));
-                splices[i].setBackground(getBackground());
+                splices[i].setBackground(MainMenu.PRIMARY_COLOR);
                 gamePanel.add(splices[i]);
-                for (int j = 0; j < gridVolume / dims[2]; j++) {
-                    splices[i].add(buttons[i * dims[0] * dims[1] + j]);
+                for (int j = 0; j < dims[1]; j++) {
+                    for (int k = 0; k < dims[0]; k++) {
+                        int[] pos = new int[dims.length];
+                        pos[0] = j;
+                        pos[1] = k;
+
+                        int temp = i;
+
+                        for (int d = 2; d < dims.length; d++) {
+                            pos[d] = temp % dims[d];
+                            temp /= dims[d];
+                        }
+                        splices[i].add(buttons[posToIdx(pos)]);
+                    }
                 }
             }
         } else {
             gamePanel = new JPanel(new GridLayout(dims[1], dims[0]));
             for (int i = 0; i < gridVolume; i++) {
-                MinesweeperButton button = buttons[i] = new MinesweeperButton(this, i);
-                gamePanel.add(button);
-                button.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        if (firstClick && !SwingUtilities.isRightMouseButton(e)) {
-                            firstClick = false;
-
-                            ActionListener timerListener = new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    secondsElapsed++;
-                                    int m = secondsElapsed / 60;
-                                    int s = secondsElapsed % 60;
-                                    timerLabel.setText(String.format("%02d:%02d", m, s));
-                                }
-                            };
-                            timer = new Timer(1000, timerListener);
-                            timer.start();
-
-                            int clickedIdx = ((MinesweeperButton) e.getSource()).getIdx();
-                            placeMines(clickedIdx);
-                        }
-                        onTileClick(e);
-                        updateTitleText();
-                        checkWin();
-                    }
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        MinesweeperButton b = (MinesweeperButton) e.getSource();
-                        highlightNeighbors(b);
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        clearHighlights();
-                    }
-                });
+                gamePanel.add(buttons[i]);
             }
-
         }
 
         // for (int j = 0; j < dims[1]; j++){
@@ -391,11 +379,11 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         for (MinesweeperButton b : adj) {
             if (!b.getRevealed()) {
-                b.setBorder(BorderFactory.createLineBorder(new Color(160,160,160), 3));
+                b.setBorder(BorderFactory.createLineBorder(new Color(160, 160, 160), 3));
             }
         }
     }
-    
+
     private void clearHighlights() {
         for (MinesweeperButton b : buttons) {
             b.setBorder(UIManager.getBorder("Button.border"));
