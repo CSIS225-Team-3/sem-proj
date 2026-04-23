@@ -152,11 +152,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public final static int MAX_SPLICES4D = 100;
     public final static int MAX_SPLICES5D = 100;
 
-    //TODO: Generalize
-    public final static int MAX_MINES_2D = MAX_ROWS * MAX_COLS - 1;
-    public final static int MAX_MINES_3D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D - 1;
-    public final static int MAX_MINES_4D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D - 1;
-    public final static int MAX_MINES_5D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D * MAX_SPLICES5D - 1;
+    // TODO: Generalize
+    public int maxMines = MAX_ROWS * MAX_COLS;
 
     public final static int MAX_DIMENSIONS = 100;
 
@@ -344,7 +341,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         mineConfigPanel.setBackground(SECONDARY_COLOR);
         mineConfigPanel.add(new JLabel("Mine Amount: "));
 
-        minesModel = new SpinnerNumberModel(10, 0, MAX_MINES_2D, 1);
+        minesModel = new SpinnerNumberModel(10, 0, maxMines, 1);
         minesSpinner = new JSpinner(minesModel);
         minesSpinner.setPreferredSize(new Dimension(60, 30));
         minesSpinner.addChangeListener(this);
@@ -571,7 +568,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 difficultyInfoLabels[2].setText("16x30, 99 mines");
                 difficultyInfoLabels[3].setText("30x50, 400 mines");
 
-                minesModel.setMaximum(MAX_MINES_2D);
             } else if (src == threeDimension) {
 
                 selectedMode = THREE_DIMENSIONS;
@@ -598,8 +594,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 difficultyInfoLabels[1].setText("7x7x4, 60 mines");
                 difficultyInfoLabels[2].setText("11x11x6, 150 mines");
                 difficultyInfoLabels[3].setText("18x18x8, 400 mines");
-
-                minesModel.setMaximum(MAX_MINES_3D);
 
             } else if (src == fourDimension) {
 
@@ -647,6 +641,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             } else {
                 selectedMode = "";
             }
+
+            updateMaxMines();
+            minesModel.setMaximum(maxMines);
+
             mainText.setText("Mode: " + selectedMode);
             revalidate();
             repaint();
@@ -709,6 +707,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                         minesSpinner.setValue(400);
                     }
                     break;
+                case FOUR_DIMENSIONS:
+                    break;
+                case FIVE_DIMENSIONS:
+                    break;
                 default:
                     return;
             }
@@ -728,7 +730,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
             int rows = (int) rowsSpinner.getValue();
             int cols = (int) colsSpinner.getValue();
-            int splices;
             int mines;
 
             errorLabel.setText(" ");
@@ -737,10 +738,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 int[] dims = { cols, rows };
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(MAX_MINES_2D) + 1;
+                    mines = new Random().nextInt(maxMines) + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > MAX_MINES_2D) {
+                    if (mines > maxMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
@@ -750,21 +751,65 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 cardLayout.show(cards, TWO_DIMENSIONS);
             } else if (dimensionsSelected == 3) {
 
-                splices = (int) splices3dSpinner.getValue();
+                int splices3d = (int) splices3dSpinner.getValue();
 
-                int[] dims = { cols, rows, splices };
+                int[] dims = { cols, rows, splices3d };
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(MAX_MINES_3D) + 1;
+                    mines = new Random().nextInt(maxMines) + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > MAX_MINES_3D) {
+                    if (mines > maxMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
                 }
                 cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), THREE_DIMENSIONS);
                 cardLayout.show(cards, THREE_DIMENSIONS);
+            } else if (dimensionsSelected == 4) {
+
+                int splices3d = (int) splices3dSpinner.getValue();
+                int splices4d = (int) splices4dSpinner.getValue();
+
+                int[] dims = { cols, rows, splices3d, splices4d };
+
+                if (randomMines.isSelected()) {
+                    mines = new Random().nextInt(maxMines) + 1;
+                } else {
+                    mines = (int) minesSpinner.getValue();
+                    if (mines > maxMines) {
+                        errorLabel.setText("Too many mines!");
+                        return;
+                    }
+                }
+                cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), FOUR_DIMENSIONS);
+                cardLayout.show(cards, FOUR_DIMENSIONS);
+            } else if (dimensionsSelected == 5) {
+
+                int splices3d = (int) splices3dSpinner.getValue();
+                int splices4d = (int) splices4dSpinner.getValue();
+                int splices5d = (int) splices5dSpinner.getValue();
+
+                int[] dims = new int[dimensionsSelected];
+                dims[0] = cols;
+                dims[1] = rows;
+                dims[2] = splices3d;
+                dims[3] = splices4d;
+                for (int i = 4; i < dimensionsSelected; i++) {
+                    dims[i] = splices5d;
+                }
+
+                if (randomMines.isSelected()) {
+                    mines = new Random().nextInt(maxMines) + 1;
+                } else {
+                    mines = (int) minesSpinner.getValue();
+                    if (mines > maxMines) {
+                        errorLabel.setText("Too many mines!");
+                        return;
+                    }
+                }
+                cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), FIVE_DIMENSIONS);
+                cardLayout.show(cards, FIVE_DIMENSIONS);
             }
 
         }
@@ -795,6 +840,19 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         setBackground(PRIMARY_COLOR);
 
         super.paintComponent(g);
+    }
+
+    private void updateMaxMines() {
+        if (dimensionsSelected == 2) {
+            maxMines = MAX_ROWS * MAX_COLS - 1;
+        } else if (dimensionsSelected == 3) {
+            maxMines = MAX_ROWS * MAX_COLS - 1;
+        } else if (dimensionsSelected == 4) {
+            maxMines = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D - 1;
+        } else if (dimensionsSelected >= 5) {
+            int BeyondCellCount = (MAX_SPLICES5D * (dimensionsSelected - 4));
+            maxMines = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D * BeyondCellCount - 1;
+        }
     }
 
     /**
