@@ -286,7 +286,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         settingsPanel.setBackground(SECONDARY_COLOR);
 
         settingsPanel.add(new JLabel("Rows: "));
-        rowsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_ROWS, 1));
+        rowsSpinner = new JSpinner(new SpinnerNumberModel(6, 2, MAX_ROWS, 1));
         rowsSpinner.setPreferredSize(new Dimension(60, 30));
         rowsSpinner.addChangeListener(this);
         settingsPanel.add(rowsSpinner);
@@ -299,7 +299,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         splices3dLabel = new JLabel("3D Splices: ");
         settingsPanel.add(splices3dLabel);
-        splices3dSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_SPLICES3D, 1));
+        splices3dSpinner = new JSpinner(new SpinnerNumberModel(5, 2, MAX_SPLICES3D, 1));
         splices3dSpinner.setPreferredSize(new Dimension(60, 30));
         splices3dSpinner.addChangeListener(this);
         settingsPanel.add(splices3dSpinner);
@@ -309,7 +309,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         splices4dLabel = new JLabel("4D Splices: ");
         settingsPanel.add(splices4dLabel);
-        splices4dSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_SPLICES4D, 1));
+        splices4dSpinner = new JSpinner(new SpinnerNumberModel(3, 2, MAX_SPLICES4D, 1));
         splices4dSpinner.setPreferredSize(new Dimension(60, 30));
         splices4dSpinner.addChangeListener(this);
         settingsPanel.add(splices4dSpinner);
@@ -319,7 +319,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         splices5dLabel = new JLabel("5D Splices: ");
         settingsPanel.add(splices5dLabel);
-        splices5dSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_SPLICES5D, 1));
+        splices5dSpinner = new JSpinner(new SpinnerNumberModel(3, 2, MAX_SPLICES5D, 1));
         splices5dSpinner.setPreferredSize(new Dimension(60, 30));
         splices5dSpinner.addChangeListener(this);
         settingsPanel.add(splices5dSpinner);
