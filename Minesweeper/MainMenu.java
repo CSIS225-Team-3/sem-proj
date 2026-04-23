@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.Toolkit;
@@ -192,6 +193,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         // frame.setUndecorated(true);
 
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("MinesweeperMine.png"));
+        frame.setIconImage(icon);
+                
         BufferedImage background = null;
         TexturePaint texturepaint = null;
         try {
