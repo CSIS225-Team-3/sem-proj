@@ -48,6 +48,7 @@ public class MinesweeperButton extends JButton {
         setContentAreaFilled(false);
         setPreferredSize(new Dimension(50, 50));
         setMinimumSize(new Dimension(50, 50));
+        //setMaximumSize(new Dimension(50, 50));
 
         // NOTE: Temp disabled for debug purposes
         // setOpaque(true);

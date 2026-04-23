@@ -206,7 +206,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         // buttons[i][j].reveal();
         // }
         // }
-        JScrollPane scrollPane = new JScrollPane(gamePanel);
+        JPanel centered = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        centered.setBackground(MainMenu.PRIMARY_COLOR);
+        centered.add(gamePanel);
+        JScrollPane scrollPane = new JScrollPane(centered);
 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
