@@ -21,8 +21,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private int mineCount;
 
-    private int buttonSize = 50;
-
     private boolean firstClick = true;
 
     /** The label for the top of the window */
@@ -174,11 +172,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         outerRows = numSplices / outerCols;
 
         if (dims.length >= 3) {
-            gamePanel = new JPanel(new GridLayout(outerRows, outerCols, 15, 10));
+            gamePanel = new JPanel(new GridLayout(outerRows, outerCols, 30, 30));
             splices = new JPanel[numSplices];
             for (int i = 0; i < numSplices; i++) {
                 splices[i] = new JPanel(new GridLayout(dims[1], dims[0]));
                 splices[i].setBackground(MainMenu.PRIMARY_COLOR);
+                splices[i].setBorder(BorderFactory.createTitledBorder("Splice " + (i+1)));
                 gamePanel.add(splices[i]);
                 for (int j = 0; j < dims[1]; j++) {
                     for (int k = 0; k < dims[0]; k++) {
@@ -212,18 +211,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         centered.setBackground(MainMenu.PRIMARY_COLOR);
         centered.add(gamePanel);
         JScrollPane scrollPane = new JScrollPane(centered);
-
-        scrollPane.addMouseWheelListener(e -> {
-            buttonSize = Math.max(5, Math.min(200, buttonSize - (int) (e.getPreciseWheelRotation() * 3)));
-            for (MinesweeperButton button : buttons) {
-                Dimension dimension = new Dimension(buttonSize, buttonSize);
-                button.setPreferredSize(dimension);
-                button.setMinimumSize(dimension);
-                button.setMaximumSize(dimension);
-            }
-            gamePanel.revalidate();
-            centered.revalidate();
-        });
 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
