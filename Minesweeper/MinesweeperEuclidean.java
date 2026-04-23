@@ -21,6 +21,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private int mineCount;
 
+    private int buttonSize = 50;
+
     private boolean firstClick = true;
 
     /** The label for the top of the window */
@@ -210,6 +212,18 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         centered.setBackground(MainMenu.PRIMARY_COLOR);
         centered.add(gamePanel);
         JScrollPane scrollPane = new JScrollPane(centered);
+
+        scrollPane.addMouseWheelListener(e -> {
+            buttonSize = Math.max(5, Math.min(200, buttonSize - (int) (e.getPreciseWheelRotation() * 3)));
+            for (MinesweeperButton button : buttons) {
+                Dimension dimension = new Dimension(buttonSize, buttonSize);
+                button.setPreferredSize(dimension);
+                button.setMinimumSize(dimension);
+                button.setMaximumSize(dimension);
+            }
+            gamePanel.revalidate();
+            centered.revalidate();
+        });
 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
