@@ -139,13 +139,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     JOptionPane deleteConfirmation;
 
     /** The primary color for the UI */
-    public static Color PRIMARY_COLOR = Color.PINK;
+    public static Color PRIMARY_COLOR = Color.WHITE;
 
     /** The secondary color for the UI */
-    public static Color SECONDARY_COLOR = new Color(207, 125, 151);
+    public static Color SECONDARY_COLOR = new Color(200, 200, 200);
 
     /** The tertiary color for the UI */
-    public static Color TERTIARY_COLOR = new Color(255, 190, 200);
+    public static Color TERTIARY_COLOR = Color.BLACK;
 
     private float rainbowHue = 0;
 
