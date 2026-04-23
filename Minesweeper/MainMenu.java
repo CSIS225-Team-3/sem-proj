@@ -826,12 +826,20 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         } else if (dimensionsSelected == 3) {
             gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
                     * (int) splices3dSpinner.getValue();
+        } else if (dimensionsSelected == 4) {
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue();
+        } else if (dimensionsSelected >= 5) {
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue()
+                    * (dimensionsSelected * (int) (splices5dSpinner.getValue()));
         }
 
         // 20k cell before it gives warning
         if (gridVolume > 20000) {
             errorLabel.setText("Current grid size may cause game to crash. Proceed with caution.");
-
+        } else {
+            errorLabel.setText(" ");
         }
     }
 
