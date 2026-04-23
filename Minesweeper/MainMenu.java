@@ -537,20 +537,20 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         */
 
         topPanel.setOpaque(false);
-        loginMainPanel.setOpaque(false);
-        fieldsPanel.setOpaque(false);
-        buttonsPanel.setOpaque(false);
-        topButtons.setOpaque(false);
-        bottomButtons.setOpaque(false);
+        //loginMainPanel.setOpaque(false);
+        //fieldsPanel.setOpaque(false);
+        //buttonsPanel.setOpaque(false);
+        //topButtons.setOpaque(false);
+        //bottomButtons.setOpaque(false);
         centerPanel.setOpaque(false);
-        modePanel.setOpaque(false);
-        configPanel.setOpaque(false);
-        settingsPanel.setOpaque(false);
-        mineConfigPanel.setOpaque(false);
-        difficultyPanel.setOpaque(false);
-        bottomPanel.setOpaque(false);
-        errorPanel.setOpaque(false);
-        startPanel.setOpaque(false);
+        //modePanel.setOpaque(false);
+        //configPanel.setOpaque(false);
+        //settingsPanel.setOpaque(false);
+        //mineConfigPanel.setOpaque(false);
+        //difficultyPanel.setOpaque(false);
+        //bottomPanel.setOpaque(false);
+        //errorPanel.setOpaque(false);
+        //startPanel.setOpaque(false);
         topPanel.setOpaque(false);
         setOpaque(false);  
 
