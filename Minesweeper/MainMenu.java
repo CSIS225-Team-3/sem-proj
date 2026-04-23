@@ -1,34 +1,37 @@
 package Minesweeper;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.CardLayout;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JSpinner;
-import javax.swing.JRadioButton;
-import javax.swing.SpinnerNumberModel;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.Timer;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -189,11 +192,41 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         // frame.setUndecorated(true);
 
+        BufferedImage background = null;
+        TexturePaint texturepaint = null;
+        try {
+            background = ImageIO.read(new File("Minesweeper/Background.jpeg"));
+            texturepaint = new TexturePaint(background, new Rectangle(0, 0, background.getWidth(), background.getHeight()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        final BufferedImage bg = background;
+        final TexturePaint tp = texturepaint;
+        System.out.println(background.getWidth());
+        System.out.println(background.getHeight());
         cardLayout = new CardLayout();
-        cards = new JPanel(cardLayout);
+        cards = new JPanel(cardLayout) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
 
+                if (bg != null) {
+                    g.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
+                }
+            }
+            /* 
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (tp != null) {
+                    Graphics2D g2d = (Graphics2D) g;
+                    g2d.setPaint(tp);
+                    g2d.fillRect(0, 0, getWidth(), getHeight());
+                }
+            } */
+        };
+        
         JPanel topPanel = new JPanel(new BorderLayout());
-
+            
         usernameField = new JTextField();
         passwordField = new JPasswordField();
 
@@ -434,7 +467,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         frame.add(cards);
         // frame.pack();
 
-        // RAINBOW
+        /* RAINBOW
         Thread rainbowThread = new Thread(() -> {
             while (true) {
                 rainbowHue = (rainbowHue + 0.002f) % 1f;
@@ -498,8 +531,28 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 }
             }
         });
+
         rainbowThread.setDaemon(true);
         rainbowThread.start();
+        */
+
+        topPanel.setOpaque(false);
+        loginMainPanel.setOpaque(false);
+        fieldsPanel.setOpaque(false);
+        buttonsPanel.setOpaque(false);
+        topButtons.setOpaque(false);
+        bottomButtons.setOpaque(false);
+        centerPanel.setOpaque(false);
+        modePanel.setOpaque(false);
+        configPanel.setOpaque(false);
+        settingsPanel.setOpaque(false);
+        mineConfigPanel.setOpaque(false);
+        difficultyPanel.setOpaque(false);
+        bottomPanel.setOpaque(false);
+        errorPanel.setOpaque(false);
+        startPanel.setOpaque(false);
+        topPanel.setOpaque(false);
+        setOpaque(false);  
 
         frame.setVisible(true);
     }
