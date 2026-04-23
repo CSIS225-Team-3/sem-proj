@@ -1,7 +1,11 @@
 package Minesweeper;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,7 +17,7 @@ import java.awt.Image;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperButton extends JButton {
+public class MinesweeperButton extends JPanel {
     public final static Color HIDDEN_COLOR = new Color(200, 115, 115);
     public final static Color REVEALED_COLOR = new Color(255, 175, 175);
 
@@ -28,6 +32,8 @@ public class MinesweeperButton extends JButton {
     private boolean isMine = false;
     private boolean isFlagged = false;
 
+    private JLabel label;
+
     private static final ImageIcon MINE_ICON = loadIcon("MinesweeperMine.png");
     private static final ImageIcon FLAG_ICON = loadIcon("MinesweeperFlag.png");
 
@@ -35,7 +41,7 @@ public class MinesweeperButton extends JButton {
      * Constructor for MinesweeperButton
      */
     public MinesweeperButton(MinesweeperBase game, int idx) {
-        super((String) null);
+        super();
         // super(position[0] + " " + position[1]);
 
         this.game = game;
@@ -43,12 +49,18 @@ public class MinesweeperButton extends JButton {
 
         setBackground(HIDDEN_COLOR);
         setForeground(Color.BLACK);
-        setFocusPainted(false);
+
+        label = new JLabel(" ");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVerticalAlignment(SwingConstants.CENTER);
+        setLayout(new BorderLayout());
+        add(label, BorderLayout.CENTER);
+
         // setRolloverEnabled(false); //Mouse hover
-        setContentAreaFilled(false);
+        setOpaque(false);
         setPreferredSize(new Dimension(50, 50));
         setMinimumSize(new Dimension(50, 50));
-        //setMaximumSize(new Dimension(50, 50));
+        // setMaximumSize(new Dimension(50, 50));
 
         // NOTE: Temp disabled for debug purposes
         // setOpaque(true);
@@ -57,6 +69,7 @@ public class MinesweeperButton extends JButton {
 
     /**
      * Gets the index of this button
+     * 
      * @return the index of this button
      */
     public int getIdx() {
@@ -65,6 +78,7 @@ public class MinesweeperButton extends JButton {
 
     /**
      * Gets the number of adjacent mines
+     * 
      * @return the number of adjacent mines
      */
     public int getNumAdjacent() {
@@ -83,22 +97,22 @@ public class MinesweeperButton extends JButton {
         isRevealed = true;
 
         if (isMine) {
-            setText(null);
-            setIcon(MINE_ICON);
+            label.setText(null);
+            label.setIcon(MINE_ICON);
             setBackground(Color.RED);
             game.onLoss();
         } else {
-            setIcon(null);
+            label.setIcon(null);
             setBackground(REVEALED_COLOR);
             if (numAdjacent == 0) {
-                setText(null);
+                label.setText(null);
 
                 MinesweeperButton[] adjacents = game.getAdjacentButtons(getIdx());
                 for (int i = 0; i < adjacents.length; i++) {
                     adjacents[i].reveal();
                 }
             } else {
-                setText(String.valueOf(numAdjacent));
+                label.setText(String.valueOf(numAdjacent));
             }
         }
     }
@@ -111,9 +125,9 @@ public class MinesweeperButton extends JButton {
             return;
         isFlagged = !isFlagged;
         if (isFlagged) {
-            setIcon(FLAG_ICON);
+            label.setIcon(FLAG_ICON);
         } else {
-            setIcon(null);
+            label.setIcon(null);
         }
     }
 
@@ -160,19 +174,26 @@ public class MinesweeperButton extends JButton {
 
     public void hide() {
         isRevealed = false;
-        setText(null);
-        setIcon(null);
+        label.setText(null);
+        label.setIcon(null);
         setBackground(HIDDEN_COLOR);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        // Paint the background color manually, ignoring the pressed state
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
-
-        // Paint the text and borders normally
         super.paintComponent(g);
+    }
+
+    @Override
+    protected void paintBorder(Graphics g) {
+        if (getBorder() != null) {
+            g.setColor(getForeground());
+        } else {
+            g.setColor(getBackground());
+        }
+        super.paintBorder(g);
     }
 
     private static ImageIcon loadIcon(String name) {
