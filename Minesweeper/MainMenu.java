@@ -97,8 +97,15 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private String selectedMode;
     private JLabel[] difficultyInfoLabels;
 
-    private JSpinner splicesSpinner;
-    private JLabel splicesLabel;
+    private JSpinner splices3dSpinner;
+    private JLabel splices3dLabel;
+
+    private JSpinner splices4dSpinner;
+    private JLabel splices4dLabel;
+
+    // 5D+
+    private JSpinner splices5dSpinner;
+    private JLabel splices5dLabel;
 
     private ButtonGroup difficultyGroup;
 
@@ -139,6 +146,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
     public final static int MAX_SPLICES3D = 100;
+    public final static int MAX_SPLICES4D = 100;
+    public final static int MAX_SPLICES5D = 100;
 
     public final static int MAX_MINES_2D = MAX_ROWS * MAX_COLS - 1;
     public final static int MAX_MINES_3D = MAX_ROWS * MAX_COLS * MAX_SPLICES3D - 1;
@@ -283,15 +292,35 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         colsSpinner.addChangeListener(this);
         settingsPanel.add(colsSpinner);
 
-        splicesLabel = new JLabel("Splices: ");
-        settingsPanel.add(splicesLabel);
-        splicesSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_SPLICES3D, 1));
-        splicesSpinner.setPreferredSize(new Dimension(60, 30));
-        splicesSpinner.addChangeListener(this);
-        settingsPanel.add(splicesSpinner);
+        splices3dLabel = new JLabel("3D Splices: ");
+        settingsPanel.add(splices3dLabel);
+        splices3dSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_SPLICES3D, 1));
+        splices3dSpinner.setPreferredSize(new Dimension(60, 30));
+        splices3dSpinner.addChangeListener(this);
+        settingsPanel.add(splices3dSpinner);
 
-        splicesLabel.setVisible(false);
-        splicesSpinner.setVisible(false);
+        splices3dLabel.setVisible(false);
+        splices3dSpinner.setVisible(false);
+
+        splices4dLabel = new JLabel("4D Splices: ");
+        settingsPanel.add(splices4dLabel);
+        splices4dSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_SPLICES4D, 1));
+        splices4dSpinner.setPreferredSize(new Dimension(60, 30));
+        splices4dSpinner.addChangeListener(this);
+        settingsPanel.add(splices4dSpinner);
+
+        splices4dLabel.setVisible(false);
+        splices4dSpinner.setVisible(false);
+
+        splices5dLabel = new JLabel("5D Splices: ");
+        settingsPanel.add(splices5dLabel);
+        splices5dSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_SPLICES5D, 1));
+        splices5dSpinner.setPreferredSize(new Dimension(60, 30));
+        splices5dSpinner.addChangeListener(this);
+        settingsPanel.add(splices5dSpinner);
+
+        splices5dLabel.setVisible(false);
+        splices5dSpinner.setVisible(false);
 
         JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         mineConfigPanel.setBackground(SECONDARY_COLOR);
@@ -505,8 +534,14 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 twoDimension.setEnabled(false);
                 threeDimension.setEnabled(true);
 
-                splicesLabel.setVisible(false);
-                splicesSpinner.setVisible(false);
+                splices3dLabel.setVisible(false);
+                splices3dSpinner.setVisible(false);
+
+                splices4dLabel.setVisible(false);
+                splices4dSpinner.setVisible(false);
+
+                splices5dLabel.setVisible(false);
+                splices5dSpinner.setVisible(false);
 
                 difficultyInfoLabels[0].setText("9x9, 10 mines");
                 difficultyInfoLabels[1].setText("16x16, 40 mines");
@@ -522,8 +557,14 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 twoDimension.setEnabled(true);
                 threeDimension.setEnabled(false);
 
-                splicesLabel.setVisible(true);
-                splicesSpinner.setVisible(true);
+                splices3dLabel.setVisible(true);
+                splices3dSpinner.setVisible(true);
+
+                splices4dLabel.setVisible(false);
+                splices4dSpinner.setVisible(false);
+
+                splices5dLabel.setVisible(false);
+                splices5dSpinner.setVisible(false);
 
                 difficultyInfoLabels[0].setText("5x5x3, 15 mines");
                 difficultyInfoLabels[1].setText("7x7x4, 60 mines");
@@ -532,6 +573,24 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 minesModel.setMaximum(MAX_MINES_3D);
 
+            } else if (src == fourDimension) {
+                
+                selectedMode = FOUR_DIMENSIONS;
+                dimensionsSelected = 4;
+
+                twoDimension.setEnabled(true);
+                threeDimension.setEnabled(false);
+
+                splices3dLabel.setVisible(true);
+                splices3dSpinner.setVisible(true);
+
+                splices4dLabel.setVisible(true);
+                splices4dSpinner.setVisible(true);
+
+                splices5dLabel.setVisible(false);
+                splices5dSpinner.setVisible(false);
+
+                //TODO: add 4d difficulty
             } else {
                 selectedMode = "";
             }
@@ -578,22 +637,22 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     if (src == easyBtn) {
                         rowsSpinner.setValue(5);
                         colsSpinner.setValue(5);
-                        splicesSpinner.setValue(3);
+                        splices3dSpinner.setValue(3);
                         minesSpinner.setValue(15);
                     } else if (src == mediumBtn) {
                         rowsSpinner.setValue(7);
                         colsSpinner.setValue(7);
-                        splicesSpinner.setValue(4);
+                        splices3dSpinner.setValue(4);
                         minesSpinner.setValue(60);
                     } else if (src == hardBtn) {
                         rowsSpinner.setValue(11);
                         colsSpinner.setValue(11);
-                        splicesSpinner.setValue(6);
+                        splices3dSpinner.setValue(6);
                         minesSpinner.setValue(150);
                     } else if (src == extremeBtn) {
                         rowsSpinner.setValue(18);
                         colsSpinner.setValue(18);
-                        splicesSpinner.setValue(8);
+                        splices3dSpinner.setValue(8);
                         minesSpinner.setValue(400);
                     }
                     break;
@@ -638,7 +697,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 cardLayout.show(cards, TWO_DIMENSIONS);
             } else if (dimensionsSelected == 3) {
 
-                splices = (int) splicesSpinner.getValue();
+                splices = (int) splices3dSpinner.getValue();
 
                 int[] dims = { cols, rows, splices };
 
@@ -665,15 +724,15 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
         int gridVolume = -1;
         if (dimensionsSelected == 2) {
-            gridVolume = (int)colsSpinner.getValue() * (int)rowsSpinner.getValue();
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue();
         } else if (dimensionsSelected == 3) {
-            gridVolume = (int)colsSpinner.getValue() * (int)rowsSpinner.getValue() * (int)splicesSpinner.getValue();
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue() * (int) splices3dSpinner.getValue();
         }
 
         // 20k cell before it gives warning
         if (gridVolume > 20000) {
             errorLabel.setText("Current grid size may cause game to crash. Proceed with caution.");
-            
+
         }
     }
 
