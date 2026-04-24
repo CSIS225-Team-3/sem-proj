@@ -204,11 +204,18 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
                     }
                 }
             }
+
+            JPanel centeringPanel = new JPanel(new GridBagLayout());
+            centeringPanel.setBackground(MainMenu.PRIMARY_COLOR);
+            centeringPanel.add(gamePanel);
+            scrollPane = new JScrollPane(centeringPanel);
+
         } else {
             gamePanel = new JPanel(new GridLayout(dims[1], dims[0]));
             for (int i = 0; i < gridVolume; i++) {
                 gamePanel.add(buttons[i]);
             }
+            scrollPane = new JScrollPane(gamePanel);
         }
 
         // for (int j = 0; j < dims[1]; j++){
@@ -216,10 +223,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         // buttons[i][j].reveal();
         // }
         // }
-        JPanel centeringPanel = new JPanel(new GridBagLayout());
-        centeringPanel.setBackground(MainMenu.PRIMARY_COLOR);
-        centeringPanel.add(gamePanel);
-        scrollPane = new JScrollPane(centeringPanel);
 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
