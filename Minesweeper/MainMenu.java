@@ -199,7 +199,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         BufferedImage background = null;
         TexturePaint texturepaint = null;
         try {
-            background = ImageIO.read(new File("Minesweeper/Background.jpeg"));
+            background = ImageIO.read(new File("Minesweeper/Background.jpg"));
             texturepaint = new TexturePaint(background, new Rectangle(0, 0, background.getWidth(), background.getHeight()));
         } catch (IOException e) {
             e.printStackTrace();
