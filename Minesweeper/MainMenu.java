@@ -144,10 +144,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public static Color PRIMARY_COLOR = Color.WHITE;
 
     /** The secondary color for the UI */
-    public static Color SECONDARY_COLOR = new Color(100, 100, 100, 125);
+    public static Color SECONDARY_COLOR = new Color(150, 150, 150, 125);
 
     /** The tertiary color for the UI */
-    public static Color TERTIARY_COLOR = new Color(200, 200, 200, 125);
+    public static Color TERTIARY_COLOR = new Color(225, 225, 225, 175);
 
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
@@ -239,6 +239,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         logoutButton = new JButton("Log Out");
         deleteButton = new JButton("Delete Account");
 
+        registerButton.setOpaque(false);
+        registerButton.setContentAreaFilled(false);
+
+        loginButton.setOpaque(false);
+        loginButton.setContentAreaFilled(false);
+
+        logoutButton.setOpaque(false);
+        logoutButton.setContentAreaFilled(false);
+
+        deleteButton.setOpaque(false);
+        deleteButton.setContentAreaFilled(false);
+
         registerButton.addActionListener(this);
         loginButton.addActionListener(this);
         logoutButton.addActionListener(this);
@@ -308,6 +320,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension };
         for (JButton b : dimensions) {
             b.setBackground(TERTIARY_COLOR);
+            b.setOpaque(false);
+            b.setContentAreaFilled(false);
             b.addActionListener(this);
             modePanel.add(b);
         }
@@ -419,6 +433,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         for (int i = 0; i < btns.length; i++) {
             btns[i].setBackground(SECONDARY_COLOR);
             btns[i].addActionListener(this);
+            btns[i].setOpaque(false);
+            btns[i].setContentAreaFilled(false);
 
             JPanel each = semiTransparentPanel(new BorderLayout());
             each.setBackground(SECONDARY_COLOR);
@@ -448,6 +464,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         startButton = new JButton("Start Game");
         startButton.setBackground(TERTIARY_COLOR);
         startButton.addActionListener(this);
+
+        startButton.setOpaque(false);
+        startButton.setContentAreaFilled(false);
         JPanel startPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         startPanel.setBackground(PRIMARY_COLOR);
         startPanel.add(startButton);
@@ -552,6 +571,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         errorPanel.setOpaque(false);
         startPanel.setOpaque(false);
         setOpaque(false);
+
+        startButton.setContentAreaFilled(false);
         frame.setVisible(true);
     }
 
@@ -893,7 +914,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             errorLabel.setText(" ");
         }
     }
-
 
     private void updateMaxMines() {
         if (dimensionsSelected == 2) {
