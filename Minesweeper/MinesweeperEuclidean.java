@@ -4,8 +4,14 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.awt.event.ActionEvent;
+
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -90,7 +96,24 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
      * Builds the GUI for the game
      */
     private void build() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        BufferedImage background = null;
+        try {
+            background = ImageIO.read(new File("Minesweeper/InGameBackground.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        final BufferedImage bg = background;
+        JPanel mainPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (bg != null) {
+
+                    g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
 
         JPanel topText = new JPanel(new FlowLayout());
 
@@ -173,8 +196,19 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
         outerRows = numSplices / outerCols;
 
+        gamePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (bg != null) {
+
+                    g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+
         if (dims.length >= 3) {
-            gamePanel = new JPanel(new GridLayout(outerRows, outerCols, 30, 30));
+            gamePanel.setLayout(new GridLayout(outerRows, outerCols, 30, 30));
             splices = new JPanel[numSplices];
             for (int i = 0; i < numSplices; i++) {
                 splices[i] = new JPanel(new GridLayout(dims[1], dims[0]));
@@ -210,13 +244,17 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             centeringPanel.add(gamePanel);
             scrollPane = new JScrollPane(centeringPanel);
 
+            centeringPanel.setOpaque(false);
+
         } else {
-            gamePanel = new JPanel(new GridLayout(dims[1], dims[0]));
+            gamePanel.setLayout(new GridLayout(dims[1], dims[0]));
             for (int i = 0; i < gridVolume; i++) {
                 gamePanel.add(buttons[i]);
             }
             scrollPane = new JScrollPane(gamePanel);
         }
+
+        gamePanel.setOpaque(false);
 
         // for (int j = 0; j < dims[1]; j++){
         // for (int i = 0; i < dims[0]; i++){
@@ -226,6 +264,9 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setOpaque(false);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -237,7 +278,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         mainPanel.setBackground(MainMenu.SECONDARY_COLOR);
         bottomButtons.setBackground(MainMenu.SECONDARY_COLOR);
         topText.setBackground(MainMenu.SECONDARY_COLOR);
-        scrollPane.getViewport().setBackground(MainMenu.SECONDARY_COLOR);
         scrollPane.getVerticalScrollBar().setBackground(MainMenu.PRIMARY_COLOR);
         scrollPane.getHorizontalScrollBar().setBackground(MainMenu.PRIMARY_COLOR);
         gamePanel.setBackground(MainMenu.PRIMARY_COLOR);
