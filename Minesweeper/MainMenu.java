@@ -143,12 +143,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public static Color PRIMARY_COLOR = Color.WHITE;
 
     /** The secondary color for the UI */
-    public static Color SECONDARY_COLOR = new Color(200, 200, 200);
+    public static Color SECONDARY_COLOR = new Color(100, 100, 100, 125);
 
     /** The tertiary color for the UI */
-    public static Color TERTIARY_COLOR = Color.BLACK;
+    public static Color TERTIARY_COLOR = new Color(200, 200, 200, 125);
 
-    private float rainbowHue = 0;
 
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
@@ -156,7 +155,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public final static int MAX_SPLICES4D = 100;
     public final static int MAX_SPLICES5D = 100;
 
-    // TODO: Generalize
     public int maxMines = MAX_ROWS * MAX_COLS;
 
     public final static int MAX_DIMENSIONS = 100;
@@ -195,12 +193,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("MinesweeperMine.png"));
         frame.setIconImage(icon);
-                
+
         BufferedImage background = null;
         TexturePaint texturepaint = null;
         try {
             background = ImageIO.read(new File("Minesweeper/Background.jpg"));
-            texturepaint = new TexturePaint(background, new Rectangle(0, 0, background.getWidth(), background.getHeight()));
+            texturepaint = new TexturePaint(background,
+                    new Rectangle(0, 0, background.getWidth(), background.getHeight()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -218,19 +217,20 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     g.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
                 }
             }
-            /* 
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (tp != null) {
-                    Graphics2D g2d = (Graphics2D) g;
-                    g2d.setPaint(tp);
-                    g2d.fillRect(0, 0, getWidth(), getHeight());
-                }
-            } */
+            /*
+             * protected void paintComponent(Graphics g) {
+             * super.paintComponent(g);
+             * if (tp != null) {
+             * Graphics2D g2d = (Graphics2D) g;
+             * g2d.setPaint(tp);
+             * g2d.fillRect(0, 0, getWidth(), getHeight());
+             * }
+             * }
+             */
         };
-        
+
         JPanel topPanel = new JPanel(new BorderLayout());
-            
+
         usernameField = new JTextField();
         passwordField = new JPasswordField();
 
@@ -471,92 +471,93 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         frame.add(cards);
         // frame.pack();
 
-        /* RAINBOW
-        Thread rainbowThread = new Thread(() -> {
-            while (true) {
-                rainbowHue = (rainbowHue + 0.002f) % 1f;
-
-                PRIMARY_COLOR = Color.getHSBColor(rainbowHue, 0.3f, 1.0f);
-                SECONDARY_COLOR = Color.getHSBColor((rainbowHue + 0.09f) % 1f, 0.5f, 0.85f);
-                TERTIARY_COLOR = Color.getHSBColor((rainbowHue + 0.05f) % 1f, 0.25f, 1.0f);
-
-                SwingUtilities.invokeLater(() -> {
-                    frame.setBackground(PRIMARY_COLOR);
-                    centerPanel.setBackground(PRIMARY_COLOR);
-                    configPanel.setBackground(PRIMARY_COLOR);
-                    bottomPanel.setBackground(PRIMARY_COLOR);
-                    errorPanel.setBackground(PRIMARY_COLOR);
-                    startPanel.setBackground(PRIMARY_COLOR);
-                    topPanel.setBackground(PRIMARY_COLOR);
-
-                    loginMainPanel.setBackground(SECONDARY_COLOR);
-                    buttonsPanel.setBackground(SECONDARY_COLOR);
-                    fieldsPanel.setBackground(SECONDARY_COLOR);
-                    topButtons.setBackground(SECONDARY_COLOR);
-                    bottomButtons.setBackground(SECONDARY_COLOR);
-                    showPassword.setBackground(SECONDARY_COLOR);
-
-                    modePanel.setBackground(SECONDARY_COLOR);
-                    settingsPanel.setBackground(SECONDARY_COLOR);
-                    mineConfigPanel.setBackground(SECONDARY_COLOR);
-                    difficultyPanel.setBackground(SECONDARY_COLOR);
-
-                    easyBtn.setBackground(SECONDARY_COLOR);
-                    mediumBtn.setBackground(SECONDARY_COLOR);
-                    hardBtn.setBackground(SECONDARY_COLOR);
-                    extremeBtn.setBackground(SECONDARY_COLOR);
-
-                    randomMines.setBackground(SECONDARY_COLOR);
-
-                    easyInfo.setBackground(SECONDARY_COLOR);
-                    mediumInfo.setBackground(SECONDARY_COLOR);
-                    hardInfo.setBackground(SECONDARY_COLOR);
-                    extremeInfo.setBackground(SECONDARY_COLOR);
-
-                    registerButton.setBackground(TERTIARY_COLOR);
-                    loginButton.setBackground(TERTIARY_COLOR);
-                    logoutButton.setBackground(TERTIARY_COLOR);
-                    deleteButton.setBackground(TERTIARY_COLOR);
-
-                    twoDimension.setBackground(TERTIARY_COLOR);
-                    threeDimension.setBackground(TERTIARY_COLOR);
-                    fourDimension.setBackground(TERTIARY_COLOR);
-                    fiveDimension.setBackground(TERTIARY_COLOR);
-
-                    startButton.setBackground(TERTIARY_COLOR);
-
-                    repaint();
-                });
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
-
-        rainbowThread.setDaemon(true);
-        rainbowThread.start();
-        */
+        /*
+         * RAINBOW
+         * Thread rainbowThread = new Thread(() -> {
+         * while (true) {
+         * rainbowHue = (rainbowHue + 0.002f) % 1f;
+         * 
+         * PRIMARY_COLOR = Color.getHSBColor(rainbowHue, 0.3f, 1.0f);
+         * SECONDARY_COLOR = Color.getHSBColor((rainbowHue + 0.09f) % 1f, 0.5f, 0.85f);
+         * TERTIARY_COLOR = Color.getHSBColor((rainbowHue + 0.05f) % 1f, 0.25f, 1.0f);
+         * 
+         * SwingUtilities.invokeLater(() -> {
+         * frame.setBackground(PRIMARY_COLOR);
+         * centerPanel.setBackground(PRIMARY_COLOR);
+         * configPanel.setBackground(PRIMARY_COLOR);
+         * bottomPanel.setBackground(PRIMARY_COLOR);
+         * errorPanel.setBackground(PRIMARY_COLOR);
+         * startPanel.setBackground(PRIMARY_COLOR);
+         * topPanel.setBackground(PRIMARY_COLOR);
+         * 
+         * loginMainPanel.setBackground(SECONDARY_COLOR);
+         * buttonsPanel.setBackground(SECONDARY_COLOR);
+         * fieldsPanel.setBackground(SECONDARY_COLOR);
+         * topButtons.setBackground(SECONDARY_COLOR);
+         * bottomButtons.setBackground(SECONDARY_COLOR);
+         * showPassword.setBackground(SECONDARY_COLOR);
+         * 
+         * modePanel.setBackground(SECONDARY_COLOR);
+         * settingsPanel.setBackground(SECONDARY_COLOR);
+         * mineConfigPanel.setBackground(SECONDARY_COLOR);
+         * difficultyPanel.setBackground(SECONDARY_COLOR);
+         * 
+         * easyBtn.setBackground(SECONDARY_COLOR);
+         * mediumBtn.setBackground(SECONDARY_COLOR);
+         * hardBtn.setBackground(SECONDARY_COLOR);
+         * extremeBtn.setBackground(SECONDARY_COLOR);
+         * 
+         * randomMines.setBackground(SECONDARY_COLOR);
+         * 
+         * easyInfo.setBackground(SECONDARY_COLOR);
+         * mediumInfo.setBackground(SECONDARY_COLOR);
+         * hardInfo.setBackground(SECONDARY_COLOR);
+         * extremeInfo.setBackground(SECONDARY_COLOR);
+         * 
+         * registerButton.setBackground(TERTIARY_COLOR);
+         * loginButton.setBackground(TERTIARY_COLOR);
+         * logoutButton.setBackground(TERTIARY_COLOR);
+         * deleteButton.setBackground(TERTIARY_COLOR);
+         * 
+         * twoDimension.setBackground(TERTIARY_COLOR);
+         * threeDimension.setBackground(TERTIARY_COLOR);
+         * fourDimension.setBackground(TERTIARY_COLOR);
+         * fiveDimension.setBackground(TERTIARY_COLOR);
+         * 
+         * startButton.setBackground(TERTIARY_COLOR);
+         * 
+         * repaint();
+         * });
+         * try {
+         * Thread.sleep(50);
+         * } catch (InterruptedException ex) {
+         * Thread.currentThread().interrupt();
+         * break;
+         * }
+         * }
+         * });
+         * 
+         * rainbowThread.setDaemon(true);
+         * rainbowThread.start();
+         */
 
         topPanel.setOpaque(false);
-        //loginMainPanel.setOpaque(false);
-        //fieldsPanel.setOpaque(false);
-        //buttonsPanel.setOpaque(false);
-        //topButtons.setOpaque(false);
-        //bottomButtons.setOpaque(false);
+        // loginMainPanel.setOpaque(false);
+        // fieldsPanel.setOpaque(false);
+        // buttonsPanel.setOpaque(false);
+        // topButtons.setOpaque(false);
+        // bottomButtons.setOpaque(false);
         centerPanel.setOpaque(false);
-        //modePanel.setOpaque(false);
-        //configPanel.setOpaque(false);
-        //settingsPanel.setOpaque(false);
-        //mineConfigPanel.setOpaque(false);
-        //difficultyPanel.setOpaque(false);
-        //bottomPanel.setOpaque(false);
-        //errorPanel.setOpaque(false);
-        //startPanel.setOpaque(false);
+        // modePanel.setOpaque(false);
+        // configPanel.setOpaque(false);
+        // settingsPanel.setOpaque(false);
+        // mineConfigPanel.setOpaque(false);
+        // difficultyPanel.setOpaque(false);
+        // bottomPanel.setOpaque(false);
+        // errorPanel.setOpaque(false);
+        // startPanel.setOpaque(false);
         topPanel.setOpaque(false);
-        setOpaque(false);  
+        setOpaque(false);
 
         frame.setVisible(true);
     }
