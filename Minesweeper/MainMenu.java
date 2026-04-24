@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.Toolkit;
@@ -147,7 +148,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     /** The tertiary color for the UI */
     public static Color TERTIARY_COLOR = new Color(200, 200, 200, 125);
-
 
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
@@ -296,7 +296,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        JPanel modePanel = new JPanel(new GridLayout(4, 1, 0, 5));
+        JPanel modePanel = semiTransparentPanel(new GridLayout(4, 1, 0, 5));
         modePanel.setBorder(BorderFactory.createTitledBorder("Select Mode"));
         modePanel.setBackground(SECONDARY_COLOR);
 
@@ -318,7 +318,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         configPanel.setBackground(PRIMARY_COLOR);
         configPanel.setVisible(false);
 
-        JPanel settingsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
+        JPanel settingsPanel = semiTransparentPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
         settingsPanel.setBorder(BorderFactory.createTitledBorder("Game Settings"));
         settingsPanel.setBackground(SECONDARY_COLOR);
 
@@ -374,7 +374,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         dimensionsLabel.setVisible(false);
         dimensionsSpinner.setVisible(false);
 
-        JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        JPanel mineConfigPanel = semiTransparentPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         mineConfigPanel.setBackground(SECONDARY_COLOR);
         mineConfigPanel.add(new JLabel("Mine Amount: "));
 
@@ -393,7 +393,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         configPanel.add(settingsPanel, BorderLayout.NORTH);
 
-        JPanel difficultyPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+        JPanel difficultyPanel = semiTransparentPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
         difficultyPanel.setBorder(BorderFactory.createTitledBorder("Preset Difficulties"));
         difficultyPanel.setBackground(SECONDARY_COLOR);
 
@@ -420,7 +420,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             btns[i].setBackground(SECONDARY_COLOR);
             btns[i].addActionListener(this);
 
-            JPanel each = new JPanel(new BorderLayout());
+            JPanel each = semiTransparentPanel(new BorderLayout());
             each.setBackground(SECONDARY_COLOR);
 
             infoLabels[i].setFont(infoLabels[i].getFont().deriveFont(10f));
@@ -540,25 +540,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
          * rainbowThread.setDaemon(true);
          * rainbowThread.start();
          */
-
         topPanel.setOpaque(false);
-        // loginMainPanel.setOpaque(false);
-        // fieldsPanel.setOpaque(false);
-        // buttonsPanel.setOpaque(false);
-        // topButtons.setOpaque(false);
-        // bottomButtons.setOpaque(false);
+        loginMainPanel.setOpaque(false);
+        fieldsPanel.setOpaque(false);
+        buttonsPanel.setOpaque(false);
+        topButtons.setOpaque(false);
+        bottomButtons.setOpaque(false);
         centerPanel.setOpaque(false);
-        // modePanel.setOpaque(false);
-        // configPanel.setOpaque(false);
-        // settingsPanel.setOpaque(false);
-        // mineConfigPanel.setOpaque(false);
-        // difficultyPanel.setOpaque(false);
-        // bottomPanel.setOpaque(false);
-        // errorPanel.setOpaque(false);
-        // startPanel.setOpaque(false);
-        topPanel.setOpaque(false);
+        configPanel.setOpaque(false);
+        bottomPanel.setOpaque(false);
+        errorPanel.setOpaque(false);
+        startPanel.setOpaque(false);
         setOpaque(false);
-
         frame.setVisible(true);
     }
 
@@ -901,12 +894,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        setBackground(PRIMARY_COLOR);
-
-        super.paintComponent(g);
-    }
 
     private void updateMaxMines() {
         if (dimensionsSelected == 2) {
@@ -1051,6 +1038,19 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             loginStatus.setText("Deletion Cancelled");
         }
 
+    }
+
+    private static JPanel semiTransparentPanel(LayoutManager layout) {
+        JPanel p = new JPanel(layout) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                g.setColor(getBackground());
+                g.fillRect(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+            }
+        };
+        p.setOpaque(false);
+        return p;
     }
 
     /**

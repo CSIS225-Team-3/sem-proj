@@ -14,8 +14,8 @@ import java.awt.Image;
  * @version 4/14/2026
  */
 public class MinesweeperButton extends JButton {
-    public final static Color HIDDEN_COLOR = new Color(200, 115, 115);
-    public final static Color REVEALED_COLOR = new Color(255, 175, 175);
+    public final static Color HIDDEN_COLOR = new Color(200, 115, 115, 180);
+    public final static Color REVEALED_COLOR = new Color(255, 175, 175, 150);
 
     MinesweeperBase game;
     private int idx;
@@ -46,6 +46,7 @@ public class MinesweeperButton extends JButton {
         setFocusPainted(false);
         // setRolloverEnabled(false); //Mouse hover
         setContentAreaFilled(false);
+        setOpaque(false);
         setPreferredSize(new Dimension(50, 50));
         setMinimumSize(new Dimension(50, 50));
         setMaximumSize(new Dimension(50, 50));
@@ -57,6 +58,7 @@ public class MinesweeperButton extends JButton {
 
     /**
      * Gets the index of this button
+     * 
      * @return the index of this button
      */
     public int getIdx() {
@@ -65,6 +67,7 @@ public class MinesweeperButton extends JButton {
 
     /**
      * Gets the number of adjacent mines
+     * 
      * @return the number of adjacent mines
      */
     public int getNumAdjacent() {

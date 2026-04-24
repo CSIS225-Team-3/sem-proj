@@ -61,6 +61,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     /** The JPanel that holds the cards */
     private JPanel cards;
 
+    private BufferedImage bgImage;
+
     /**
      * Constructor for the MinesweeperEuclidean class that initializes the game with
      * the given parameters.
@@ -82,6 +84,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         this.cardLayout = cardLayout;
         this.cards = cards;
 
+        try {
+            bgImage = ImageIO.read(new File("Minesweeper/InGameBackground.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         setLayout(new BorderLayout());
 
         gridVolume = 1;
@@ -97,23 +105,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
      */
     private void build() {
 
-        BufferedImage background = null;
-        try {
-            background = ImageIO.read(new File("Minesweeper/InGameBackground.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        final BufferedImage bg = background;
-        JPanel mainPanel = new JPanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (bg != null) {
-
-                    g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
-                }
-            }
-        };
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setOpaque(false);
 
         JPanel topText = new JPanel(new FlowLayout());
 
@@ -196,23 +189,15 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
         outerRows = numSplices / outerCols;
 
-        gamePanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (bg != null) {
-
-                    g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
-                }
-            }
-        };
+        gamePanel = new JPanel();
+        gamePanel.setOpaque(false);
 
         if (dims.length >= 3) {
             gamePanel.setLayout(new GridLayout(outerRows, outerCols, 30, 30));
             splices = new JPanel[numSplices];
             for (int i = 0; i < numSplices; i++) {
                 splices[i] = new JPanel(new GridLayout(dims[1], dims[0]));
-                splices[i].setBackground(MainMenu.PRIMARY_COLOR);
+                splices[i].setOpaque(false);
                 Dimension spliceSize = new Dimension(dims[0] * 50, dims[1] * 50);
                 splices[i].setPreferredSize(spliceSize);
                 splices[i].setMinimumSize(spliceSize);
@@ -240,11 +225,9 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             }
 
             JPanel centeringPanel = new JPanel(new GridBagLayout());
-            centeringPanel.setBackground(MainMenu.PRIMARY_COLOR);
+            centeringPanel.setOpaque(false);
             centeringPanel.add(gamePanel);
             scrollPane = new JScrollPane(centeringPanel);
-
-            centeringPanel.setOpaque(false);
 
         } else {
             gamePanel.setLayout(new GridLayout(dims[1], dims[0]));
@@ -255,6 +238,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
 
         gamePanel.setOpaque(false);
+        scrollPane.getViewport().setBackground(new Color(0, 0, 0, 0));
 
         // for (int j = 0; j < dims[1]; j++){
         // for (int i = 0; i < dims[0]; i++){
@@ -272,15 +256,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         add(mainPanel);
 
-        setBackground(MainMenu.PRIMARY_COLOR);
         newGame.setBackground(MainMenu.TERTIARY_COLOR);
         reset.setBackground(MainMenu.TERTIARY_COLOR);
-        mainPanel.setBackground(MainMenu.SECONDARY_COLOR);
-        bottomButtons.setBackground(MainMenu.SECONDARY_COLOR);
-        topText.setBackground(MainMenu.SECONDARY_COLOR);
-        scrollPane.getVerticalScrollBar().setBackground(MainMenu.PRIMARY_COLOR);
-        scrollPane.getHorizontalScrollBar().setBackground(MainMenu.PRIMARY_COLOR);
-        gamePanel.setBackground(MainMenu.PRIMARY_COLOR);
+        bottomButtons.setOpaque(false);
+        topText.setOpaque(false);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
     }
 
     /**
@@ -471,5 +452,14 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             stride *= dims[i];
         }
         return idx;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        if (bgImage != null) {
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+        } else {
+            super.paintComponent(g);
+        }
     }
 }
