@@ -40,6 +40,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private JPanel[] splices;
 
+    private JScrollPane scrollPane;
+
+    private int numSplices;
+    private int outerCols;
+    private int outerRows;
+
     /** The size of the grid for the game (amount of buttons) */
     private int gridVolume;
 
@@ -158,10 +164,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             });
         }
 
-        int numSplices;
-        int outerCols;
-        int outerRows;
-
         if (dims.length >= 3) {
             numSplices = gridVolume / (dims[0] * dims[1]);
             outerCols = dims[2];
@@ -177,8 +179,15 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             for (int i = 0; i < numSplices; i++) {
                 splices[i] = new JPanel(new GridLayout(dims[1], dims[0]));
                 splices[i].setBackground(MainMenu.PRIMARY_COLOR);
-                //splices[i].setBorder(BorderFactory.createTitledBorder("Splice " + (i+1)));
-                gamePanel.add(splices[i]);
+                Dimension spliceSize = new Dimension(dims[0] * 50, dims[1] * 50);
+                splices[i].setPreferredSize(spliceSize);
+                splices[i].setMinimumSize(spliceSize);
+                splices[i].setMaximumSize(spliceSize);
+                // splices[i].setBorder(BorderFactory.createTitledBorder("Splice " + (i+1)));
+
+                JPanel spliceWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+                spliceWrapper.add(splices[i]);
+                gamePanel.add(spliceWrapper);
                 for (int j = 0; j < dims[1]; j++) {
                     for (int k = 0; k < dims[0]; k++) {
                         int[] pos = new int[dims.length];
@@ -207,10 +216,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         // buttons[i][j].reveal();
         // }
         // }
-        JPanel centered = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        centered.setBackground(MainMenu.PRIMARY_COLOR);
-        centered.add(gamePanel);
-        JScrollPane scrollPane = new JScrollPane(centered);
+        JPanel centeringPanel = new JPanel(new GridBagLayout());
+        centeringPanel.setBackground(MainMenu.PRIMARY_COLOR);
+        centeringPanel.add(gamePanel);
+        scrollPane = new JScrollPane(centeringPanel);
 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
