@@ -314,8 +314,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         twoDimension = new JButton("2D Minesweeper");
         threeDimension = new JButton("3D Minesweeper");
-        fourDimension = new JButton("4D Minesweeper (WIP)");
-        fiveDimension = new JButton("5D+ Minesweeper (Coming Soon!)");
+        fourDimension = new JButton("4D Minesweeper");
+        fiveDimension = new JButton("5D+ Minesweeper)");
 
         JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension };
         for (JButton b : dimensions) {
