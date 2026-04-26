@@ -1,4 +1,4 @@
-﻿using CliWrap;
+using CliWrap;
 using DotNetGraph.Compilation;
 using DotNetGraph.Core;
 using DotNetGraph.Extensions;
@@ -9,19 +9,74 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        var v = Gen();
+        var (vertVer, tileVer) = Gen();
+
+
+        //var tileVer = ConvertToTiles(vertVer);
+
+        //Vert ConvertToTiles(Vert v)
+        //{
+        //    //var n1 = v.neighbors;
+        //    ////2nd degree neighbors that aren't the parent
+        //    //var n2 = n1.Select(n => n.neighbors.Where(n => n != v)).ToList();
+        //    ////Closed neighbors
+        //    //var n3 = n2.Where(n => n.Any(x => n1.Contains(x)))
+
+        //    return v;
+        //}
+
+
+
+
+
 
         var graph = new DotGraph().WithIdentifier("MyGraph");
-        var directedGraph = new DotGraph().WithIdentifier("MyDirectedGraph").Directed();
+        var directedGraph = new DotGraph().WithIdentifier("MyDirectedGraph");
 
-        Dictionary<Vert, DotNode> visited = [];
         HashSet<(DotNode, DotNode)> edges = [];
 
-        Convert(v);
+        //Dictionary<Vert, DotNode> v_visited = [];
+        //Convert(vertVer);
 
-        DotNode Convert(Vert v)
+        Dictionary<Tile, DotNode> t_visited = [];
+        Convert(tileVer);
+
+        //DotNode Convert(Vert v)
+        //{
+        //    if (v_visited.TryGetValue(v, out var existingNode))
+        //        return existingNode;
+
+        //    var nodeId = v.GetHashCode().ToString();
+        //    var node = new DotNode()
+        //        .WithIdentifier(nodeId)
+        //        .WithShape(DotNodeShape.Ellipse)
+        //        .WithLabel(v.id.ToString());
+
+        //    graph.Elements.Add(node);
+        //    v_visited.Add(v, node);
+
+        //    foreach (var neighbor in v.neighbors)
+        //    {
+        //        //Recurse for the neighbor's DotNode
+        //        var neighborNode = Convert(neighbor);
+
+        //        //A--B is the same as B--A, check to avoid duplicates
+        //        if (!edges.Contains((node, neighborNode)) && !edges.Contains((neighborNode, node)))
+        //        {
+        //            var edge = new DotEdge()
+        //                .From(node)
+        //                .To(neighborNode);
+        //            graph.Elements.Add(edge);
+        //            edges.Add((node, neighborNode));
+        //        }
+        //    }
+
+        //    return node;
+        //}
+
+        DotNode Convert(Tile v)
         {
-            if (visited.TryGetValue(v, out var existingNode))
+            if (t_visited.TryGetValue(v, out var existingNode))
                 return existingNode;
 
             var nodeId = v.GetHashCode().ToString();
@@ -31,7 +86,7 @@ internal class Program
                 .WithLabel(v.id.ToString());
 
             graph.Elements.Add(node);
-            visited.Add(v, node);
+            t_visited.Add(v, node);
 
             foreach (var neighbor in v.neighbors)
             {
@@ -56,47 +111,53 @@ internal class Program
         var context = new CompilationContext(writer, new CompilationOptions());
         graph.CompileAsync(context);
 
-        //var dotResult = writer.GetStringBuilder().ToString();
+        var dotResult = writer.GetStringBuilder().ToString();
 
-        //File.WriteAllText("graph.dot", dotResult);
+        File.WriteAllText("graph.dot", dotResult);
 
-        //var result = Cli.Wrap(@"C:\Users\kaned\Desktop\Programming Tools\Graphviz\bin\dot.exe")
-        //        .WithArguments(args => args
-        //            .Add("-Tpng")
-        //            .Add("graph.dot")
-        //            .Add("-o")
-        //            .Add("img.png"))
-        //        .WithValidation(CommandResultValidation.ZeroExitCode)
-        //        .ExecuteAsync();
+        var result = Cli.Wrap(@"C:\Users\kaned\Desktop\Programming Tools\Graphviz\bin\dot.exe")
+                .WithArguments(args => args
+                    .Add("-Tpng")
+                    .Add("graph.dot")
+                    .Add("-o")
+                    .Add("img.png"))
+                .WithValidation(CommandResultValidation.ZeroExitCode)
+                .ExecuteAsync();
 
-        //Console.WriteLine($"Success: {result.Task.Result.IsSuccess}");
+        Console.WriteLine($"Success: {result.Task.Result.IsSuccess}");
     }
 
 
-    static Vert Gen()
+    static (Vert vertGraph, Tile tileGraph) Gen()
     {
+        Tile tile0 = new();
+        Tile tile1 = new();
+        tile0.AddNeighbor(tile1);
+
+        var v0 = new Vert();
         var v1 = new Vert();
-        var v2 = new Vert();
-        v1.AddNeighbor(v2, true);
+        v0.AddNeighbor(v1, tile0); //Bottom
 
-        //Core tile approach CCW
-        (var tmp1, var tmp2) = Extrude3L(v1, v2); //First tile
-        v1.MarkBuilder(tmp1);
-        v2.MarkBuilder(tmp2);
-        (v1, v2) = (tmp1, tmp2);
+        (var v2, var v3) = Extrude3L(v0, v1); //First tile
+        v0.MarkBuilder(v2, tile0); //Left
+        v1.MarkBuilder(v3, tile0); //Right
 
-        (tmp1, Vert shell) = Extrude3L(v1, v2); //2nd tile
-        tmp1.MarkBuilder(shell);
-        v2.MarkBuilder(shell);
-        v2 = tmp1;
+        (Vert v4, Vert v5) = Extrude3L(v2, v3); //2nd tile
+        v4.MarkBuilder(v5, tile1);
+        v3.MarkBuilder(v5, tile1);
 
-        for (int i = 0; i < 1000; i++)
+        var l = v2;
+        var r = v4;
+        var nt = tile1;
+        //for (int i = 0; i <= 58; i++)
+        //for (int i = 0; i <= 10; i++)
+        for (int i = 0; i <= 15; i++)
         {
-            (v1, v2) = Extrude(v1, v2);
-            Console.WriteLine($"{v1.id} {v2.id} {i}");
+            (l, r, nt) = Extrude(l, r, nt);
+            Console.WriteLine($"{l.id} {r.id} {i}");
         }
 
-        return v1;
+        return (v0, tile0);
 
         static (Vert l, Vert r) Extrude3L(Vert parentL, Vert parentR)
         {
@@ -114,29 +175,32 @@ internal class Program
             }
         }
 
-        static (Vert l, Vert r) Extrude(Vert parentL, Vert parentR)
+        static (Vert l, Vert r, Tile newTile) Extrude(Vert parentL, Vert parentR, Tile parentTile)
         {
+            Tile newTile = new();
+            newTile.AddNeighbor(parentTile);
+
             if (parentL.neighbors.Count is 3 or 4)
             {
                 //Full extrusion
                 var nL = new Vert();
                 var nR = new Vert();
                 parentL.AddNeighbor(nL);
-                parentR.AddNeighbor(nR, true);
-                nL.AddNeighbor(nR, true);
-                return (parentL, nL);
+                parentR.AddNeighbor(nR, newTile);
+                nL.AddNeighbor(nR, newTile);
+                return (parentL, nL, newTile);
             }
             else if (parentL.neighbors.Count == 5)
             {
                 //Merging extrusion
                 //CCW
                 var nL = (parentL.builderCons ?? []).Single();
-                parentL.UnmarkBuilder(nL);
+                parentL.UnmarkBuilder(nL.Key, newTile);
                 var nR = new Vert();
-                parentR.AddNeighbor(nR, true);
-                nL.AddNeighbor(nR);
+                parentR.AddNeighbor(nR, newTile);
+                nL.Key.AddNeighbor(nR);
                 Console.WriteLine("C");
-                return (nL, nR);
+                return (nL.Key, nR, newTile);
             }
             else
                 throw new Exception("Uh oh");
@@ -149,9 +213,10 @@ internal class Program
         public readonly int id = instances++;
 
         public List<Vert> neighbors = [];
-        public List<Vert>? builderCons = null;
+        //Vert => Tile
+        public Dictionary<Vert, Tile>? builderCons = null;
 
-        public void AddNeighbor(Vert neighbor, bool markBuilder = false)
+        public void AddNeighbor(Vert neighbor, Tile? tile = null)
         {
             if (neighbors.Contains(neighbor) || neighbor.neighbors.Contains(this))
                 throw new Exception("Already a neighbor");
@@ -159,23 +224,32 @@ internal class Program
             neighbors.Add(neighbor);
             neighbor.neighbors.Add(this);
 
-            if (markBuilder)
-                MarkBuilder(neighbor);
+            if (tile != null)
+                MarkBuilder(neighbor, tile);
         }
 
-        public void MarkBuilder(Vert neighbor)
+        public void RemoveNeighbor(Vert neighbor)
+        {
+            if (!neighbors.Contains(neighbor))
+                throw new Exception("Not a neighbor");
+
+            neighbors.Remove(neighbor);
+            neighbor.neighbors.Remove(this);
+        }
+
+        public void MarkBuilder(Vert neighbor, Tile tile)
         {
             if (!neighbors.Contains(neighbor))
                 throw new Exception("Not a neighbor");
 
             builderCons ??= [];
-            builderCons.Add(neighbor);
+            builderCons.Add(neighbor, tile);
 
             neighbor.builderCons ??= [];
-            neighbor.builderCons.Add(this);
+            neighbor.builderCons.Add(this, tile);
         }
 
-        public void UnmarkBuilder(Vert neighbor)
+        public void UnmarkBuilder(Vert neighbor, Tile newTile)
         {
             if (!neighbors.Contains(neighbor))
                 throw new Exception("Not a neighbor");
@@ -183,8 +257,11 @@ internal class Program
             if (builderCons == null || neighbor.builderCons == null)
                 throw new Exception("Error state? Or not a builder? idk");
 
-            builderCons.Remove(neighbor);
+            if (!builderCons.Remove(neighbor, out Tile? tile))
+                throw new Exception();
             neighbor.builderCons.Remove(this);
+
+            tile.AddNeighbor(newTile);
 
             if (builderCons.Count == 0)
                 builderCons = null;
@@ -192,17 +269,38 @@ internal class Program
                 neighbor.builderCons = null;
         }
 
-        public Vert? GetSharedVert(Vert other)
+        //public Vert? GetSharedVert(Vert other)
+        //{
+        //    foreach (var neighbor in neighbors)
+        //        if (neighbor == other)
+        //            throw new Exception("Direct Neighbor");
+
+        //    foreach (var neighbor in neighbors)
+        //        if (other.neighbors.Contains(neighbor))
+        //            return neighbor;
+
+        //    return null;
+        //}
+
+        public override string ToString() => id.ToString();
+    }
+
+
+
+    class Tile
+    {
+        static int instances = 0;
+        public readonly int id = instances++;
+
+        public List<Tile> neighbors = [];
+
+        public void AddNeighbor(Tile neighbor)
         {
-            foreach (var neighbor in neighbors)
-                if (neighbor == other)
-                    throw new Exception("Direct Neighbor");
+            if (neighbors.Contains(neighbor) || neighbor.neighbors.Contains(this))
+                throw new Exception("Already a neighbor");
 
-            foreach (var neighbor in neighbors)
-                if (other.neighbors.Contains(neighbor))
-                    return neighbor;
-
-            return null;
+            neighbors.Add(neighbor);
+            neighbor.neighbors.Add(this);
         }
 
         public override string ToString() => id.ToString();
