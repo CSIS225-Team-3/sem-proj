@@ -143,7 +143,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             MinesweeperButton button = buttons[i] = new MinesweeperButton(this, i);
             button.setOpaque(false);
             button.setContentAreaFilled(false);
-            button.setBackground(MainMenu.PRIMARY_COLOR);
+            //button.setBackground(MainMenu.PRIMARY_COLOR);
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {

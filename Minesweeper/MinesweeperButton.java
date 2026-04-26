@@ -14,7 +14,7 @@ import java.awt.Image;
  * @version 4/14/2026
  */
 public class MinesweeperButton extends JButton {
-    public final static Color HIDDEN_COLOR = new Color(50, 80, 120, 180);
+    public final static Color HIDDEN_COLOR = new Color(50, 80, 120, 150);
     public final static Color REVEALED_COLOR = new Color(100, 160, 240, 150);
 
     MinesweeperBase game;
