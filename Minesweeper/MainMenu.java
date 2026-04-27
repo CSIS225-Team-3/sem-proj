@@ -56,7 +56,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private static final String FOUR_DIMENSIONS = "4D Minesweeper";
 
     private static final String FIVE_DIMENSIONS = "5D+ Minesweeper";
-    private static final String HYPERBOLIC_MS = "Hyperbolic Minesweeper";
+    private static final String HYPERBOLIC = "Hyperbolic Minesweeper";
 
     /** The CardLayout for managing panels */
     private CardLayout cardLayout;
@@ -308,7 +308,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         topPanel.add(loginMainPanel, BorderLayout.EAST);
 
-        // TODO: Higher the location of it
 
         mainText = new JLabel("Welcome to Minesweeper!", SwingConstants.CENTER);
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
@@ -657,6 +656,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 difficultyInfoLabels[2].setText("16x30, 99 mines");
                 difficultyInfoLabels[3].setText("30x50, 400 mines");
 
+                minesSpinner.setValue(10);
+
             } else if (src == threeDimension) {
 
                 selectedMode = THREE_DIMENSIONS;
@@ -684,6 +685,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 difficultyInfoLabels[2].setText("11x11x6, 150 mines");
                 difficultyInfoLabels[3].setText("18x18x8, 400 mines");
 
+                minesSpinner.setValue(30);
+
             } else if (src == fourDimension) {
 
                 selectedMode = FOUR_DIMENSIONS;
@@ -705,11 +708,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 dimensionsLabel.setVisible(false);
                 dimensionsSpinner.setVisible(false);
-                // TODO: add 4d difficultys and 4d max mines
+
                 difficultyInfoLabels[0].setText("4x4x3x3, 20 mines");
                 difficultyInfoLabels[1].setText("5x5x4x4, 80 mines");
                 difficultyInfoLabels[2].setText("6x6x5x5, 225 mines");
                 difficultyInfoLabels[3].setText("9x9x7x7, 850 mines");
+
+                minesSpinner.setValue(120);
 
             } else if (src == fiveDimension) {
                 selectedMode = FIVE_DIMENSIONS;
@@ -736,6 +741,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 difficultyInfoLabels[1].setText("5D, 5x5x4x4x3, 225 mines");
                 difficultyInfoLabels[2].setText("6D, 5x5x5x4x3x3, 1000 mines");
                 difficultyInfoLabels[3].setText("7D, 5x5x5x5x3x3x3, 4125 mines");
+
+                minesSpinner.setValue(500);
             } else {
                 selectedMode = "";
             }
