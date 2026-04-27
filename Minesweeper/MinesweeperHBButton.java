@@ -18,7 +18,7 @@ public class MinesweeperHBButton extends JButton {
     public final static Color REVEALED_COLOR = new Color(100, 160, 240, 150);
 
     MinesweeperHyperbolic game;
-    private int idx;
+    private Tile tile = null;
 
     private boolean isRevealed = false;
 
@@ -34,12 +34,11 @@ public class MinesweeperHBButton extends JButton {
     /**
      * Constructor for MinesweeperButton
      */
-    public MinesweeperHBButton(MinesweeperHyperbolic game, int idx) {
+    public MinesweeperHBButton(MinesweeperHyperbolic game) {
         super((String) null);
         // super(position[0] + " " + position[1]);
 
         this.game = game;
-        this.idx = idx;
 
         setBackground(HIDDEN_COLOR);
         setForeground(Color.BLACK);
@@ -57,12 +56,12 @@ public class MinesweeperHBButton extends JButton {
     }
 
     /**
-     * Gets the index of this button
+     * Gets the tile this button is showing
      * 
-     * @return the index of this button
+     * @return the tile this button is showing
      */
-    public int getIdx() {
-        return idx;
+    public Tile getTile() {
+        return tile;
     }
 
     /**
@@ -96,7 +95,7 @@ public class MinesweeperHBButton extends JButton {
             if (numAdjacent == 0) {
                 setText(null);
 
-                MinesweeperHBButton[] adjacents = game.getAdjacentButtons(getIdx());
+                MinesweeperHBButton[] adjacents = game.getAdjacentButtons(this);
                 for (int i = 0; i < adjacents.length; i++) {
                     adjacents[i].reveal();
                 }
@@ -137,7 +136,7 @@ public class MinesweeperHBButton extends JButton {
     public void setMine(boolean isMine) {
         this.isMine = isMine;
 
-        MinesweeperHBButton[] adjacents = game.getAdjacentButtons(getIdx());
+        MinesweeperHBButton[] adjacents = game.getAdjacentButtons(this);
         for (int i = 0; i < adjacents.length; i++) {
             adjacents[i].numAdjacent++;
         }

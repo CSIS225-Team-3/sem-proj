@@ -6,12 +6,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.security.InvalidParameterException;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * A 2D game of minesweeper
@@ -22,6 +22,9 @@ import java.util.ArrayList;
 public class MinesweeperHyperbolic extends MinesweeperBase implements ActionListener {
     /** The array of buttons for the game */
     private MinesweeperHBButton[] buttons;
+
+    private Tile[] allTiles;
+    private HashMap<Tile, MinesweeperHBButton> visibleTiles = new HashMap<>();
 
     private int mineCount;
 
@@ -66,6 +69,8 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         this.mineCount = mines;
         this.cardLayout = cardLayout;
         this.cards = cards;
+
+        allTiles = HyperbolicGraphGen.gen();
 
         try {
             bgImage = ImageIO.read(new File("Minesweeper/InGameBackground.png"));
@@ -122,7 +127,7 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         buttons = new MinesweeperHBButton[viewButtons];
 
         for (int i = 0; i < viewButtons; i++) {
-            MinesweeperHBButton button = buttons[i] = new MinesweeperHBButton(this, i);
+            MinesweeperHBButton button = buttons[i] = new MinesweeperHBButton(this);
             button.setOpaque(false);
             button.setContentAreaFilled(false);
             button.setBackground(MainMenu.PRIMARY_COLOR);
@@ -337,39 +342,21 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
      * @param position The index of the reference button
      * @return the list of buttons adjacent to one
      */
-    public MinesweeperHBButton[] getAdjacentButtons(int idx) {
-        throw new IllegalStateException("Not implemented yet");
-        // int[] targetPos = idxToPos(idx);
+    public MinesweeperHBButton[] getAdjacentButtons(MinesweeperHBButton ref) {
+        Tile t = ref.getTile();
 
-        // DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
-        //     int[] ctx = (int[]) context;
-        //     int min = Math.max(0, ctx[axis] - 1);
-        //     int max = Math.min(length - 1, ctx[axis] + 1) + 1; // +1 because max is exclusive
-        //     return new int[] { min, max };
-        // }, targetPos);
+        if (t == null)
+            return new MinesweeperHBButton[0];
 
-        // ArrayList<MinesweeperButton> adjs = new ArrayList<>();
-        // while (iter.hasNext()) {
-        //     MinesweeperButton b = iter.next();
-        //     int[] pos = idxToPos(b.getIdx());
-
-        //     boolean equal = true;
-        //     for (int i = 0; i < pos.length; i++) {
-        //         if (pos[i] != targetPos[i]) {
-        //             equal = false;
-        //             break;
-        //         }
-        //     }
-
-        //     if (!equal)
-        //         adjs.add(b);
-        // }
-
-        // return adjs.toArray(new MinesweeperHBButton[0]);
+        HashSet<Tile> adjs = new HashSet<>();
+        for (Vert v : t.vertices)
+            adjs.addAll(v.tiles);
+        
+        return adjs.stream().map(visibleTiles::get).toArray(MinesweeperHBButton[]::new);
     }
 
     private void highlightNeighbors(MinesweeperHBButton button) {
-        MinesweeperHBButton[] adj = getAdjacentButtons(button.getIdx());
+        MinesweeperHBButton[] adj = getAdjacentButtons(button);
 
         for (MinesweeperHBButton b : adj) {
             if (!b.getRevealed()) {

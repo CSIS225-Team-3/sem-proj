@@ -56,6 +56,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private static final String FOUR_DIMENSIONS = "4D Minesweeper";
 
     private static final String FIVE_DIMENSIONS = "5D+ Minesweeper";
+    private static final String HYPERBOLIC_MS = "Hyperbolic Minesweeper";
 
     /** The CardLayout for managing panels */
     private CardLayout cardLayout;
@@ -584,6 +585,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         startButton.setContentAreaFilled(false);
         frame.setVisible(true);
+
+
+        //Dev thing, leave it for now
+        // int mines = 1;
+        // cards.add(new MinesweeperHyperbolic(mines, cardLayout, cards), HYPERBOLIC_MS);
+        // cardLayout.show(cards, HYPERBOLIC_MS);
     }
 
     @Override
