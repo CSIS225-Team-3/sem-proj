@@ -151,15 +151,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     public static Color TRANSPARENT_COLOR = new Color(0, 0, 0, 255);
 
-    public final static int MAX_ROWS = 100;
-    public final static int MAX_COLS = 100;
-    public final static int MAX_SPLICES3D = 100;
-    public final static int MAX_SPLICES4D = 100;
-    public final static int MAX_SPLICES5D = 100;
+    private final static int MAX_ROWS = 100;
+    private final static int MAX_COLS = 100;
+    private final static int MAX_SPLICES3D = 100;
+    private final static int MAX_SPLICES4D = 100;
+    private final static int MAX_SPLICES5D = 100;
 
-    public int maxMines = MAX_ROWS * MAX_COLS;
+    private int maxMines = MAX_ROWS * MAX_COLS;
 
-    public final static int MAX_DIMENSIONS = 100;
+    private int maxRandomMines;
+
+    private final static int MAX_DIMENSIONS = 100;
 
     private int dimensionsSelected;
 
@@ -207,8 +209,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
         final BufferedImage bg = background;
         final TexturePaint tp = texturepaint;
-        System.out.println(background.getWidth());
-        System.out.println(background.getHeight());
         cardLayout = new CardLayout();
         cards = new JPanel(cardLayout) {
             @Override
@@ -818,10 +818,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 int[] dims = { cols, rows };
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxMines) + 1;
+                    mines = new Random().nextInt(maxRandomMines) / 2 + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > maxMines) {
+                    if (mines > maxRandomMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
@@ -836,10 +836,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 int[] dims = { cols, rows, splices3d };
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxMines) + 1;
+                    mines = new Random().nextInt(maxRandomMines) / 2 + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > maxMines) {
+                    if (mines > maxRandomMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
@@ -854,17 +854,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 int[] dims = { cols, rows, splices3d, splices4d };
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxMines) + 1;
+                    mines = new Random().nextInt(maxRandomMines) / 2 + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > maxMines) {
+                    if (mines > maxRandomMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
                 }
                 cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), FOUR_DIMENSIONS);
                 cardLayout.show(cards, FOUR_DIMENSIONS);
-            } else if (dimensionsSelected == 5) {
+            } else if (dimensionsSelected >= 5) {
 
                 int splices3d = (int) splices3dSpinner.getValue();
                 int splices4d = (int) splices4dSpinner.getValue();
@@ -880,10 +880,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 }
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxMines) + 1;
+                    mines = new Random().nextInt(maxRandomMines) / 2 + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > maxMines) {
+                    if (mines > maxRandomMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
@@ -926,12 +926,20 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private void updateMaxMines() {
         if (dimensionsSelected == 2) {
             maxMines = MAX_ROWS * MAX_COLS - 1;
+            maxRandomMines = (int) rowsSpinner.getValue() * (int) colsSpinner.getValue() - 1;
         } else if (dimensionsSelected == 3) {
             maxMines = MAX_ROWS * MAX_COLS - 1;
+            maxRandomMines = (int) rowsSpinner.getValue() * (int) colsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() - 1;
         } else if (dimensionsSelected == 4) {
             maxMines = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D - 1;
+            maxRandomMines = (int) rowsSpinner.getValue() * (int) colsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue() - 1;
         } else if (dimensionsSelected >= 5) {
             int BeyondCellCount = (MAX_SPLICES5D * (dimensionsSelected - 4));
+            maxRandomMines = (int) rowsSpinner.getValue() * (int) colsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue()
+                    - 1 * ((int) splices5dSpinner.getValue() * (dimensionsSelected));
             maxMines = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D * BeyondCellCount - 1;
         }
     }

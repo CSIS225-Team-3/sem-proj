@@ -314,7 +314,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
 
         java.util.Collections.shuffle(allPositions);
-
         int actualMineCount = Math.min(mineCount, allPositions.size());
 
         for (int i = 0; i < actualMineCount; i++) {
