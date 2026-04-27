@@ -118,11 +118,10 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
         mainPanel.add(bottomButtons, BorderLayout.SOUTH);
 
-        buttons = new MinesweeperHBButton[gridVolume];
+        final int viewButtons = 13;
+        buttons = new MinesweeperHBButton[viewButtons];
 
-        JPanel gamePanel;
-
-        for (int i = 0; i < gridVolume; i++) {
+        for (int i = 0; i < viewButtons; i++) {
             MinesweeperHBButton button = buttons[i] = new MinesweeperHBButton(this, i);
             button.setOpaque(false);
             button.setContentAreaFilled(false);
@@ -166,42 +165,71 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
             });
         }
 
-        gamePanel = new JPanel();
+        JPanel gamePanel = new JPanel();
         gamePanel.setOpaque(false);
 
-        //NOTE: This WILL throw since this is always reached
-        throw new IllegalStateException("Not implemented yet");
-        // gamePanel.setLayout(new GridLayout(dims[1], dims[0]));
-        // for (int i = 0; i < gridVolume; i++) {
-        //     gamePanel.add(buttons[i]);
+        gamePanel.setLayout(new GridLayout(5, 5));
+        int btnIdx = 0;
+        //-###-
+        gamePanel.add(new JPanel());
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(new JPanel());
+        //#---#
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(new JPanel());
+        gamePanel.add(new JPanel());
+        gamePanel.add(new JPanel());
+        gamePanel.add(buttons[btnIdx++]);
+        //#-#-#
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(new JPanel());
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(new JPanel());
+        gamePanel.add(buttons[btnIdx++]);
+        //#---#
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(new JPanel());
+        gamePanel.add(new JPanel());
+        gamePanel.add(new JPanel());
+        gamePanel.add(buttons[btnIdx++]);
+        //-###-
+        gamePanel.add(new JPanel());
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(new JPanel());
+        if (btnIdx != viewButtons)
+            throw new IllegalStateException("Wrong number of buttons");
+
+        scrollPane = new JScrollPane(gamePanel);
+        
+        gamePanel.setOpaque(false);
+        scrollPane.getViewport().setBackground(new Color(0, 0, 0, 0));
+
+        // for (int j = 0; j < dims[1]; j++){
+        // for (int i = 0; i < dims[0]; i++){
+        // buttons[i][j].reveal();
         // }
-        // scrollPane = new JScrollPane(gamePanel);
-
-        // gamePanel.setOpaque(false);
-        // scrollPane.getViewport().setBackground(new Color(0, 0, 0, 0));
-
-        // // for (int j = 0; j < dims[1]; j++){
-        // // for (int i = 0; i < dims[0]; i++){
-        // // buttons[i][j].reveal();
-        // // }
-        // // }
-
-        // scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        // scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
-
-        // scrollPane.getViewport().setOpaque(false);
-        // scrollPane.setOpaque(false);
-
-        // mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-        // add(mainPanel);
-
-        // newGame.setBackground(MainMenu.TERTIARY_COLOR);
-        // reset.setBackground(MainMenu.TERTIARY_COLOR);
-        // bottomButtons.setOpaque(false);
-        // topText.setOpaque(false);
-        // scrollPane.setOpaque(false);
-        // scrollPane.getViewport().setOpaque(false);
+        // }
+        
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+        
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setOpaque(false);
+        
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        add(mainPanel);
+        
+        newGame.setBackground(MainMenu.TERTIARY_COLOR);
+        reset.setBackground(MainMenu.TERTIARY_COLOR);
+        bottomButtons.setOpaque(false);
+        topText.setOpaque(false);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
     }
 
     /**
