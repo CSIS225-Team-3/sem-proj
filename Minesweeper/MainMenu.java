@@ -1199,7 +1199,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         return p;
     }
 
-    private static JButton semiTransparentButton(String text) {
+    public static JButton semiTransparentButton(String text) {
         JButton button = new JButton(text) {
             @Override
             protected void paintComponent(Graphics g) {
