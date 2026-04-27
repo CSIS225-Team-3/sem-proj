@@ -96,6 +96,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     private JButton fiveDimension;
 
+    private JButton hyperbolic;
+
     private JRadioButton easyBtn;
     private JRadioButton mediumBtn;
     private JRadioButton hardBtn;
@@ -147,10 +149,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public static Color PRIMARY_COLOR = Color.WHITE;
 
     /** The secondary color for the UI */
-    public static Color SECONDARY_COLOR = new Color(150, 150, 150, 125);
+    public static Color SECONDARY_COLOR = new Color(30, 100, 200, 175);
 
     /** The tertiary color for the UI */
-    public static Color TERTIARY_COLOR = new Color(225, 225, 225, 175);
+    public static Color TERTIARY_COLOR = new Color(65, 150, 255, 220);
 
     public static Color TRANSPARENT_COLOR = new Color(0, 0, 0, 255);
 
@@ -239,10 +241,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         usernameField = new JTextField();
         passwordField = new JPasswordField();
 
-        registerButton = new JButton("Register");
-        loginButton = new JButton("Login");
-        logoutButton = new JButton("Log Out");
-        deleteButton = new JButton("Delete Account");
+        registerButton = semiTransparentButton("Register");
+        loginButton = semiTransparentButton("Login");
+        logoutButton = semiTransparentButton("Log Out");
+        deleteButton = semiTransparentButton("Delete Account");
 
         registerButton.setOpaque(false);
         registerButton.setContentAreaFilled(false);
@@ -308,8 +310,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         topPanel.add(loginMainPanel, BorderLayout.EAST);
 
-
         mainText = new JLabel("Welcome to Minesweeper!", SwingConstants.CENTER);
+        mainText.setForeground(Color.WHITE);
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
         topPanel.add(mainText, BorderLayout.NORTH);
 
@@ -318,20 +320,22 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        JPanel modePanel = semiTransparentPanel(new GridLayout(4, 1, 0, 5));
+        JPanel modePanel = semiTransparentPanel(new GridLayout(5, 1, 0, 5));
         modePanel.setBorder(BorderFactory.createTitledBorder("Select Mode"));
         modePanel.setBackground(SECONDARY_COLOR);
 
-        twoDimension = new JButton("2D Minesweeper");
-        threeDimension = new JButton("3D Minesweeper");
-        fourDimension = new JButton("4D Minesweeper");
-        fiveDimension = new JButton("5D+ Minesweeper");
+        twoDimension = semiTransparentButton("2D Minesweeper");
+        threeDimension = semiTransparentButton("3D Minesweeper");
+        fourDimension = semiTransparentButton("4D Minesweeper");
+        fiveDimension = semiTransparentButton("5D+ Minesweeper");
+        hyperbolic = semiTransparentButton("Hyperbolic Minesweeper");
 
-        JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension };
+        JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension, hyperbolic };
         for (JButton b : dimensions) {
-            b.setBackground(TERTIARY_COLOR);
-            b.setOpaque(false);
-            b.setContentAreaFilled(false);
+            // b.setBackground(TERTIARY_COLOR);
+            // b.setForeground(Color.WHITE);
+            // b.setOpaque(true);
+            // b.setContentAreaFilled(true);
             b.addActionListener(this);
             modePanel.add(b);
         }
@@ -471,7 +475,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         errorLabel.setForeground(Color.RED);
         errorPanel.add(errorLabel);
 
-        startButton = new JButton("Start Game");
+        startButton = semiTransparentButton("Start Game");
         startButton.setBackground(TERTIARY_COLOR);
         startButton.addActionListener(this);
 
@@ -585,10 +589,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         startButton.setContentAreaFilled(false);
         frame.setVisible(true);
 
-
-        //Dev thing, leave it for now
+        // Dev thing, leave it for now
         // int mines = 1;
-        // cards.add(new MinesweeperHyperbolic(mines, cardLayout, cards), HYPERBOLIC_MS);
+        // cards.add(new MinesweeperHyperbolic(mines, cardLayout, cards),
+        // HYPERBOLIC_MS);
         // cardLayout.show(cards, HYPERBOLIC_MS);
     }
 
@@ -1174,6 +1178,22 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         };
         p.setOpaque(false);
         return p;
+    }
+
+    private static JButton semiTransparentButton(String text) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                g.setColor(getBackground());
+                g.fillRect(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+            }
+        };
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setForeground(Color.WHITE);
+        button.setBackground(TERTIARY_COLOR);
+        return button;
     }
 
     /**
