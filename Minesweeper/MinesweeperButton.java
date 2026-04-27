@@ -101,9 +101,14 @@ public class MinesweeperButton extends JButton {
                     adjacents[i].reveal();
                 }
             } else {
-                setText(String.valueOf(numAdjacent));
+                String text = String.valueOf(numAdjacent);
+                setText(text);
+                if (text.length() >= 3) {
+                    setFont(getFont().deriveFont(8f));
+                }
             }
         }
+
     }
 
     /**
