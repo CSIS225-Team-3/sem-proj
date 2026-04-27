@@ -44,6 +44,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     /** The dimensions of the game */
     private int[] dims;
 
+    private int buttonSize;
+
     private JPanel[] splices;
 
     private JScrollPane scrollPane;
@@ -73,7 +75,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
      * @param cardLayout the CardLayout for managing panels
      * @param cards      the JPanel that holds the cards
      */
-    public MinesweeperEuclidean(int[] dims, int mines, CardLayout cardLayout, JPanel cards) {
+    public MinesweeperEuclidean(int[] dims, int mines, int buttonSize, CardLayout cardLayout, JPanel cards) {
         super();
 
         if (dims.length == 0)
@@ -81,6 +83,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         this.dims = dims;
         this.mineCount = mines;
+        this.buttonSize = buttonSize;
         this.cardLayout = cardLayout;
         this.cards = cards;
 
@@ -140,10 +143,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         JPanel gamePanel;
 
         for (int i = 0; i < gridVolume; i++) {
-            MinesweeperButton button = buttons[i] = new MinesweeperButton(this, i);
+            MinesweeperButton button = buttons[i] = new MinesweeperButton(this, buttonSize, i);
             button.setOpaque(false);
             button.setContentAreaFilled(false);
-            //button.setBackground(MainMenu.PRIMARY_COLOR);
+            // button.setBackground(MainMenu.PRIMARY_COLOR);
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -196,12 +199,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         gamePanel.setOpaque(false);
 
         if (dims.length >= 3) {
-            gamePanel.setLayout(new GridLayout(outerRows, outerCols, 30, 30));
+            gamePanel.setLayout(new GridLayout(outerRows, outerCols, buttonSize, buttonSize));
             splices = new JPanel[numSplices];
             for (int i = 0; i < numSplices; i++) {
                 splices[i] = new JPanel(new GridLayout(dims[1], dims[0]));
                 splices[i].setOpaque(false);
-                Dimension spliceSize = new Dimension(dims[0] * 50, dims[1] * 50);
+                Dimension spliceSize = new Dimension(dims[0] * buttonSize, dims[1] * buttonSize);
                 splices[i].setPreferredSize(spliceSize);
                 splices[i].setMinimumSize(spliceSize);
                 splices[i].setMaximumSize(spliceSize);
@@ -382,9 +385,9 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
     }
 
-    
     /**
      * Gets the list of buttons adjacent to one
+     * 
      * @param position The index of the reference button
      * @return the list of buttons adjacent to one
      */

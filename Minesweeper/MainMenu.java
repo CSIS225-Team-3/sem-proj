@@ -81,6 +81,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     private SpinnerNumberModel minesModel;
 
+    private int buttonSize = 15;
+
     private JCheckBox randomMines;
 
     /** The label for displaying error messages */
@@ -905,7 +907,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     }
                 }
 
-                cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), TWO_DIMENSIONS);
+                cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), TWO_DIMENSIONS);
                 cardLayout.show(cards, TWO_DIMENSIONS);
             } else if (dimensionsSelected == 3) {
 
@@ -922,7 +924,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                         return;
                     }
                 }
-                cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), THREE_DIMENSIONS);
+                cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), THREE_DIMENSIONS);
                 cardLayout.show(cards, THREE_DIMENSIONS);
             } else if (dimensionsSelected == 4) {
 
@@ -940,7 +942,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                         return;
                     }
                 }
-                cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), FOUR_DIMENSIONS);
+                cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), FOUR_DIMENSIONS);
                 cardLayout.show(cards, FOUR_DIMENSIONS);
             } else if (dimensionsSelected >= 5) {
 
@@ -966,7 +968,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                         return;
                     }
                 }
-                cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), FIVE_DIMENSIONS);
+                cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), FIVE_DIMENSIONS);
                 cardLayout.show(cards, FIVE_DIMENSIONS);
             }
 
