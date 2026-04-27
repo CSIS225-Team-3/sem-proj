@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Insets;
 
 /**
  * Custom class for handling the locations on the minefield
@@ -34,7 +35,7 @@ public class MinesweeperButton extends JButton {
     /**
      * Constructor for MinesweeperButton
      */
-    public MinesweeperButton(MinesweeperEuclidean game, int idx) {
+    public MinesweeperButton(MinesweeperEuclidean game, int buttonSize, int idx) {
         super((String) null);
         // super(position[0] + " " + position[1]);
 
@@ -47,9 +48,11 @@ public class MinesweeperButton extends JButton {
         // setRolloverEnabled(false); //Mouse hover
         setContentAreaFilled(false);
         setOpaque(false);
-        setPreferredSize(new Dimension(50, 50));
-        setMinimumSize(new Dimension(50, 50));
-        setMaximumSize(new Dimension(50, 50));
+        setPreferredSize(new Dimension(buttonSize, buttonSize));
+        setMinimumSize(new Dimension(buttonSize, buttonSize));
+        setMaximumSize(new Dimension(buttonSize, buttonSize));
+        setMargin(new Insets(0, 0, 0, 0));
+        setFont(getFont().deriveFont((float) buttonSize / 3));
 
         // NOTE: Temp disabled for debug purposes
         // setOpaque(true);
