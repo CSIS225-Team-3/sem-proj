@@ -149,6 +149,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The tertiary color for the UI */
     public static Color TERTIARY_COLOR = new Color(225, 225, 225, 175);
 
+    public static Color TRANSPARENT_COLOR = new Color(0, 0, 0, 255);
+
     public final static int MAX_ROWS = 100;
     public final static int MAX_COLS = 100;
     public final static int MAX_SPLICES3D = 100;
@@ -259,9 +261,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         logoutButton.setEnabled(false);
         deleteButton.setEnabled(false);
 
-        JPanel loginMainPanel = new JPanel(new BorderLayout(5, 5));
+        JPanel loginMainPanel = semiTransparentPanel(new BorderLayout(5, 5));
+        loginMainPanel.setOpaque(false);
+        loginMainPanel.setBackground(SECONDARY_COLOR);
 
         JPanel fieldsPanel = new JPanel(new GridLayout(4, 2, 5, 5));
+        fieldsPanel.setOpaque(false);
+
         fieldsPanel.add(new JLabel("Username:", SwingConstants.RIGHT));
         fieldsPanel.add(usernameField);
 
@@ -277,10 +283,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
 
         JPanel topButtons = new JPanel(new GridLayout(1, 2, 5, 5));
+        topButtons.setOpaque(false);
         topButtons.add(registerButton);
         topButtons.add(loginButton);
 
         JPanel bottomButtons = new JPanel(new GridLayout(1, 2, 5, 5));
+        bottomButtons.setOpaque(false);
         bottomButtons.add(logoutButton);
         bottomButtons.add(deleteButton);
 
