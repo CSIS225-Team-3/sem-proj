@@ -120,6 +120,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         updateTitleText();
         topLabel.setForeground(Color.WHITE);
         topLabel.setFont(topLabel.getFont().deriveFont(Font.BOLD, 15f));
+        topLabel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
 
         timerLabel = new JLabel("00:00");
         timerLabel.setForeground(Color.WHITE);
@@ -375,10 +376,22 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     }
 
     /**
-     * Updates the round title text at the top of the window
+     * Updates the mine title text at the top of the window
      */
     private void updateTitleText() {
-        topLabel.setText("Round " + roundNum);
+        // First created
+        if (buttons == null) {
+            topLabel.setText("Mines: " + mineCount);
+            return;
+        }
+
+        int flagged = 0;
+        for (MinesweeperButton b : buttons) {
+            if (b != null && b.getFlagged()) {
+                flagged++;
+            }
+        }
+        topLabel.setText("Mines: " + (mineCount - flagged));
         topLabel.setForeground(Color.WHITE);
     }
 
