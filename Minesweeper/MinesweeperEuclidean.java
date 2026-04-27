@@ -29,6 +29,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private boolean firstClick = true;
 
+    private boolean subtractFlagged = false;
+
+    private JCheckBox subtractBox;
+
     /** The label for the top of the window */
     private JLabel topLabel;
 
@@ -144,8 +148,25 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         sliderGroup.add(sizeIcon);
         sliderGroup.add(sizeSlider);
 
+        subtractBox = new JCheckBox("Smart Numbers");
+        subtractBox.setOpaque(false);
+        subtractBox.setFocusPainted(false);
+        subtractBox.setForeground(Color.WHITE);
+        subtractBox.setSelected(subtractFlagged);
+        subtractBox.addActionListener(e -> {
+            subtractFlagged = subtractBox.isSelected();
+            refreshNumbers();
+        });
+
+        JPanel centerGroup = new JPanel();
+        centerGroup.setLayout(new BoxLayout(centerGroup, BoxLayout.X_AXIS));
+        centerGroup.setOpaque(false);
+        centerGroup.add(sliderGroup);
+        centerGroup.add(Box.createHorizontalStrut(16));
+        centerGroup.add(subtractBox);
+
         topText.add(topLabel, BorderLayout.WEST);
-        topText.add(sliderGroup, BorderLayout.CENTER);
+        topText.add(centerGroup, BorderLayout.CENTER);
         topText.add(timerLabel, BorderLayout.EAST);
 
         mainPanel.add(topText, BorderLayout.NORTH);
@@ -199,6 +220,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
                     }
                     onTileClick(e);
                     updateTitleText();
+                    refreshNumbers();
                     checkWin();
                 }
 
@@ -528,6 +550,14 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             stride *= dims[i];
         }
         return idx;
+    }
+
+    private void refreshNumbers() {
+        for (MinesweeperButton b : buttons) {
+            if (b != null) {
+                b.updateDisplayedNumber(subtractFlagged);
+            }
+        }
     }
 
     @Override

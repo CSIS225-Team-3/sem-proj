@@ -199,6 +199,27 @@ public class MinesweeperButton extends JButton {
         }
     }
 
+    public void updateDisplayedNumber(boolean subtractFlagged) {
+        if (!isRevealed || isMine || numAdjacent == 0) {
+            return;
+        }
+
+        int display = numAdjacent;
+        if (subtractFlagged) {
+            for (MinesweeperButton a : game.getAdjacentButtons(idx)) {
+                if (a.getFlagged()) {
+                    display--;
+                }
+            }
+        }
+        setText(String.valueOf(display));
+        if (display < 0) {
+            setForeground(Color.RED);
+        } else {
+            setForeground(Color.BLACK);
+        }
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         // Paint the background color manually, ignoring the pressed state
