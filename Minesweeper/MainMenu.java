@@ -696,7 +696,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 dimensionsLabel.setVisible(false);
                 dimensionsSpinner.setVisible(false);
-
                 // TODO: add 4d difficultys and 4d max mines
             } else if (src == fiveDimension) {
                 selectedMode = FIVE_DIMENSIONS;
@@ -794,7 +793,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 default:
                     return;
             }
-
+            updateMaxMines();
             difficultyAdjusted = false;
         }
 
