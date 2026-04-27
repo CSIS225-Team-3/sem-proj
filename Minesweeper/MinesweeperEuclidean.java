@@ -383,7 +383,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
     }
 
-    @Override
+    
+    /**
+     * Gets the list of buttons adjacent to one
+     * @param position The index of the reference button
+     * @return the list of buttons adjacent to one
+     */
     public MinesweeperButton[] getAdjacentButtons(int idx) {
         int[] targetPos = idxToPos(idx);
 

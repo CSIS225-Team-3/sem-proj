@@ -1,9 +1,10 @@
+package Minesweeper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
 public class HyperbolicGraphGen
 {
-    static Tile Gen()
+    static Tile gen()
     {
         Tile tile0 = new Tile();
         Tile tile1 = new Tile();

@@ -13,11 +13,11 @@ import java.awt.Image;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperButton extends JButton {
+public class MinesweeperHBButton extends JButton {
     public final static Color HIDDEN_COLOR = new Color(50, 80, 120, 180);
     public final static Color REVEALED_COLOR = new Color(100, 160, 240, 150);
 
-    MinesweeperEuclidean game;
+    MinesweeperHyperbolic game;
     private int idx;
 
     private boolean isRevealed = false;
@@ -34,7 +34,7 @@ public class MinesweeperButton extends JButton {
     /**
      * Constructor for MinesweeperButton
      */
-    public MinesweeperButton(MinesweeperEuclidean game, int idx) {
+    public MinesweeperHBButton(MinesweeperHyperbolic game, int idx) {
         super((String) null);
         // super(position[0] + " " + position[1]);
 
@@ -96,7 +96,7 @@ public class MinesweeperButton extends JButton {
             if (numAdjacent == 0) {
                 setText(null);
 
-                MinesweeperButton[] adjacents = game.getAdjacentButtons(getIdx());
+                MinesweeperHBButton[] adjacents = game.getAdjacentButtons(getIdx());
                 for (int i = 0; i < adjacents.length; i++) {
                     adjacents[i].reveal();
                 }
@@ -137,7 +137,7 @@ public class MinesweeperButton extends JButton {
     public void setMine(boolean isMine) {
         this.isMine = isMine;
 
-        MinesweeperButton[] adjacents = game.getAdjacentButtons(getIdx());
+        MinesweeperHBButton[] adjacents = game.getAdjacentButtons(getIdx());
         for (int i = 0; i < adjacents.length; i++) {
             adjacents[i].numAdjacent++;
         }

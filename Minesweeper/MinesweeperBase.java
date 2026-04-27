@@ -15,13 +15,6 @@ public abstract class MinesweeperBase extends JPanel {
     protected int secondsElapsed;
     protected JLabel timerLabel;
 
-    /**
-     * Gets the list of buttons adjacent to one
-     * @param position The index of the reference button
-     * @return the list of buttons adjacent to one
-     */
-    public abstract MinesweeperButton[] getAdjacentButtons(int idx);
-
     public void reset(){
         gameOver = false;
     }
