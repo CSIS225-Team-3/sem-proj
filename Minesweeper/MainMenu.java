@@ -149,15 +149,19 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The tertiary color for the UI */
     public static Color TERTIARY_COLOR = new Color(225, 225, 225, 175);
 
-    public final static int MAX_ROWS = 100;
-    public final static int MAX_COLS = 100;
-    public final static int MAX_SPLICES3D = 100;
-    public final static int MAX_SPLICES4D = 100;
-    public final static int MAX_SPLICES5D = 100;
+    public static Color TRANSPARENT_COLOR = new Color(0, 0, 0, 255);
 
-    public int maxMines = MAX_ROWS * MAX_COLS;
+    private final static int MAX_ROWS = 100;
+    private final static int MAX_COLS = 100;
+    private final static int MAX_SPLICES3D = 100;
+    private final static int MAX_SPLICES4D = 100;
+    private final static int MAX_SPLICES5D = 100;
 
-    public final static int MAX_DIMENSIONS = 100;
+    private int maxMines = MAX_ROWS * MAX_COLS;
+
+    private int maxRandomMines;
+
+    private final static int MAX_DIMENSIONS = 100;
 
     private int dimensionsSelected;
 
@@ -205,8 +209,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
         final BufferedImage bg = background;
         final TexturePaint tp = texturepaint;
-        System.out.println(background.getWidth());
-        System.out.println(background.getHeight());
         cardLayout = new CardLayout();
         cards = new JPanel(cardLayout) {
             @Override
@@ -259,9 +261,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         logoutButton.setEnabled(false);
         deleteButton.setEnabled(false);
 
-        JPanel loginMainPanel = new JPanel(new BorderLayout(5, 5));
+        JPanel loginMainPanel = semiTransparentPanel(new BorderLayout(5, 5));
+        loginMainPanel.setOpaque(false);
+        loginMainPanel.setBackground(SECONDARY_COLOR);
 
         JPanel fieldsPanel = new JPanel(new GridLayout(4, 2, 5, 5));
+        fieldsPanel.setOpaque(false);
+
         fieldsPanel.add(new JLabel("Username:", SwingConstants.RIGHT));
         fieldsPanel.add(usernameField);
 
@@ -277,10 +283,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
 
         JPanel topButtons = new JPanel(new GridLayout(1, 2, 5, 5));
+        topButtons.setOpaque(false);
         topButtons.add(registerButton);
         topButtons.add(loginButton);
 
         JPanel bottomButtons = new JPanel(new GridLayout(1, 2, 5, 5));
+        bottomButtons.setOpaque(false);
         bottomButtons.add(logoutButton);
         bottomButtons.add(deleteButton);
 
@@ -314,8 +322,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         twoDimension = new JButton("2D Minesweeper");
         threeDimension = new JButton("3D Minesweeper");
-        fourDimension = new JButton("4D Minesweeper (WIP)");
-        fiveDimension = new JButton("5D+ Minesweeper (Coming Soon!)");
+        fourDimension = new JButton("4D Minesweeper");
+        fiveDimension = new JButton("5D+ Minesweeper");
 
         JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension };
         for (JButton b : dimensions) {
@@ -688,8 +696,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 dimensionsLabel.setVisible(false);
                 dimensionsSpinner.setVisible(false);
-
                 // TODO: add 4d difficultys and 4d max mines
+                difficultyInfoLabels[0].setText("4x4x3x3, 20 mines");
+                difficultyInfoLabels[1].setText("5x5x4x4, 80 mines");
+                difficultyInfoLabels[2].setText("6x6x5x5, 225 mines");
+                difficultyInfoLabels[3].setText("9x9x7x7, 850 mines");
+
             } else if (src == fiveDimension) {
                 selectedMode = FIVE_DIMENSIONS;
                 dimensionsSelected = 5;
@@ -710,6 +722,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 dimensionsLabel.setVisible(true);
                 dimensionsSpinner.setVisible(true);
+
+                difficultyInfoLabels[0].setText("5D, 4x4x3x3x2, 20 mines");
+                difficultyInfoLabels[1].setText("5D, 5x5x4x4x3, 225 mines");
+                difficultyInfoLabels[2].setText("6D, 5x5x5x4x3x3, 1000 mines");
+                difficultyInfoLabels[3].setText("7D, 5x5x5x5x3x3x3, 4125 mines");
             } else {
                 selectedMode = "";
             }
@@ -780,13 +797,75 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     }
                     break;
                 case FOUR_DIMENSIONS:
+                    if (src == easyBtn) {
+                        rowsSpinner.setValue(4);
+                        colsSpinner.setValue(4);
+                        splices3dSpinner.setValue(3);
+                        splices4dSpinner.setValue(3);
+                        minesSpinner.setValue(20);
+                    } else if (src == mediumBtn) {
+                        rowsSpinner.setValue(5);
+                        colsSpinner.setValue(5);
+                        splices3dSpinner.setValue(4);
+                        splices4dSpinner.setValue(4);
+                        minesSpinner.setValue(80);
+                    } else if (src == hardBtn) {
+                        rowsSpinner.setValue(6);
+                        colsSpinner.setValue(6);
+                        splices3dSpinner.setValue(5);
+                        splices4dSpinner.setValue(5);
+                        minesSpinner.setValue(225);
+                    } else if (src == extremeBtn) {
+                        rowsSpinner.setValue(9);
+                        colsSpinner.setValue(9);
+                        splices3dSpinner.setValue(7);
+                        splices4dSpinner.setValue(7);
+                        minesSpinner.setValue(850);
+                    }
                     break;
                 case FIVE_DIMENSIONS:
+                    if (src == easyBtn) {
+                        rowsSpinner.setValue(4);
+                        colsSpinner.setValue(4);
+                        splices3dSpinner.setValue(3);
+                        splices4dSpinner.setValue(2);
+                        splices5dSpinner.setValue(2);
+                        dimensionsSelected = 5;
+                        dimensionsSpinner.setValue(dimensionsSelected);
+                        minesSpinner.setValue(20);
+                    } else if (src == mediumBtn) {
+                        rowsSpinner.setValue(5);
+                        colsSpinner.setValue(5);
+                        splices3dSpinner.setValue(4);
+                        splices4dSpinner.setValue(4);
+                        splices5dSpinner.setValue(3);
+                        dimensionsSelected = 5;
+                        dimensionsSpinner.setValue(dimensionsSelected);
+                        minesSpinner.setValue(225);
+                    } else if (src == hardBtn) {
+                        rowsSpinner.setValue(5);
+                        colsSpinner.setValue(5);
+                        splices3dSpinner.setValue(5);
+                        splices4dSpinner.setValue(4);
+                        splices5dSpinner.setValue(3);
+                        dimensionsSelected = 6;
+                        dimensionsSpinner.setValue(dimensionsSelected);
+                        minesSpinner.setValue(1000);
+                    } else if (src == extremeBtn) {
+                        rowsSpinner.setValue(5);
+                        colsSpinner.setValue(5);
+                        splices3dSpinner.setValue(5);
+                        splices4dSpinner.setValue(5);
+                        splices5dSpinner.setValue(3);
+                        dimensionsSelected = 7;
+                        dimensionsSpinner.setValue(dimensionsSelected);
+                        minesSpinner.setValue(4125);
+                    }
                     break;
                 default:
                     return;
             }
-
+            updateMaxMines();
             difficultyAdjusted = false;
         }
 
@@ -810,10 +889,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 int[] dims = { cols, rows };
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxMines) + 1;
+                    mines = new Random().nextInt(maxRandomMines) / 3 + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > maxMines) {
+                    if (mines > maxRandomMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
@@ -828,10 +907,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 int[] dims = { cols, rows, splices3d };
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxMines) + 1;
+                    mines = new Random().nextInt(maxRandomMines) / 3 + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > maxMines) {
+                    if (mines > maxRandomMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
@@ -846,17 +925,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 int[] dims = { cols, rows, splices3d, splices4d };
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxMines) + 1;
+                    mines = new Random().nextInt(maxRandomMines) / 3 + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > maxMines) {
+                    if (mines > maxRandomMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
                 }
                 cards.add(new MinesweeperEuclidean(dims, mines, cardLayout, cards), FOUR_DIMENSIONS);
                 cardLayout.show(cards, FOUR_DIMENSIONS);
-            } else if (dimensionsSelected == 5) {
+            } else if (dimensionsSelected >= 5) {
 
                 int splices3d = (int) splices3dSpinner.getValue();
                 int splices4d = (int) splices4dSpinner.getValue();
@@ -872,10 +951,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 }
 
                 if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxMines) + 1;
+                    mines = new Random().nextInt(maxRandomMines) / 3 + 1;
                 } else {
                     mines = (int) minesSpinner.getValue();
-                    if (mines > maxMines) {
+                    if (mines > maxRandomMines) {
                         errorLabel.setText("Too many mines!");
                         return;
                     }
@@ -918,12 +997,20 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private void updateMaxMines() {
         if (dimensionsSelected == 2) {
             maxMines = MAX_ROWS * MAX_COLS - 1;
+            maxRandomMines = (int) rowsSpinner.getValue() * (int) colsSpinner.getValue() - 1;
         } else if (dimensionsSelected == 3) {
             maxMines = MAX_ROWS * MAX_COLS - 1;
+            maxRandomMines = (int) rowsSpinner.getValue() * (int) colsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() - 1;
         } else if (dimensionsSelected == 4) {
             maxMines = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D - 1;
+            maxRandomMines = (int) rowsSpinner.getValue() * (int) colsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue() - 1;
         } else if (dimensionsSelected >= 5) {
             int BeyondCellCount = (MAX_SPLICES5D * (dimensionsSelected - 4));
+            maxRandomMines = (int) rowsSpinner.getValue() * (int) colsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue()
+                    * ((int) splices5dSpinner.getValue() * (dimensionsSelected)) - 1;
             maxMines = MAX_ROWS * MAX_COLS * MAX_SPLICES3D * MAX_SPLICES4D * BeyondCellCount - 1;
         }
     }
