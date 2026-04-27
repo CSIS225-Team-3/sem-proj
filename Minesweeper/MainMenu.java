@@ -239,7 +239,16 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JPanel topPanel = new JPanel(new BorderLayout());
 
         usernameField = new JTextField();
+
+        usernameField.setForeground(Color.WHITE);
+        usernameField.setBackground(SECONDARY_COLOR);
+        usernameField.setCaretColor(Color.WHITE);
+
         passwordField = new JPasswordField();
+
+        passwordField.setForeground(Color.WHITE);
+        passwordField.setBackground(SECONDARY_COLOR);
+        passwordField.setCaretColor(Color.WHITE);
 
         registerButton = semiTransparentButton("Register");
         loginButton = semiTransparentButton("Login");
@@ -273,16 +282,26 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JPanel fieldsPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         fieldsPanel.setOpaque(false);
 
-        fieldsPanel.add(new JLabel("Username:", SwingConstants.RIGHT));
+        JLabel usernameLabel = new JLabel("Username", SwingConstants.RIGHT);
+        usernameLabel.setForeground(Color.WHITE);
+
+        fieldsPanel.add(usernameLabel);
         fieldsPanel.add(usernameField);
 
-        fieldsPanel.add(new JLabel("Password:", SwingConstants.RIGHT));
+        JLabel passwordLabel = new JLabel("Password", SwingConstants.RIGHT);
+        passwordLabel.setForeground(Color.WHITE);
+
+        fieldsPanel.add(passwordLabel);
         fieldsPanel.add(passwordField);
 
         showPassword = new JCheckBox();
+        showPassword.setOpaque(false);
+        showPassword.setContentAreaFilled(false);
         showPassword.addActionListener(this);
 
-        fieldsPanel.add(new JLabel("Show Password", SwingConstants.RIGHT));
+        JLabel showPasswordLabel = new JLabel("Show Password", SwingConstants.RIGHT);
+        showPasswordLabel.setForeground(Color.WHITE);
+        fieldsPanel.add(showPasswordLabel);
         fieldsPanel.add(showPassword);
 
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
