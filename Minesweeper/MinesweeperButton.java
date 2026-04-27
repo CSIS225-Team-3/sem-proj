@@ -31,8 +31,8 @@ public class MinesweeperButton extends JButton {
     private boolean isMine = false;
     private boolean isFlagged = false;
 
-    private static final ImageIcon MINE_ICON = loadIcon("MinesweeperMine.png");
-    private static final ImageIcon FLAG_ICON = loadIcon("MinesweeperFlag.png");
+    private static final Image MINE_ICON = loadImage("MinesweeperMine.png");
+    private static final Image FLAG_ICON = loadImage("MinesweeperFlag.png");
 
     /**
      * Constructor for MinesweeperButton
@@ -93,7 +93,7 @@ public class MinesweeperButton extends JButton {
 
         if (isMine) {
             setText(null);
-            setIcon(MINE_ICON);
+            setIcon(scaledIcon(MINE_ICON));
             setBackground(Color.RED);
             game.onLoss();
         } else {
@@ -125,7 +125,7 @@ public class MinesweeperButton extends JButton {
             return;
         isFlagged = !isFlagged;
         if (isFlagged) {
-            setIcon(FLAG_ICON);
+            setIcon(scaledIcon(FLAG_ICON));
         } else {
             setIcon(null);
         }
@@ -191,6 +191,12 @@ public class MinesweeperButton extends JButton {
                 setFont(getFont().deriveFont((float) newSize / 20));
             }
         }
+
+        if (isMine && isRevealed) {
+            setIcon(scaledIcon(MINE_ICON));
+        } else if (isFlagged) {
+            setIcon(scaledIcon(FLAG_ICON));
+        }
     }
 
     @Override
@@ -203,14 +209,18 @@ public class MinesweeperButton extends JButton {
         super.paintComponent(g);
     }
 
-    private static ImageIcon loadIcon(String name) {
+    private static Image loadImage(String name) {
         try {
-            ImageIcon icon = new ImageIcon(MinesweeperButton.class.getResource(name));
-            Image scaled = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            return new ImageIcon(scaled);
+            return new ImageIcon(MinesweeperButton.class.getResource(name)).getImage();
         } catch (Exception e) {
             System.err.println("Could not load \'" + name + "\' image: " + e.getMessage());
             return null;
         }
+    }
+
+    private ImageIcon scaledIcon(Image img) {
+        if (img == null)
+            return null;
+        return new ImageIcon(img.getScaledInstance(buttonSize, buttonSize, Image.SCALE_SMOOTH));
     }
 }
