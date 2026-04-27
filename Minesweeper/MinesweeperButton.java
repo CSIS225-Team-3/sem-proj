@@ -21,6 +21,8 @@ public class MinesweeperButton extends JButton {
     MinesweeperEuclidean game;
     private int idx;
 
+    private int buttonSize;
+
     private boolean isRevealed = false;
 
     /** The number of adjacent mines */
@@ -41,6 +43,7 @@ public class MinesweeperButton extends JButton {
 
         this.game = game;
         this.idx = idx;
+        this.buttonSize = buttonSize;
 
         setBackground(HIDDEN_COLOR);
         setForeground(Color.BLACK);
@@ -107,7 +110,7 @@ public class MinesweeperButton extends JButton {
                 String text = String.valueOf(numAdjacent);
                 setText(text);
                 if (text.length() >= 3) {
-                    setFont(getFont().deriveFont(8f));
+                    setFont(getFont().deriveFont((float) buttonSize / 20));
                 }
             }
         }
@@ -174,6 +177,20 @@ public class MinesweeperButton extends JButton {
         setText(null);
         setIcon(null);
         setBackground(HIDDEN_COLOR);
+    }
+
+    public void resizeButton(int newSize) {
+        this.buttonSize = newSize;
+        setPreferredSize(new Dimension(newSize, newSize));
+        setMinimumSize(new Dimension(newSize, newSize));
+        setMaximumSize(new Dimension(newSize, newSize));
+        setFont(getFont().deriveFont((float) newSize / 3));
+        if (isRevealed && numAdjacent >= 3) {
+            String text = getText();
+            if (text != null && text.length() >= 3) {
+                setFont(getFont().deriveFont((float) newSize / 20));
+            }
+        }
     }
 
     @Override

@@ -48,6 +48,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private JPanel[] splices;
 
+    private JPanel gamePanel;
+
     private JScrollPane scrollPane;
 
     private int numSplices;
@@ -111,18 +113,38 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setOpaque(false);
 
-        JPanel topText = new JPanel(new FlowLayout());
-
-        topText.setLayout(new BorderLayout());
+        JPanel topText = new JPanel(new BorderLayout());
+        topText.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
 
         topLabel = new JLabel();
         updateTitleText();
-        topLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        topLabel.setForeground(Color.WHITE);
+        topLabel.setFont(topLabel.getFont().deriveFont(Font.BOLD, 15f));
 
         timerLabel = new JLabel("00:00");
-        timerLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        timerLabel.setForeground(Color.WHITE);
+        timerLabel.setFont(timerLabel.getFont().deriveFont(Font.BOLD, 15f));
+
+        JSlider sizeSlider = new JSlider(16, 64, buttonSize);
+        sizeSlider.setOpaque(false);
+        sizeSlider.setMaximumSize(new Dimension(140, 30));
+        sizeSlider.setPreferredSize(new Dimension(140, 30));
+        sizeSlider.addChangeListener(e -> updateButtonSize(sizeSlider.getValue()));
+
+        JLabel sizeIcon = new JLabel("\uD83D\uDD0D"); // will make this icon: 🔍
+        sizeIcon.setForeground(Color.LIGHT_GRAY);
+        sizeIcon.setFont(sizeIcon.getFont().deriveFont(13f));
+        sizeIcon.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 2));
+
+        JPanel sliderGroup = new JPanel();
+        sliderGroup.setLayout(new BoxLayout(sliderGroup, BoxLayout.X_AXIS));
+        sliderGroup.setOpaque(false);
+        sliderGroup.add(Box.createHorizontalStrut(20)); // gap
+        sliderGroup.add(sizeIcon);
+        sliderGroup.add(sizeSlider);
 
         topText.add(topLabel, BorderLayout.WEST);
+        topText.add(sliderGroup, BorderLayout.CENTER);
         topText.add(timerLabel, BorderLayout.EAST);
 
         mainPanel.add(topText, BorderLayout.NORTH);
@@ -140,7 +162,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         buttons = new MinesweeperButton[gridVolume];
 
-        JPanel gamePanel;
+        gamePanel = null;
 
         for (int i = 0; i < gridVolume; i++) {
             MinesweeperButton button = buttons[i] = new MinesweeperButton(this, buttonSize, i);
@@ -294,6 +316,30 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
     }
 
+    private void updateButtonSize(int newSize) {
+        this.buttonSize = newSize;
+
+        for (MinesweeperButton b : buttons) {
+            b.resizeButton(newSize);
+        }
+
+        if (dims.length >= 3 && splices != null) {
+            for (JPanel splice : splices) {
+                Dimension spliceSize = new Dimension(dims[0] * newSize, dims[1] * newSize);
+                splice.setPreferredSize(spliceSize);
+                splice.setMinimumSize(spliceSize);
+                splice.setMaximumSize(spliceSize);
+            }
+            if (gamePanel != null) {
+                gamePanel.setLayout(new GridLayout(outerRows, outerCols, newSize, newSize));
+            }
+        }
+
+        revalidate();
+
+        repaint();
+    }
+
     private void placeMines(int clickIdx) {
         int[] clickPos = idxToPos(clickIdx);
 
@@ -333,6 +379,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
      */
     private void updateTitleText() {
         topLabel.setText("Round " + roundNum);
+        topLabel.setForeground(Color.WHITE);
     }
 
     /**

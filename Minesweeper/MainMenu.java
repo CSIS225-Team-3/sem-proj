@@ -80,7 +80,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     private SpinnerNumberModel minesModel;
 
-    private int buttonSize = 15;
+    private int buttonSize = 40;
 
     private JCheckBox randomMines;
 
