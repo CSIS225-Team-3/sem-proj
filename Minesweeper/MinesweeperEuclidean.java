@@ -155,6 +155,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         reset = new JButton("Reset");
         newGame.addActionListener(this);
         reset.addActionListener(this);
+        newGame.setForeground(Color.WHITE);
+        reset.setForeground(Color.WHITE);
+        newGame.setBackground(MainMenu.TERTIARY_COLOR);
+        reset.setBackground(MainMenu.TERTIARY_COLOR);
+        newGame.setOpaque(false);
+        reset.setOpaque(false);
 
         bottomButtons.add(newGame);
         bottomButtons.add(reset);
