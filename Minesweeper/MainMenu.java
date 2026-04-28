@@ -56,7 +56,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private static final String FOUR_DIMENSIONS = "4D Minesweeper";
 
     private static final String FIVE_DIMENSIONS = "5D+ Minesweeper";
-    
+
     private static final String HYPERBOLIC = "Hyperbolic Minesweeper";
 
     /** The CardLayout for managing panels */
@@ -648,361 +648,26 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         // Mode buttons
         if (src == twoDimension || src == threeDimension || src == fourDimension || src == fiveDimension) {
-
-            configPanel.setVisible(true);
-
-            // USER SELECTING DIMENSION
-
-            if (src == twoDimension) {
-
-                selectedMode = TWO_DIMENSIONS;
-                dimensionsSelected = 2;
-
-                twoDimension.setEnabled(false);
-                threeDimension.setEnabled(true);
-                fourDimension.setEnabled(true);
-                fiveDimension.setEnabled(true);
-
-                splices3dLabel.setVisible(false);
-                splices3dSpinner.setVisible(false);
-
-                splices4dLabel.setVisible(false);
-                splices4dSpinner.setVisible(false);
-
-                splices5dLabel.setVisible(false);
-                splices5dSpinner.setVisible(false);
-
-                dimensionsLabel.setVisible(false);
-                dimensionsSpinner.setVisible(false);
-
-                difficultyInfoLabels[0].setText("9x9, 10 mines");
-                difficultyInfoLabels[1].setText("16x16, 40 mines");
-                difficultyInfoLabels[2].setText("16x30, 99 mines");
-                difficultyInfoLabels[3].setText("30x50, 400 mines");
-
-                minesSpinner.setValue(10);
-
-            } else if (src == threeDimension) {
-
-                selectedMode = THREE_DIMENSIONS;
-                dimensionsSelected = 3;
-
-                twoDimension.setEnabled(true);
-                threeDimension.setEnabled(false);
-                fourDimension.setEnabled(true);
-                fiveDimension.setEnabled(true);
-
-                splices3dLabel.setVisible(true);
-                splices3dSpinner.setVisible(true);
-
-                splices4dLabel.setVisible(false);
-                splices4dSpinner.setVisible(false);
-
-                splices5dLabel.setVisible(false);
-                splices5dSpinner.setVisible(false);
-
-                dimensionsLabel.setVisible(false);
-                dimensionsSpinner.setVisible(false);
-
-                difficultyInfoLabels[0].setText("5x5x3, 15 mines");
-                difficultyInfoLabels[1].setText("7x7x4, 60 mines");
-                difficultyInfoLabels[2].setText("11x11x6, 150 mines");
-                difficultyInfoLabels[3].setText("18x18x8, 400 mines");
-
-                minesSpinner.setValue(30);
-
-            } else if (src == fourDimension) {
-
-                selectedMode = FOUR_DIMENSIONS;
-                dimensionsSelected = 4;
-
-                twoDimension.setEnabled(true);
-                threeDimension.setEnabled(true);
-                fourDimension.setEnabled(false);
-                fiveDimension.setEnabled(true);
-
-                splices3dLabel.setVisible(true);
-                splices3dSpinner.setVisible(true);
-
-                splices4dLabel.setVisible(true);
-                splices4dSpinner.setVisible(true);
-
-                splices5dLabel.setVisible(false);
-                splices5dSpinner.setVisible(false);
-
-                dimensionsLabel.setVisible(false);
-                dimensionsSpinner.setVisible(false);
-
-                difficultyInfoLabels[0].setText("4x4x3x3, 20 mines");
-                difficultyInfoLabels[1].setText("5x5x4x4, 80 mines");
-                difficultyInfoLabels[2].setText("6x6x5x5, 225 mines");
-                difficultyInfoLabels[3].setText("9x9x7x7, 850 mines");
-
-                minesSpinner.setValue(120);
-
-            } else if (src == fiveDimension) {
-                selectedMode = FIVE_DIMENSIONS;
-                dimensionsSelected = 5;
-
-                twoDimension.setEnabled(true);
-                threeDimension.setEnabled(true);
-                fourDimension.setEnabled(true);
-                fiveDimension.setEnabled(false);
-
-                splices3dLabel.setVisible(true);
-                splices3dSpinner.setVisible(true);
-
-                splices4dLabel.setVisible(true);
-                splices4dSpinner.setVisible(true);
-
-                splices5dLabel.setVisible(true);
-                splices5dSpinner.setVisible(true);
-
-                dimensionsLabel.setVisible(true);
-                dimensionsSpinner.setVisible(true);
-
-                difficultyInfoLabels[0].setText("5D, 4x4x3x3x2, 20 mines");
-                difficultyInfoLabels[1].setText("5D, 5x5x4x4x3, 225 mines");
-                difficultyInfoLabels[2].setText("6D, 5x5x5x4x3x3, 1000 mines");
-                difficultyInfoLabels[3].setText("7D, 5x5x5x5x3x3x3, 4125 mines");
-
-                minesSpinner.setValue(500);
-            } else {
-                selectedMode = "";
-            }
-
-            updateMaxMines();
-            minesModel.setMaximum(maxMines);
-
-            mainText.setText("Mode: " + selectedMode);
-            revalidate();
-            repaint();
+            handleModeSelection(src);
             return;
         }
 
         // USER SELECTING DIFFICULTY
         if (src == easyBtn || src == mediumBtn || src == hardBtn || src == extremeBtn) {
-
-            randomMines.setSelected(false);
-            minesSpinner.setEnabled(true);
-            difficultyAdjusted = true;
-
-            if (loggedInAccount == null) {
-                errorLabel.setText("Progress will not save. Login to save progress.");
-            } else {
-                errorLabel.setText(" ");
-            }
-
-            switch (selectedMode) {
-                case TWO_DIMENSIONS:
-                    if (src == easyBtn) {
-                        rowsSpinner.setValue(9);
-                        colsSpinner.setValue(9);
-                        minesSpinner.setValue(10);
-                    } else if (src == mediumBtn) {
-                        rowsSpinner.setValue(16);
-                        colsSpinner.setValue(16);
-                        minesSpinner.setValue(40);
-                    } else if (src == hardBtn) {
-                        rowsSpinner.setValue(16);
-                        colsSpinner.setValue(30);
-                        minesSpinner.setValue(99);
-                    } else if (src == extremeBtn) {
-                        rowsSpinner.setValue(30);
-                        colsSpinner.setValue(50);
-                        minesSpinner.setValue(400);
-                    }
-                    break;
-                case THREE_DIMENSIONS:
-                    if (src == easyBtn) {
-                        rowsSpinner.setValue(5);
-                        colsSpinner.setValue(5);
-                        splices3dSpinner.setValue(3);
-                        minesSpinner.setValue(15);
-                    } else if (src == mediumBtn) {
-                        rowsSpinner.setValue(7);
-                        colsSpinner.setValue(7);
-                        splices3dSpinner.setValue(4);
-                        minesSpinner.setValue(60);
-                    } else if (src == hardBtn) {
-                        rowsSpinner.setValue(11);
-                        colsSpinner.setValue(11);
-                        splices3dSpinner.setValue(6);
-                        minesSpinner.setValue(150);
-                    } else if (src == extremeBtn) {
-                        rowsSpinner.setValue(18);
-                        colsSpinner.setValue(18);
-                        splices3dSpinner.setValue(8);
-                        minesSpinner.setValue(400);
-                    }
-                    break;
-                case FOUR_DIMENSIONS:
-                    if (src == easyBtn) {
-                        rowsSpinner.setValue(4);
-                        colsSpinner.setValue(4);
-                        splices3dSpinner.setValue(3);
-                        splices4dSpinner.setValue(3);
-                        minesSpinner.setValue(20);
-                    } else if (src == mediumBtn) {
-                        rowsSpinner.setValue(5);
-                        colsSpinner.setValue(5);
-                        splices3dSpinner.setValue(4);
-                        splices4dSpinner.setValue(4);
-                        minesSpinner.setValue(80);
-                    } else if (src == hardBtn) {
-                        rowsSpinner.setValue(6);
-                        colsSpinner.setValue(6);
-                        splices3dSpinner.setValue(5);
-                        splices4dSpinner.setValue(5);
-                        minesSpinner.setValue(225);
-                    } else if (src == extremeBtn) {
-                        rowsSpinner.setValue(9);
-                        colsSpinner.setValue(9);
-                        splices3dSpinner.setValue(7);
-                        splices4dSpinner.setValue(7);
-                        minesSpinner.setValue(850);
-                    }
-                    break;
-                case FIVE_DIMENSIONS:
-                    if (src == easyBtn) {
-                        rowsSpinner.setValue(4);
-                        colsSpinner.setValue(4);
-                        splices3dSpinner.setValue(3);
-                        splices4dSpinner.setValue(2);
-                        splices5dSpinner.setValue(2);
-                        dimensionsSelected = 5;
-                        dimensionsSpinner.setValue(dimensionsSelected);
-                        minesSpinner.setValue(20);
-                    } else if (src == mediumBtn) {
-                        rowsSpinner.setValue(5);
-                        colsSpinner.setValue(5);
-                        splices3dSpinner.setValue(4);
-                        splices4dSpinner.setValue(4);
-                        splices5dSpinner.setValue(3);
-                        dimensionsSelected = 5;
-                        dimensionsSpinner.setValue(dimensionsSelected);
-                        minesSpinner.setValue(225);
-                    } else if (src == hardBtn) {
-                        rowsSpinner.setValue(5);
-                        colsSpinner.setValue(5);
-                        splices3dSpinner.setValue(5);
-                        splices4dSpinner.setValue(4);
-                        splices5dSpinner.setValue(3);
-                        dimensionsSelected = 6;
-                        dimensionsSpinner.setValue(dimensionsSelected);
-                        minesSpinner.setValue(1000);
-                    } else if (src == extremeBtn) {
-                        rowsSpinner.setValue(5);
-                        colsSpinner.setValue(5);
-                        splices3dSpinner.setValue(5);
-                        splices4dSpinner.setValue(5);
-                        splices5dSpinner.setValue(3);
-                        dimensionsSelected = 7;
-                        dimensionsSpinner.setValue(dimensionsSelected);
-                        minesSpinner.setValue(4125);
-                    }
-                    break;
-                default:
-                    return;
-            }
-            updateMaxMines();
-            difficultyAdjusted = false;
+            handleDifficultySelection(src);
+            return;
         }
 
         if (src == randomMines) {
             minesSpinner.setEnabled(!randomMines.isSelected());
             difficultyGroup.clearSelection();
+            return;
         }
 
+        // USER STARTING GAME
         if (src == startButton) {
-            if (selectedMode == null) {
-                return;
-            }
-
-            int rows = (int) rowsSpinner.getValue();
-            int cols = (int) colsSpinner.getValue();
-            int mines;
-
-            errorLabel.setText(" ");
-
-            if (dimensionsSelected == 2) {
-                int[] dims = { cols, rows };
-
-                if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxRandomMines) / 3 + 1;
-                } else {
-                    mines = (int) minesSpinner.getValue();
-                    if (mines > maxRandomMines) {
-                        errorLabel.setText("Too many mines!");
-                        return;
-                    }
-                }
-
-                cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), TWO_DIMENSIONS);
-                cardLayout.show(cards, TWO_DIMENSIONS);
-            } else if (dimensionsSelected == 3) {
-
-                int splices3d = (int) splices3dSpinner.getValue();
-
-                int[] dims = { cols, rows, splices3d };
-
-                if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxRandomMines) / 3 + 1;
-                } else {
-                    mines = (int) minesSpinner.getValue();
-                    if (mines > maxRandomMines) {
-                        errorLabel.setText("Too many mines!");
-                        return;
-                    }
-                }
-                cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), THREE_DIMENSIONS);
-                cardLayout.show(cards, THREE_DIMENSIONS);
-            } else if (dimensionsSelected == 4) {
-
-                int splices3d = (int) splices3dSpinner.getValue();
-                int splices4d = (int) splices4dSpinner.getValue();
-
-                int[] dims = { cols, rows, splices3d, splices4d };
-
-                if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxRandomMines) / 3 + 1;
-                } else {
-                    mines = (int) minesSpinner.getValue();
-                    if (mines > maxRandomMines) {
-                        errorLabel.setText("Too many mines!");
-                        return;
-                    }
-                }
-                cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), FOUR_DIMENSIONS);
-                cardLayout.show(cards, FOUR_DIMENSIONS);
-            } else if (dimensionsSelected >= 5) {
-
-                int splices3d = (int) splices3dSpinner.getValue();
-                int splices4d = (int) splices4dSpinner.getValue();
-                int splices5d = (int) splices5dSpinner.getValue();
-
-                int[] dims = new int[dimensionsSelected];
-                dims[0] = cols;
-                dims[1] = rows;
-                dims[2] = splices3d;
-                dims[3] = splices4d;
-                for (int i = 4; i < dimensionsSelected; i++) {
-                    dims[i] = splices5d;
-                }
-
-                if (randomMines.isSelected()) {
-                    mines = new Random().nextInt(maxRandomMines) / 3 + 1;
-                } else {
-                    mines = (int) minesSpinner.getValue();
-                    if (mines > maxRandomMines) {
-                        errorLabel.setText("Too many mines!");
-                        return;
-                    }
-                }
-                cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), FIVE_DIMENSIONS);
-                cardLayout.show(cards, FIVE_DIMENSIONS);
-            }
-
+            handleStartGame(src);
+            return;
         }
     }
 
@@ -1183,6 +848,357 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         } else {
             loginStatus.setForeground(Color.BLACK);
             loginStatus.setText("Deletion Cancelled");
+        }
+
+    }
+
+    private void handleModeSelection(Object src) {
+
+        configPanel.setVisible(true);
+
+        // USER SELECTING DIMENSION
+
+        if (src == twoDimension) {
+
+            selectedMode = TWO_DIMENSIONS;
+            dimensionsSelected = 2;
+
+            twoDimension.setEnabled(false);
+            threeDimension.setEnabled(true);
+            fourDimension.setEnabled(true);
+            fiveDimension.setEnabled(true);
+
+            splices3dLabel.setVisible(false);
+            splices3dSpinner.setVisible(false);
+
+            splices4dLabel.setVisible(false);
+            splices4dSpinner.setVisible(false);
+
+            splices5dLabel.setVisible(false);
+            splices5dSpinner.setVisible(false);
+
+            dimensionsLabel.setVisible(false);
+            dimensionsSpinner.setVisible(false);
+
+            difficultyInfoLabels[0].setText("9x9, 10 mines");
+            difficultyInfoLabels[1].setText("16x16, 40 mines");
+            difficultyInfoLabels[2].setText("16x30, 99 mines");
+            difficultyInfoLabels[3].setText("30x50, 400 mines");
+
+            minesSpinner.setValue(10);
+
+        } else if (src == threeDimension) {
+
+            selectedMode = THREE_DIMENSIONS;
+            dimensionsSelected = 3;
+
+            twoDimension.setEnabled(true);
+            threeDimension.setEnabled(false);
+            fourDimension.setEnabled(true);
+            fiveDimension.setEnabled(true);
+
+            splices3dLabel.setVisible(true);
+            splices3dSpinner.setVisible(true);
+
+            splices4dLabel.setVisible(false);
+            splices4dSpinner.setVisible(false);
+
+            splices5dLabel.setVisible(false);
+            splices5dSpinner.setVisible(false);
+
+            dimensionsLabel.setVisible(false);
+            dimensionsSpinner.setVisible(false);
+
+            difficultyInfoLabels[0].setText("5x5x3, 15 mines");
+            difficultyInfoLabels[1].setText("7x7x4, 60 mines");
+            difficultyInfoLabels[2].setText("11x11x6, 150 mines");
+            difficultyInfoLabels[3].setText("18x18x8, 400 mines");
+
+            minesSpinner.setValue(30);
+
+        } else if (src == fourDimension) {
+
+            selectedMode = FOUR_DIMENSIONS;
+            dimensionsSelected = 4;
+
+            twoDimension.setEnabled(true);
+            threeDimension.setEnabled(true);
+            fourDimension.setEnabled(false);
+            fiveDimension.setEnabled(true);
+
+            splices3dLabel.setVisible(true);
+            splices3dSpinner.setVisible(true);
+
+            splices4dLabel.setVisible(true);
+            splices4dSpinner.setVisible(true);
+
+            splices5dLabel.setVisible(false);
+            splices5dSpinner.setVisible(false);
+
+            dimensionsLabel.setVisible(false);
+            dimensionsSpinner.setVisible(false);
+
+            difficultyInfoLabels[0].setText("4x4x3x3, 20 mines");
+            difficultyInfoLabels[1].setText("5x5x4x4, 80 mines");
+            difficultyInfoLabels[2].setText("6x6x5x5, 225 mines");
+            difficultyInfoLabels[3].setText("9x9x7x7, 850 mines");
+
+            minesSpinner.setValue(120);
+
+        } else if (src == fiveDimension) {
+            selectedMode = FIVE_DIMENSIONS;
+            dimensionsSelected = 5;
+
+            twoDimension.setEnabled(true);
+            threeDimension.setEnabled(true);
+            fourDimension.setEnabled(true);
+            fiveDimension.setEnabled(false);
+
+            splices3dLabel.setVisible(true);
+            splices3dSpinner.setVisible(true);
+
+            splices4dLabel.setVisible(true);
+            splices4dSpinner.setVisible(true);
+
+            splices5dLabel.setVisible(true);
+            splices5dSpinner.setVisible(true);
+
+            dimensionsLabel.setVisible(true);
+            dimensionsSpinner.setVisible(true);
+
+            difficultyInfoLabels[0].setText("5D, 4x4x3x3x2, 20 mines");
+            difficultyInfoLabels[1].setText("5D, 5x5x4x4x3, 225 mines");
+            difficultyInfoLabels[2].setText("6D, 5x5x5x4x3x3, 1000 mines");
+            difficultyInfoLabels[3].setText("7D, 5x5x5x5x3x3x3, 4125 mines");
+
+            minesSpinner.setValue(500);
+        } else {
+            selectedMode = "";
+        }
+
+        updateMaxMines();
+        minesModel.setMaximum(maxMines);
+
+        mainText.setText("Mode: " + selectedMode);
+        revalidate();
+        repaint();
+    }
+
+    private void handleDifficultySelection(Object src) {
+        randomMines.setSelected(false);
+        minesSpinner.setEnabled(true);
+        difficultyAdjusted = true;
+
+        if (loggedInAccount == null) {
+            errorLabel.setText("Progress will not save. Login to save progress.");
+        } else {
+            errorLabel.setText(" ");
+        }
+
+        switch (selectedMode) {
+            case TWO_DIMENSIONS:
+                if (src == easyBtn) {
+                    rowsSpinner.setValue(9);
+                    colsSpinner.setValue(9);
+                    minesSpinner.setValue(10);
+                } else if (src == mediumBtn) {
+                    rowsSpinner.setValue(16);
+                    colsSpinner.setValue(16);
+                    minesSpinner.setValue(40);
+                } else if (src == hardBtn) {
+                    rowsSpinner.setValue(16);
+                    colsSpinner.setValue(30);
+                    minesSpinner.setValue(99);
+                } else if (src == extremeBtn) {
+                    rowsSpinner.setValue(30);
+                    colsSpinner.setValue(50);
+                    minesSpinner.setValue(400);
+                }
+                break;
+            case THREE_DIMENSIONS:
+                if (src == easyBtn) {
+                    rowsSpinner.setValue(5);
+                    colsSpinner.setValue(5);
+                    splices3dSpinner.setValue(3);
+                    minesSpinner.setValue(15);
+                } else if (src == mediumBtn) {
+                    rowsSpinner.setValue(7);
+                    colsSpinner.setValue(7);
+                    splices3dSpinner.setValue(4);
+                    minesSpinner.setValue(60);
+                } else if (src == hardBtn) {
+                    rowsSpinner.setValue(11);
+                    colsSpinner.setValue(11);
+                    splices3dSpinner.setValue(6);
+                    minesSpinner.setValue(150);
+                } else if (src == extremeBtn) {
+                    rowsSpinner.setValue(18);
+                    colsSpinner.setValue(18);
+                    splices3dSpinner.setValue(8);
+                    minesSpinner.setValue(400);
+                }
+                break;
+            case FOUR_DIMENSIONS:
+                if (src == easyBtn) {
+                    rowsSpinner.setValue(4);
+                    colsSpinner.setValue(4);
+                    splices3dSpinner.setValue(3);
+                    splices4dSpinner.setValue(3);
+                    minesSpinner.setValue(20);
+                } else if (src == mediumBtn) {
+                    rowsSpinner.setValue(5);
+                    colsSpinner.setValue(5);
+                    splices3dSpinner.setValue(4);
+                    splices4dSpinner.setValue(4);
+                    minesSpinner.setValue(80);
+                } else if (src == hardBtn) {
+                    rowsSpinner.setValue(6);
+                    colsSpinner.setValue(6);
+                    splices3dSpinner.setValue(5);
+                    splices4dSpinner.setValue(5);
+                    minesSpinner.setValue(225);
+                } else if (src == extremeBtn) {
+                    rowsSpinner.setValue(9);
+                    colsSpinner.setValue(9);
+                    splices3dSpinner.setValue(7);
+                    splices4dSpinner.setValue(7);
+                    minesSpinner.setValue(850);
+                }
+                break;
+            case FIVE_DIMENSIONS:
+                if (src == easyBtn) {
+                    rowsSpinner.setValue(4);
+                    colsSpinner.setValue(4);
+                    splices3dSpinner.setValue(3);
+                    splices4dSpinner.setValue(2);
+                    splices5dSpinner.setValue(2);
+                    dimensionsSelected = 5;
+                    dimensionsSpinner.setValue(dimensionsSelected);
+                    minesSpinner.setValue(20);
+                } else if (src == mediumBtn) {
+                    rowsSpinner.setValue(5);
+                    colsSpinner.setValue(5);
+                    splices3dSpinner.setValue(4);
+                    splices4dSpinner.setValue(4);
+                    splices5dSpinner.setValue(3);
+                    dimensionsSelected = 5;
+                    dimensionsSpinner.setValue(dimensionsSelected);
+                    minesSpinner.setValue(225);
+                } else if (src == hardBtn) {
+                    rowsSpinner.setValue(5);
+                    colsSpinner.setValue(5);
+                    splices3dSpinner.setValue(5);
+                    splices4dSpinner.setValue(4);
+                    splices5dSpinner.setValue(3);
+                    dimensionsSelected = 6;
+                    dimensionsSpinner.setValue(dimensionsSelected);
+                    minesSpinner.setValue(1000);
+                } else if (src == extremeBtn) {
+                    rowsSpinner.setValue(5);
+                    colsSpinner.setValue(5);
+                    splices3dSpinner.setValue(5);
+                    splices4dSpinner.setValue(5);
+                    splices5dSpinner.setValue(3);
+                    dimensionsSelected = 7;
+                    dimensionsSpinner.setValue(dimensionsSelected);
+                    minesSpinner.setValue(4125);
+                }
+                break;
+            default:
+                return;
+        }
+        updateMaxMines();
+        difficultyAdjusted = false;
+
+    }
+
+    private void handleStartGame(Object src) {
+        if (selectedMode == null) {
+            return;
+        }
+
+        int rows = (int) rowsSpinner.getValue();
+        int cols = (int) colsSpinner.getValue();
+        int mines;
+
+        errorLabel.setText(" ");
+
+        if (dimensionsSelected == 2) {
+            int[] dims = { cols, rows };
+
+            if (randomMines.isSelected()) {
+                mines = new Random().nextInt(maxRandomMines) / 3 + 1;
+            } else {
+                mines = (int) minesSpinner.getValue();
+                if (mines > maxRandomMines) {
+                    errorLabel.setText("Too many mines!");
+                    return;
+                }
+            }
+
+            cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), TWO_DIMENSIONS);
+            cardLayout.show(cards, TWO_DIMENSIONS);
+        } else if (dimensionsSelected == 3) {
+
+            int splices3d = (int) splices3dSpinner.getValue();
+
+            int[] dims = { cols, rows, splices3d };
+
+            if (randomMines.isSelected()) {
+                mines = new Random().nextInt(maxRandomMines) / 3 + 1;
+            } else {
+                mines = (int) minesSpinner.getValue();
+                if (mines > maxRandomMines) {
+                    errorLabel.setText("Too many mines!");
+                    return;
+                }
+            }
+            cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), THREE_DIMENSIONS);
+            cardLayout.show(cards, THREE_DIMENSIONS);
+        } else if (dimensionsSelected == 4) {
+
+            int splices3d = (int) splices3dSpinner.getValue();
+            int splices4d = (int) splices4dSpinner.getValue();
+
+            int[] dims = { cols, rows, splices3d, splices4d };
+
+            if (randomMines.isSelected()) {
+                mines = new Random().nextInt(maxRandomMines) / 3 + 1;
+            } else {
+                mines = (int) minesSpinner.getValue();
+                if (mines > maxRandomMines) {
+                    errorLabel.setText("Too many mines!");
+                    return;
+                }
+            }
+            cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), FOUR_DIMENSIONS);
+            cardLayout.show(cards, FOUR_DIMENSIONS);
+        } else if (dimensionsSelected >= 5) {
+
+            int splices3d = (int) splices3dSpinner.getValue();
+            int splices4d = (int) splices4dSpinner.getValue();
+            int splices5d = (int) splices5dSpinner.getValue();
+
+            int[] dims = new int[dimensionsSelected];
+            dims[0] = cols;
+            dims[1] = rows;
+            dims[2] = splices3d;
+            dims[3] = splices4d;
+            for (int i = 4; i < dimensionsSelected; i++) {
+                dims[i] = splices5d;
+            }
+
+            if (randomMines.isSelected()) {
+                mines = new Random().nextInt(maxRandomMines) / 3 + 1;
+            } else {
+                mines = (int) minesSpinner.getValue();
+                if (mines > maxRandomMines) {
+                    errorLabel.setText("Too many mines!");
+                    return;
+                }
+            }
+            cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), FIVE_DIMENSIONS);
+            cardLayout.show(cards, FIVE_DIMENSIONS);
         }
 
     }
