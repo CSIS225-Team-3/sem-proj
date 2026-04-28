@@ -177,10 +177,14 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         autoplayPanel.setPreferredSize(new Dimension(260, 58));
         autoplayPanel.setMaximumSize(new Dimension(260, 58));
         autoplayStart = MainMenu.styledButton("Start");
-        autoplayStart.addActionListener(this);
+        autoplayStart.addActionListener(e -> {
+            startAutoplay();
+        });
 
         autoplayPause = MainMenu.styledButton("Pause");
-        autoplayPause.addActionListener(this);
+        autoplayPause.addActionListener(e -> {
+            stopAutoplay();
+        });
 
         JLabel delayIcon = new JLabel("\u23F1");
         delayIcon.setForeground(Color.LIGHT_GRAY);
@@ -408,6 +412,16 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private void removeAutoplay() {
         autoplayPanel.setVisible(false);
+    }
+
+    private void startAutoplay() {
+        autoplayStart.setEnabled(false);
+        autoplayPause.setEnabled(true);
+    }
+
+    private void stopAutoplay() {
+        autoplayStart.setEnabled(true);
+        autoplayPause.setEnabled(false);
     }
 
     private void updateButtonSize(int newSize) {
