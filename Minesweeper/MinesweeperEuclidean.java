@@ -54,6 +54,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private JButton autoplayPause;
 
+    private JSlider autoplayDelaySlider;
+
     /** The dimensions of the game */
     private int[] dims;
 
@@ -167,21 +169,41 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             refreshNumbers();
         });
 
-        autoplayPanel = new JPanel(new FlowLayout());
+        autoplayPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 2));
         autoplayPanel.setOpaque(false);
         TitledBorder autoplayBorder = BorderFactory.createTitledBorder("Autoplay");
         autoplayBorder.setTitleColor(Color.WHITE);
         autoplayPanel.setBorder(autoplayBorder);
+        autoplayPanel.setPreferredSize(new Dimension(260, 58));
+        autoplayPanel.setMaximumSize(new Dimension(260, 58));
         autoplayStart = MainMenu.styledButton("Start");
         autoplayStart.addActionListener(this);
 
         autoplayPause = MainMenu.styledButton("Pause");
         autoplayPause.addActionListener(this);
 
+        JLabel delayIcon = new JLabel("\u23F1");
+        delayIcon.setForeground(Color.LIGHT_GRAY);
+        delayIcon.setFont(delayIcon.getFont().deriveFont(13f));
+        delayIcon.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 2));
+
+        autoplayDelaySlider = new JSlider(100, 2000, 500);
+        autoplayDelaySlider.setOpaque(false);
+        autoplayDelaySlider.setPreferredSize(new Dimension(80, 26));
+        autoplayDelaySlider.setMaximumSize(new Dimension(80, 26));
+
         autoplayPanel.add(autoplayStart);
         autoplayPanel.add(autoplayPause);
-
+        autoplayPanel.add(delayIcon);
+        autoplayPanel.add(autoplayDelaySlider);
         autoplayPanel.setVisible(false);
+
+        JPanel autoplayWrapper = new JPanel(new BorderLayout());
+        autoplayWrapper.setOpaque(false);
+        autoplayWrapper.setPreferredSize(new Dimension(260, 58));
+        autoplayWrapper.setMaximumSize(new Dimension(260, 58));
+        autoplayWrapper.setMinimumSize(new Dimension(260, 58));
+        autoplayWrapper.add(autoplayPanel, BorderLayout.CENTER);
 
         JPanel centerGroup = new JPanel();
         centerGroup.setLayout(new BoxLayout(centerGroup, BoxLayout.X_AXIS));
@@ -189,7 +211,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         centerGroup.add(sliderGroup);
         centerGroup.add(Box.createHorizontalStrut(16));
         centerGroup.add(subtractBox);
-        centerGroup.add(autoplayPanel);
+        centerGroup.add(autoplayWrapper);
 
         topText.add(topLabel, BorderLayout.WEST);
         topText.add(centerGroup, BorderLayout.CENTER);
@@ -363,6 +385,9 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         String pressed = e.getActionCommand();
 
         // Check text of the pressed JButton
+        if (pressed.equals("Start")) {
+
+        }
         if (pressed.equals("New Game")) {
             reset();
             cardLayout.show(cards, "Menu");
@@ -451,7 +476,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     private void updateTitleText() {
         // First created
         if (buttons == null) {
-            topLabel.setText("Mines: " + mineCount);
+            topLabel.setText("\uD83D\uDCA3 " + mineCount);
             return;
         }
 
@@ -461,7 +486,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
                 flagged++;
             }
         }
-        topLabel.setText("Mines: " + (mineCount - flagged));
+        topLabel.setText((mineCount - flagged) + "\uD83D\uDCA3 ");
         topLabel.setForeground(Color.WHITE);
     }
 
