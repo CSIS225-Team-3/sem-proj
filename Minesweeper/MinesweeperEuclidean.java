@@ -42,9 +42,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     /** The button to reset the game */
     private JButton reset;
 
-    /** The round number for the game */
-    private int roundNum;
-
     /** The dimensions of the game */
     private int[] dims;
 
@@ -431,11 +428,11 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
         secondsElapsed = 0;
         build();
+        updateTitleText();
         revalidate();
         repaint();
 
         firstClick = true;
-        roundNum++;
     }
 
     private void checkWin() {
