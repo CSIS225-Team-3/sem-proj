@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
 import java.util.ArrayList;
 
 /**
@@ -45,6 +47,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     private JButton autoplay;
 
     private boolean autoplayActive;
+
+    private JPanel autoplayPanel;
+
+    private JButton autoplayStart;
+
+    private JButton autoplayPause;
 
     /** The dimensions of the game */
     private int[] dims;
@@ -159,12 +167,29 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             refreshNumbers();
         });
 
+        autoplayPanel = new JPanel(new FlowLayout());
+        autoplayPanel.setOpaque(false);
+        TitledBorder autoplayBorder = BorderFactory.createTitledBorder("Autoplay");
+        autoplayBorder.setTitleColor(Color.WHITE);
+        autoplayPanel.setBorder(autoplayBorder);
+        autoplayStart = MainMenu.styledButton("Start");
+        autoplayStart.addActionListener(this);
+
+        autoplayPause = MainMenu.styledButton("Pause");
+        autoplayPause.addActionListener(this);
+
+        autoplayPanel.add(autoplayStart);
+        autoplayPanel.add(autoplayPause);
+
+        autoplayPanel.setVisible(false);
+
         JPanel centerGroup = new JPanel();
         centerGroup.setLayout(new BoxLayout(centerGroup, BoxLayout.X_AXIS));
         centerGroup.setOpaque(false);
         centerGroup.add(sliderGroup);
         centerGroup.add(Box.createHorizontalStrut(16));
         centerGroup.add(subtractBox);
+        centerGroup.add(autoplayPanel);
 
         topText.add(topLabel, BorderLayout.WEST);
         topText.add(centerGroup, BorderLayout.CENTER);
@@ -178,14 +203,14 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         newGame.addActionListener(this);
         reset.addActionListener(this);
 
-        
-        autoplay = MainMenu.styledButton("Autoplay");
+        autoplay = MainMenu.styledButton("Toggle Autoplay Mode");
         autoplay.addActionListener(e -> {
+            // TODO: Thing here to prevent score from submitting to leaderboards
             autoplayActive = !autoplayActive;
             if (autoplayActive) {
-                //startAutoplay();
+                addAutoplay();
             } else {
-                //stopAutoplay();
+                removeAutoplay();
             }
         });
 
@@ -350,6 +375,14 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
                 button.reveal();
             }
         }
+    }
+
+    private void addAutoplay() {
+        autoplayPanel.setVisible(true);
+    }
+
+    private void removeAutoplay() {
+        autoplayPanel.setVisible(false);
     }
 
     private void updateButtonSize(int newSize) {
