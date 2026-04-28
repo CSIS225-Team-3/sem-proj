@@ -54,7 +54,9 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private JButton autoplayPause;
 
-    private JSlider autoplayDelaySlider;
+    private JSlider autoplaySpeedSlider;
+
+    private Timer autoplayTimer;
 
     /** The dimensions of the game */
     private int[] dims;
@@ -186,20 +188,20 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
             stopAutoplay();
         });
 
-        JLabel delayIcon = new JLabel("\u23F1");
-        delayIcon.setForeground(Color.LIGHT_GRAY);
-        delayIcon.setFont(delayIcon.getFont().deriveFont(13f));
-        delayIcon.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 2));
+        JLabel speedIcon = new JLabel("\u26A1");
+        speedIcon.setForeground(Color.LIGHT_GRAY);
+        speedIcon.setFont(speedIcon.getFont().deriveFont(13f));
+        speedIcon.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 2));
 
-        autoplayDelaySlider = new JSlider(100, 2000, 500);
-        autoplayDelaySlider.setOpaque(false);
-        autoplayDelaySlider.setPreferredSize(new Dimension(80, 26));
-        autoplayDelaySlider.setMaximumSize(new Dimension(80, 26));
+        autoplaySpeedSlider = new JSlider(1, 10, 5);
+        autoplaySpeedSlider.setOpaque(false);
+        autoplaySpeedSlider.setPreferredSize(new Dimension(80, 26));
+        autoplaySpeedSlider.setMaximumSize(new Dimension(80, 26));
 
         autoplayPanel.add(autoplayStart);
         autoplayPanel.add(autoplayPause);
-        autoplayPanel.add(delayIcon);
-        autoplayPanel.add(autoplayDelaySlider);
+        autoplayPanel.add(speedIcon);
+        autoplayPanel.add(autoplaySpeedSlider);
         autoplayPanel.setVisible(false);
 
         JPanel autoplayWrapper = new JPanel(new BorderLayout());
@@ -229,15 +231,11 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         newGame.addActionListener(this);
         reset.addActionListener(this);
 
-        autoplay = MainMenu.styledButton("Toggle Autoplay Mode");
+        autoplay = MainMenu.styledButton("Enable Autoplay Mode");
         autoplay.addActionListener(e -> {
             // TODO: Thing here to prevent score from submitting to leaderboards
-            autoplayActive = !autoplayActive;
-            if (autoplayActive) {
-                addAutoplay();
-            } else {
-                removeAutoplay();
-            }
+            autoplayActive = true;
+            addAutoplay();
         });
 
         bottomButtons.add(newGame);
@@ -389,9 +387,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         String pressed = e.getActionCommand();
 
         // Check text of the pressed JButton
-        if (pressed.equals("Start")) {
-
-        }
         if (pressed.equals("New Game")) {
             reset();
             cardLayout.show(cards, "Menu");
@@ -408,10 +403,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private void addAutoplay() {
         autoplayPanel.setVisible(true);
-    }
-
-    private void removeAutoplay() {
-        autoplayPanel.setVisible(false);
+        autoplay.setEnabled(false);
     }
 
     private void startAutoplay() {
