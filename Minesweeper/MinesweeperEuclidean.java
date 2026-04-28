@@ -44,6 +44,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private JButton autoplay;
 
+    private boolean autoplayActive;
+
     /** The dimensions of the game */
     private int[] dims;
 
@@ -177,8 +179,15 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         reset.addActionListener(this);
 
         
-        autoplay = MainMenu.styledButton("Autoplay Game");
-        autoplay.addActionListener(this);
+        autoplay = MainMenu.styledButton("Autoplay");
+        autoplay.addActionListener(e -> {
+            autoplayActive = !autoplayActive;
+            if (autoplayActive) {
+                //startAutoplay();
+            } else {
+                //stopAutoplay();
+            }
+        });
 
         bottomButtons.add(newGame);
         bottomButtons.add(reset);
