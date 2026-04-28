@@ -56,6 +56,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private static final String FOUR_DIMENSIONS = "4D Minesweeper";
 
     private static final String FIVE_DIMENSIONS = "5D+ Minesweeper";
+    
     private static final String HYPERBOLIC = "Hyperbolic Minesweeper";
 
     /** The CardLayout for managing panels */
