@@ -195,11 +195,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public void run() {
         frame = new JFrame("Minesweeper");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // frame.setPreferredSize(new Dimension(800, 800));
         frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setLocationRelativeTo(null);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        // frame.setUndecorated(true);
 
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("MinesweeperMine.png"));
         frame.setIconImage(icon);
@@ -352,10 +350,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension, hyperbolic };
         for (JButton b : dimensions) {
-            // b.setBackground(TERTIARY_COLOR);
-            // b.setForeground(Color.WHITE);
-            // b.setOpaque(true);
-            // b.setContentAreaFilled(true);
             b.addActionListener(this);
             modePanel.add(b);
         }
@@ -524,75 +518,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         frame.add(cards);
         // frame.pack();
 
-        /*
-         * RAINBOW
-         * Thread rainbowThread = new Thread(() -> {
-         * while (true) {
-         * rainbowHue = (rainbowHue + 0.002f) % 1f;
-         * 
-         * PRIMARY_COLOR = Color.getHSBColor(rainbowHue, 0.3f, 1.0f);
-         * SECONDARY_COLOR = Color.getHSBColor((rainbowHue + 0.09f) % 1f, 0.5f, 0.85f);
-         * TERTIARY_COLOR = Color.getHSBColor((rainbowHue + 0.05f) % 1f, 0.25f, 1.0f);
-         * 
-         * SwingUtilities.invokeLater(() -> {
-         * frame.setBackground(PRIMARY_COLOR);
-         * centerPanel.setBackground(PRIMARY_COLOR);
-         * configPanel.setBackground(PRIMARY_COLOR);
-         * bottomPanel.setBackground(PRIMARY_COLOR);
-         * errorPanel.setBackground(PRIMARY_COLOR);
-         * startPanel.setBackground(PRIMARY_COLOR);
-         * topPanel.setBackground(PRIMARY_COLOR);
-         * 
-         * loginMainPanel.setBackground(SECONDARY_COLOR);
-         * buttonsPanel.setBackground(SECONDARY_COLOR);
-         * fieldsPanel.setBackground(SECONDARY_COLOR);
-         * topButtons.setBackground(SECONDARY_COLOR);
-         * bottomButtons.setBackground(SECONDARY_COLOR);
-         * showPassword.setBackground(SECONDARY_COLOR);
-         * 
-         * modePanel.setBackground(SECONDARY_COLOR);
-         * settingsPanel.setBackground(SECONDARY_COLOR);
-         * mineConfigPanel.setBackground(SECONDARY_COLOR);
-         * difficultyPanel.setBackground(SECONDARY_COLOR);
-         * 
-         * easyBtn.setBackground(SECONDARY_COLOR);
-         * mediumBtn.setBackground(SECONDARY_COLOR);
-         * hardBtn.setBackground(SECONDARY_COLOR);
-         * extremeBtn.setBackground(SECONDARY_COLOR);
-         * 
-         * randomMines.setBackground(SECONDARY_COLOR);
-         * 
-         * easyInfo.setBackground(SECONDARY_COLOR);
-         * mediumInfo.setBackground(SECONDARY_COLOR);
-         * hardInfo.setBackground(SECONDARY_COLOR);
-         * extremeInfo.setBackground(SECONDARY_COLOR);
-         * 
-         * registerButton.setBackground(TERTIARY_COLOR);
-         * loginButton.setBackground(TERTIARY_COLOR);
-         * logoutButton.setBackground(TERTIARY_COLOR);
-         * deleteButton.setBackground(TERTIARY_COLOR);
-         * 
-         * twoDimension.setBackground(TERTIARY_COLOR);
-         * threeDimension.setBackground(TERTIARY_COLOR);
-         * fourDimension.setBackground(TERTIARY_COLOR);
-         * fiveDimension.setBackground(TERTIARY_COLOR);
-         * 
-         * startButton.setBackground(TERTIARY_COLOR);
-         * 
-         * repaint();
-         * });
-         * try {
-         * Thread.sleep(50);
-         * } catch (InterruptedException ex) {
-         * Thread.currentThread().interrupt();
-         * break;
-         * }
-         * }
-         * });
-         * 
-         * rainbowThread.setDaemon(true);
-         * rainbowThread.start();
-         */
         topPanel.setOpaque(false);
         loginMainPanel.setOpaque(false);
         fieldsPanel.setOpaque(false);
