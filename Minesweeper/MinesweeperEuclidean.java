@@ -169,8 +169,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         mainPanel.add(topText, BorderLayout.NORTH);
 
         JPanel bottomButtons = new JPanel(new FlowLayout());
-        newGame = MainMenu.semiTransparentButton("New Game");
-        reset = MainMenu.semiTransparentButton("Reset");
+        newGame = MainMenu.styledButton("New Game");
+        reset = MainMenu.styledButton("Reset");
         newGame.addActionListener(this);
         reset.addActionListener(this);
 

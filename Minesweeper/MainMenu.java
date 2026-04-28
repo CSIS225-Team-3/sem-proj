@@ -357,10 +357,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         passwordField.setBackground(SECONDARY_COLOR);
         passwordField.setCaretColor(Color.WHITE);
 
-        registerButton = semiTransparentButton("Register");
-        loginButton = semiTransparentButton("Login");
-        logoutButton = semiTransparentButton("Log Out");
-        deleteButton = semiTransparentButton("Delete Account");
+        registerButton = styledButton("Register");
+        loginButton = styledButton("Login");
+        logoutButton = styledButton("Log Out");
+        deleteButton = styledButton("Delete Account");
 
         registerButton.setOpaque(false);
         registerButton.setContentAreaFilled(false);
@@ -382,7 +382,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         logoutButton.setEnabled(false);
         deleteButton.setEnabled(false);
 
-        JPanel loginMainPanel = semiTransparentPanel(new BorderLayout(5, 5));
+        JPanel loginMainPanel = styledPanel(new BorderLayout(5, 5));
         loginMainPanel.setOpaque(false);
         loginMainPanel.setBackground(SECONDARY_COLOR);
 
@@ -455,15 +455,15 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        JPanel modePanel = semiTransparentPanel(new GridLayout(5, 1, 0, 5));
+        JPanel modePanel = styledPanel(new GridLayout(5, 1, 0, 5));
         modePanel.setBorder(BorderFactory.createTitledBorder("Select Mode"));
         modePanel.setBackground(SECONDARY_COLOR);
 
-        twoDimension = semiTransparentButton("2D Minesweeper");
-        threeDimension = semiTransparentButton("3D Minesweeper");
-        fourDimension = semiTransparentButton("4D Minesweeper");
-        fiveDimension = semiTransparentButton("5D+ Minesweeper");
-        hyperbolic = semiTransparentButton("Hyperbolic Minesweeper");
+        twoDimension = styledButton("2D Minesweeper");
+        threeDimension = styledButton("3D Minesweeper");
+        fourDimension = styledButton("4D Minesweeper");
+        fiveDimension = styledButton("5D+ Minesweeper");
+        hyperbolic = styledButton("Hyperbolic Minesweeper");
 
         JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension, hyperbolic };
         for (JButton b : dimensions) {
@@ -477,7 +477,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         configPanel.setBackground(PRIMARY_COLOR);
         configPanel.setVisible(false);
 
-        JPanel settingsPanel = semiTransparentPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
+        JPanel settingsPanel = styledPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
         settingsPanel.setBorder(BorderFactory.createTitledBorder("Game Settings"));
         settingsPanel.setBackground(SECONDARY_COLOR);
 
@@ -533,7 +533,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         dimensionsLabel.setVisible(false);
         dimensionsSpinner.setVisible(false);
 
-        JPanel mineConfigPanel = semiTransparentPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        JPanel mineConfigPanel = styledPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         mineConfigPanel.setBackground(SECONDARY_COLOR);
         mineConfigPanel.add(new JLabel("Mine Amount: "));
 
@@ -552,7 +552,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         configPanel.add(settingsPanel, BorderLayout.NORTH);
 
-        JPanel difficultyPanel = semiTransparentPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+        JPanel difficultyPanel = styledPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
         difficultyPanel.setBorder(BorderFactory.createTitledBorder("Preset Difficulties"));
         difficultyPanel.setBackground(SECONDARY_COLOR);
 
@@ -581,7 +581,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             btns[i].setOpaque(false);
             btns[i].setContentAreaFilled(false);
 
-            JPanel each = semiTransparentPanel(new BorderLayout());
+            JPanel each = styledPanel(new BorderLayout());
             each.setBackground(SECONDARY_COLOR);
 
             infoLabels[i].setFont(infoLabels[i].getFont().deriveFont(10f));
@@ -606,13 +606,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         errorLabel.setForeground(Color.RED);
         errorPanel.add(errorLabel);
 
-        startButton = semiTransparentButton("Start Game");
+        startButton = styledButton("Start Game");
         startButton.setBackground(TERTIARY_COLOR);
         startButton.addActionListener(this);
         startButton.setOpaque(false);
         startButton.setContentAreaFilled(false);
 
-        autoplayButton = semiTransparentButton("Autoplay Game");
+        autoplayButton = styledButton("Autoplay Game");
         autoplayButton.setBackground(TERTIARY_COLOR);
         autoplayButton.addActionListener(this);
         autoplayButton.setOpaque(false);
@@ -1150,7 +1150,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     }
 
-    private static JPanel semiTransparentPanel(LayoutManager layout) {
+    private static JPanel styledPanel(LayoutManager layout) {
         JPanel p = new JPanel(layout) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -1163,7 +1163,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         return p;
     }
 
-    public static JButton semiTransparentButton(String text) {
+    public static JButton styledButton(String text) {
         JButton button = new JButton(text) {
             @Override
             protected void paintComponent(Graphics g) {
