@@ -202,6 +202,109 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("MinesweeperMine.png"));
         frame.setIconImage(icon);
 
+        cards = buildCardsPanel();
+
+        add(buildTopPanel(), BorderLayout.NORTH);
+        add(buildCenterPanel(), BorderLayout.CENTER);
+        setBackground(PRIMARY_COLOR);
+
+        cards.add(this, MENU_CARD);
+        cardLayout.show(cards, MENU_CARD);
+        frame.add(cards);
+        setOpaque(false);
+        frame.setVisible(true);
+
+        // Dev thing, leave it for now
+        // int mines = 1;
+        // cards.add(new MinesweeperHyperbolic(mines, cardLayout, cards),
+        // HYPERBOLIC_MS);
+        // cardLayout.show(cards, HYPERBOLIC_MS);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object src = e.getSource();
+
+        // Password visibility
+        if (src == showPassword) {
+            togglePasswordVisibility();
+            return;
+        }
+
+        if (src == registerButton) {
+            register();
+            return;
+        }
+
+        if (src == loginButton) {
+            login();
+            return;
+        }
+
+        if (src == logoutButton) {
+            logout();
+            return;
+        }
+
+        if (src == deleteButton) {
+            deleteAccount();
+            return;
+        }
+
+        // Mode buttons
+        if (src == twoDimension || src == threeDimension || src == fourDimension || src == fiveDimension) {
+            handleModeSelection(src);
+            return;
+        }
+
+        // USER SELECTING DIFFICULTY
+        if (src == easyBtn || src == mediumBtn || src == hardBtn || src == extremeBtn) {
+            handleDifficultySelection(src);
+            return;
+        }
+
+        if (src == randomMines) {
+            minesSpinner.setEnabled(!randomMines.isSelected());
+            difficultyGroup.clearSelection();
+            return;
+        }
+
+        // USER STARTING GAME
+        if (src == startButton) {
+            handleStartGame(src);
+            return;
+        }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (!difficultyAdjusted) {
+            difficultyGroup.clearSelection();
+        }
+        int gridVolume = -1;
+        if (dimensionsSelected == 2) {
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue();
+        } else if (dimensionsSelected == 3) {
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue();
+        } else if (dimensionsSelected == 4) {
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue();
+        } else if (dimensionsSelected >= 5) {
+            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
+                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue()
+                    * (dimensionsSelected * (int) (splices5dSpinner.getValue()));
+        }
+
+        // 20k cell before it gives warning
+        if (gridVolume > 20000) {
+            errorLabel.setText("Current grid size may cause game to crash. Proceed with caution.");
+        } else {
+            errorLabel.setText(" ");
+        }
+    }
+
+    private JPanel buildCardsPanel() {
         BufferedImage background = null;
         TexturePaint texturepaint = null;
         try {
@@ -214,7 +317,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         final BufferedImage bg = background;
         final TexturePaint tp = texturepaint;
         cardLayout = new CardLayout();
-        cards = new JPanel(cardLayout) {
+        JPanel panel = new JPanel(cardLayout) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -234,7 +337,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
              * }
              */
         };
+        return panel;
+    }
 
+    private JPanel buildTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout());
 
         usernameField = new JTextField();
@@ -333,8 +439,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
         topPanel.add(mainText, BorderLayout.NORTH);
 
-        add(topPanel, BorderLayout.NORTH);
+        topPanel.setOpaque(false);
+        loginMainPanel.setOpaque(false);
+        fieldsPanel.setOpaque(false);
+        buttonsPanel.setOpaque(false);
+        topButtons.setOpaque(false);
+        bottomButtons.setOpaque(false);
 
+        return topPanel;
+    }
+
+    private JPanel buildCenterPanel() {
         JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
@@ -508,120 +623,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         difficultyInfoLabels = infoLabels;
 
-        add(centerPanel, BorderLayout.CENTER);
         centerPanel.setBackground(PRIMARY_COLOR);
         modePanel.setBackground(SECONDARY_COLOR);
-        setBackground(PRIMARY_COLOR);
 
-        cards.add(this, MENU_CARD);
-        cardLayout.show(cards, MENU_CARD);
-        frame.add(cards);
-        // frame.pack();
-
-        topPanel.setOpaque(false);
-        loginMainPanel.setOpaque(false);
-        fieldsPanel.setOpaque(false);
-        buttonsPanel.setOpaque(false);
-        topButtons.setOpaque(false);
-        bottomButtons.setOpaque(false);
         centerPanel.setOpaque(false);
         configPanel.setOpaque(false);
         bottomPanel.setOpaque(false);
         errorPanel.setOpaque(false);
         startPanel.setOpaque(false);
-        setOpaque(false);
 
         startButton.setContentAreaFilled(false);
-        frame.setVisible(true);
 
-        // Dev thing, leave it for now
-        // int mines = 1;
-        // cards.add(new MinesweeperHyperbolic(mines, cardLayout, cards),
-        // HYPERBOLIC_MS);
-        // cardLayout.show(cards, HYPERBOLIC_MS);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object src = e.getSource();
-
-        // Password visibility
-        if (src == showPassword) {
-            togglePasswordVisibility();
-            return;
-        }
-
-        if (src == registerButton) {
-            register();
-            return;
-        }
-
-        if (src == loginButton) {
-            login();
-            return;
-        }
-
-        if (src == logoutButton) {
-            logout();
-            return;
-        }
-
-        if (src == deleteButton) {
-            deleteAccount();
-            return;
-        }
-
-        // Mode buttons
-        if (src == twoDimension || src == threeDimension || src == fourDimension || src == fiveDimension) {
-            handleModeSelection(src);
-            return;
-        }
-
-        // USER SELECTING DIFFICULTY
-        if (src == easyBtn || src == mediumBtn || src == hardBtn || src == extremeBtn) {
-            handleDifficultySelection(src);
-            return;
-        }
-
-        if (src == randomMines) {
-            minesSpinner.setEnabled(!randomMines.isSelected());
-            difficultyGroup.clearSelection();
-            return;
-        }
-
-        // USER STARTING GAME
-        if (src == startButton) {
-            handleStartGame(src);
-            return;
-        }
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        if (!difficultyAdjusted) {
-            difficultyGroup.clearSelection();
-        }
-        int gridVolume = -1;
-        if (dimensionsSelected == 2) {
-            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue();
-        } else if (dimensionsSelected == 3) {
-            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
-                    * (int) splices3dSpinner.getValue();
-        } else if (dimensionsSelected == 4) {
-            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
-                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue();
-        } else if (dimensionsSelected >= 5) {
-            gridVolume = (int) colsSpinner.getValue() * (int) rowsSpinner.getValue()
-                    * (int) splices3dSpinner.getValue() * (int) splices4dSpinner.getValue()
-                    * (dimensionsSelected * (int) (splices5dSpinner.getValue()));
-        }
-
-        // 20k cell before it gives warning
-        if (gridVolume > 20000) {
-            errorLabel.setText("Current grid size may cause game to crash. Proceed with caution.");
-        } else {
-            errorLabel.setText(" ");
-        }
+        return centerPanel;
     }
 
     private void updateMaxMines() {
