@@ -105,7 +105,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private JRadioButton extremeBtn;
 
     private JButton startButton;
-    private JButton autoplayButton;
 
     private String selectedMode;
     private JLabel[] difficultyInfoLabels;
@@ -612,16 +611,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         startButton.setOpaque(false);
         startButton.setContentAreaFilled(false);
 
-        autoplayButton = styledButton("Autoplay Game");
-        autoplayButton.setBackground(TERTIARY_COLOR);
-        autoplayButton.addActionListener(this);
-        autoplayButton.setOpaque(false);
-        autoplayButton.setContentAreaFilled(false);
 
         JPanel startPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         startPanel.setBackground(PRIMARY_COLOR);
         startPanel.add(startButton);
-        startPanel.add(autoplayButton);
 
         bottomPanel.add(errorPanel, BorderLayout.NORTH);
         bottomPanel.add(startPanel, BorderLayout.SOUTH);

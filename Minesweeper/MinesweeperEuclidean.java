@@ -42,6 +42,8 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     /** The button to reset the game */
     private JButton reset;
 
+    private JButton autoplay;
+
     /** The dimensions of the game */
     private int[] dims;
 
@@ -174,8 +176,13 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         newGame.addActionListener(this);
         reset.addActionListener(this);
 
+        
+        autoplay = MainMenu.styledButton("Autoplay Game");
+        autoplay.addActionListener(this);
+
         bottomButtons.add(newGame);
         bottomButtons.add(reset);
+        bottomButtons.add(autoplay);
 
         mainPanel.add(bottomButtons, BorderLayout.SOUTH);
 
