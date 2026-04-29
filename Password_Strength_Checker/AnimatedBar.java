@@ -22,15 +22,21 @@ public class AnimatedBar extends Thread {
         while (strengthBar.getValue() != target) {
             int current = strengthBar.getValue();
             int diff = target - current;
+            int step = diff / 7;
 
-            // testing
-            int next = 2;
+            if (step == 0) {
+                if (diff > 0) {
+                    step = 1;
+                } else {
+                    step = -1;
+                }
+            }
+            final int next = current + step;
             SwingUtilities.invokeLater(() -> {
                 strengthBar.setValue(next);
                 strengthBar.setString(String.valueOf(next));
             });
 
-            // 16ms
             try {
                 Thread.sleep(16);
             } catch (InterruptedException e) {
