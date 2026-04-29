@@ -347,27 +347,34 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         
         b_u.setTile(newCenter.relUp);
         if (newCenter.relUp != null){
-            b_ul.setTile(newCenter.relUp.relLeft);
-            b_ur.setTile(newCenter.relUp.relRight);
+            b_ul.setTile(getRelOrientedTile(newCenter, Direction.Up, Direction.Left));
+            b_ur.setTile(getRelOrientedTile(newCenter, Direction.Up, Direction.Right));
         }
 
         b_l.setTile(newCenter.relLeft);
         if (newCenter.relLeft != null){
-            b_lu.setTile(newCenter.relLeft.relUp);
-            b_ld.setTile(newCenter.relLeft.relDown);
+            b_lu.setTile(getRelOrientedTile(newCenter, Direction.Left, Direction.Right));
+            b_ld.setTile(getRelOrientedTile(newCenter, Direction.Left, Direction.Left));
         }
 
         b_d.setTile(newCenter.relDown);
         if (newCenter.relDown != null){
-            b_dl.setTile(newCenter.relDown.relLeft);
-            b_dr.setTile(newCenter.relDown.relRight);
+            b_dl.setTile(getRelOrientedTile(newCenter, Direction.Down, Direction.Right));
+            b_dr.setTile(getRelOrientedTile(newCenter, Direction.Down, Direction.Left));
         }
 
         b_r.setTile(newCenter.relRight);
         if (newCenter.relRight != null){
-            b_ru.setTile(newCenter.relRight.relUp);
-            b_rd.setTile(newCenter.relRight.relDown);
+            b_ru.setTile(getRelOrientedTile(newCenter, Direction.Right, Direction.Left));
+            b_rd.setTile(getRelOrientedTile(newCenter, Direction.Right, Direction.Right));
         }
+    }
+
+    private Tile getRelOrientedTile(Tile source, Direction selfSide, Direction otherSide){
+        if (source == null)
+            return null;
+        var relOtherSide = otherSide.reorient(selfSide);
+        return source.getRelSide(selfSide).getRelSide(relOtherSide);
     }
 
     /**

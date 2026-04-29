@@ -273,8 +273,76 @@ class Tile
         }
         throw new IllegalStateException("Invalid direction");
     }
+
+    /**
+     * Returns the neighbor of this tile in the given direction
+     * @param dir The direction
+     * @return The neighbor
+     */
+    public Tile getRelSide(Direction dir){
+        switch (dir) {
+            case Up:
+                return relUp;
+            case Down:
+                return relDown;
+            case Left:
+                return relLeft;
+            case Right:
+                return relRight;
+            default:
+                throw new IllegalStateException("Invalid direction");
+        }
+    }
 }
 
 enum Direction {
-    Up, Down, Left, Right
+    Up, Down, Left, Right;
+
+
+    /**
+     * Returns this direction relative to a given direction (up serving as the default basis)
+     * @param dir The direction to orient relative to
+     * @return The relative direction
+     */
+    public Direction reorient(Direction dir){
+        switch (dir) {
+            case Up:
+                return this;
+            case Down:
+                switch (this) {
+                    case Up:
+                        return Down;
+                    case Down:
+                        return Up;
+                    case Left:
+                        return Right;
+                    case Right:
+                        return Left;
+                }
+            case Left:
+                switch (this) {
+                    case Up:
+                        return Right;
+                    case Down:
+                        return Left;
+                    case Left:
+                        return Up;
+                    case Right:
+                        return Down;
+                }
+            case Right:
+                switch (this) {
+                    case Up:
+                        return Left;
+                    case Down:
+                        return Right;
+                    case Left:
+                        return Down;
+                    case Right:
+                        return Up;
+                }
+            default:
+                throw new IllegalStateException("Invalid direction");
+        }
+    }
 }
