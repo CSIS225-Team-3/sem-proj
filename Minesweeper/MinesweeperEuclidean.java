@@ -409,6 +409,14 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     private void startAutoplay() {
         autoplayStart.setEnabled(false);
         autoplayPause.setEnabled(true);
+
+        autoplayTimer = new Timer(speedToDelay(autoplaySpeedSlider.getValue()), e -> {
+            ((Timer) e.getSource()).setDelay(speedToDelay(autoplaySpeedSlider.getValue()));
+        });
+    }
+
+    private int speedToDelay(int speed) {
+        return 2000 - (speed - 1) * (1950 / 9);
     }
 
     private void stopAutoplay() {
