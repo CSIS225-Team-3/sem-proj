@@ -50,6 +50,8 @@ public class PasswordChecker implements Runnable, ActionListener {
     /** The current password strength */
     private int strength;
 
+    private int targetStrength;
+
     /**
      * Panel to store labels which guide the user on the qualifications of a strong
      * password
@@ -77,7 +79,6 @@ public class PasswordChecker implements Runnable, ActionListener {
     public void run() {
         // Doesn't apply to existing JFrames, so must be called first
         JFrame.setDefaultLookAndFeelDecorated(true);
-
 
         JFrame frame = new JFrame("Password Strength Checker");
         frame.setPreferredSize(new Dimension(450, 320));
@@ -149,8 +150,6 @@ public class PasswordChecker implements Runnable, ActionListener {
         checksLabels.add(new JLabel(" ✗ Number (0-9)", SwingConstants.CENTER));
         checksLabels.add(new JLabel(" ✓ Doesn't have a commonly used password phrase", SwingConstants.CENTER));
         checksLabels.add(new JLabel(" ✓ Doesn't an ascending or descending seqence of numbers", SwingConstants.CENTER));
-
-
 
         for (JLabel label : checksLabels) {
             label.setForeground(Color.RED);
@@ -258,15 +257,19 @@ public class PasswordChecker implements Runnable, ActionListener {
      */
     private void initCommonPasswords() {
         commonPasswords = new String[] {
-            "password", "password1", "password123", "passw0rd",
-            "qwerty", "qwerty123", "qwertyuiop",
-            "abc123", "111111", "000000", "123123", "654321",
-            "admin", "admin123", "root", "letmein", "welcome", "login",
-            "test", "test123", "guest", "user",
-            "iloveyou", "dragon", "baseball", "football",
-            "superman", "batman", "trustno1", "asdfgh", "asdfghjkl", "zxcvbnm",
-            "1q2w3e4r", "qazwsx", "hello", "sunshine"
+                "password", "password1", "password123", "passw0rd",
+                "qwerty", "qwerty123", "qwertyuiop",
+                "abc123", "111111", "000000", "123123", "654321",
+                "admin", "admin123", "root", "letmein", "welcome", "login",
+                "test", "test123", "guest", "user",
+                "iloveyou", "dragon", "baseball", "football",
+                "superman", "batman", "trustno1", "asdfgh", "asdfghjkl", "zxcvbnm",
+                "1q2w3e4r", "qazwsx", "hello", "sunshine"
         };
+    }
+
+    private void animateBar(int target) {
+        
     }
 
     /**
@@ -301,9 +304,8 @@ public class PasswordChecker implements Runnable, ActionListener {
      */
     private void calculateScore() {
         String password = new String(passwordBox.getPassword());
-        
-        int choices = 0;
 
+        int choices = 0;
 
         if (hasUpperCase(password)) {
             choices += 26; // 26 uppercase letters
@@ -326,17 +328,17 @@ public class PasswordChecker implements Runnable, ActionListener {
         double combinations = Math.pow(choices, password.length());
 
         // Scale down the massive number
-        strength = (int) Math.log(combinations) / 2 -2;
+        strength = (int) Math.log(combinations) / 2 - 2;
 
-        //checking for sequence or common password
+        // checking for sequence or common password
         if (isCommonPassword(password) || isSequential(password)) {
             strength = strength - 10;
-            if (strength < 2 ){
+            if (strength < 2) {
                 strength = 2;
             }
         }
 
-        if (strength < 0){
+        if (strength < 0) {
             strength = 0;
         }
     }
@@ -385,26 +387,26 @@ public class PasswordChecker implements Runnable, ActionListener {
         if (hasNum(password)) {
             checksLabels.get(3).setForeground(new Color(0, 200, 0));
             checksLabels.get(3).setText(" ✓ Number (0-9)");
-            
+
         } else {
             checksLabels.get(3).setForeground(Color.RED);
             checksLabels.get(3).setText(" ✗ Number (0-9)");
         }
 
-        if(isCommonPassword(password)) {
+        if (isCommonPassword(password)) {
             checksLabels.get(4).setForeground(Color.RED);
             checksLabels.get(4).setText(" ✗ Has a commonly used password phrase");
-        } else{
+        } else {
             checksLabels.get(4).setForeground(new Color(0, 200, 0));
             checksLabels.get(4).setText(" ✓ Doesn't have a commonly used password phrase");
         }
 
-        if(isSequential(password)) {
+        if (isSequential(password)) {
             checksLabels.get(5).setForeground(Color.RED);
             checksLabels.get(5).setText(" ✗ Has an ascending or descending seqence of numbers");
-        } else{
+        } else {
             checksLabels.get(5).setForeground(new Color(0, 200, 0));
-            checksLabels.get(5).setText(" ✓ Doesn't have an ascending or descending seqence of numbers");        
+            checksLabels.get(5).setText(" ✓ Doesn't have an ascending or descending seqence of numbers");
         }
     }
 
@@ -466,7 +468,8 @@ public class PasswordChecker implements Runnable, ActionListener {
      * Check if password is common
      * 
      * @param password the password to check
-     * @return true if the password is included in the list of common passwords, false otherwise
+     * @return true if the password is included in the list of common passwords,
+     *         false otherwise
      */
     private boolean isCommonPassword(String password) {
         String lower = password.toLowerCase();
@@ -485,7 +488,8 @@ public class PasswordChecker implements Runnable, ActionListener {
      * @return true if the password is sequence, false otherwise
      */
     private boolean isSequential(String password) {
-        if (password.length() < 3) return false;
+        if (password.length() < 3)
+            return false;
         boolean ascending = true;
         boolean descending = true;
 
