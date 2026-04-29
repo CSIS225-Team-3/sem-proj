@@ -268,10 +268,6 @@ public class PasswordChecker implements Runnable, ActionListener {
         };
     }
 
-    private void animateBar(int target) {
-        
-    }
-
     /**
      * Sets the strength message based on password strength randomly.
      */
@@ -295,8 +291,9 @@ public class PasswordChecker implements Runnable, ActionListener {
         calculateScore();
         setColor();
         setStrengthMessage();
-        strengthBar.setValue(strength);
-        strengthBar.setString(String.valueOf(strength));
+        // strengthBar.setValue(strength);
+        // strengthBar.setString(String.valueOf(strength));
+        new AnimatedBar(strength, strengthBar).start();
     }
 
     /**
