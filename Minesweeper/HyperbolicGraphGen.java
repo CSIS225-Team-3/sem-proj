@@ -33,14 +33,16 @@ public class HyperbolicGraphGen
         var l = v2;
         var r = v4;
         var nt = tile1;
+        var nextDir = Direction.Left;
         // for (int i = 0; i <= 58; i++)
         for (int i = 0; i <= 10; i++)
         // for (int i = 0; i <= 15; i++)
         {
-            ExtrudeReturn e = extrude(l, r, nt);
+            ExtrudeReturn e = extrude(l, r, nt, nextDir);
             l = e.l;
             r = e.r;
             nt = e.newTile;
+            nextDir = e.nextDir;
             tiles.add(nt);
         }
 
@@ -61,10 +63,10 @@ public class HyperbolicGraphGen
         parentL.addNeighbor(nL, null, null);
         parentR.addNeighbor(nR, null, null);
         nL.addNeighbor(nR, null, null);
-        return new ExtrudeReturn(nL, nR, null);
+        return new ExtrudeReturn(nL, nR, null, null);
     }
 
-    static ExtrudeReturn extrude(Vert parentL, Vert parentR, Tile parentTile)
+    static ExtrudeReturn extrude(Vert parentL, Vert parentR, Tile parentTile, Direction nextDir)
     {
         if (parentL.neighbors.size() == 3 || parentL.neighbors.size() == 4)
         {
@@ -73,13 +75,12 @@ public class HyperbolicGraphGen
             var nR = new Vert();
 
             Tile newTile = new Tile(new Vert[] { parentL, parentR, nL, nR });
-            //idk if that ternary is correct
-            parentTile.addNeighbor(newTile, parentL.neighbors.size() == 4 ? Direction.Left : Direction.Up, Direction.Down);
+            parentTile.addNeighbor(newTile, nextDir, Direction.Down);
 
             parentL.addNeighbor(nL, null, null);
             parentR.addNeighbor(nR, newTile, Direction.Right);
             nL.addNeighbor(nR, newTile, Direction.Up);
-            return new ExtrudeReturn(parentL, nL, newTile);
+            return new ExtrudeReturn(parentL, nL, newTile, Direction.Left);
         }
         else if (parentL.neighbors.size() == 5)
         {
@@ -89,13 +90,12 @@ public class HyperbolicGraphGen
             var nR = new Vert();
             
             Tile newTile = new Tile(new Vert[] { parentL, parentR, nL.getKey(), nR });
-            //I'm not certain if Left is always the correct direction, but I think it is
-            parentTile.addNeighbor(newTile, Direction.Left, Direction.Down);
+            parentTile.addNeighbor(newTile, nextDir, Direction.Down);
 
             parentL.unmarkBuilder(nL.getKey(), newTile);
             parentR.addNeighbor(nR, newTile, Direction.Right);
             nL.getKey().addNeighbor(nR, null, null);
-            return new ExtrudeReturn(nL.getKey(), nR, newTile);
+            return new ExtrudeReturn(nL.getKey(), nR, newTile, Direction.Up);
         }
         else
             throw new IllegalStateException("Uh oh");
@@ -107,12 +107,14 @@ class ExtrudeReturn
     public Vert l;
     public Vert r;
     public Tile newTile;
+    public Direction nextDir;
 
-    public ExtrudeReturn(Vert l, Vert r, Tile newTile)
+    public ExtrudeReturn(Vert l, Vert r, Tile newTile, Direction nextDir)
     {
         this.l = l;
         this.r = r;
         this.newTile = newTile;
+        this.nextDir = nextDir;
     }
 }
 
