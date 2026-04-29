@@ -245,14 +245,26 @@ class Tile
 
     private void setRelSide(Tile neighbor, Direction dir)
     {
-        if (dir == Direction.Up)
+        if (dir == Direction.Up){
+            if (relUp != null)
+                throw new IllegalStateException("Already have an up neighbor");
             relUp = neighbor;
-        else if (dir == Direction.Down)
+        }
+        else if (dir == Direction.Down){
+            if (relDown != null)
+                throw new IllegalStateException("Already have a down neighbor");
             relDown = neighbor;
-        else if (dir == Direction.Left)
+        }
+        else if (dir == Direction.Left){
+            if (relLeft != null)
+                throw new IllegalStateException("Already have a left neighbor");
             relLeft = neighbor;
-        else if (dir == Direction.Right)
+        }
+        else if (dir == Direction.Right){
+            if (relRight != null)
+                throw new IllegalStateException("Already have a right neighbor");
             relRight = neighbor;
+        }
         throw new IllegalStateException("Invalid direction");
     }
 }
