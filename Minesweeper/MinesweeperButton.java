@@ -110,7 +110,7 @@ public class MinesweeperButton extends JButton {
                 String text = String.valueOf(numAdjacent);
                 setText(text);
                 if (text.length() >= 3) {
-                    setFont(getFont().deriveFont((float) buttonSize / 20));
+                    setFont(getFont().deriveFont((float) buttonSize / 3));
                 }
             }
         }

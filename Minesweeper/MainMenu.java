@@ -218,8 +218,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         // Dev thing, leave it for now
         // int mines = 1;
         // cards.add(new MinesweeperHyperbolic(mines, cardLayout, cards),
-        // HYPERBOLIC_MS);
-        // cardLayout.show(cards, HYPERBOLIC_MS);
+        //         HYPERBOLIC);
+        // cardLayout.show(cards, HYPERBOLIC);
     }
 
     @Override
@@ -610,7 +610,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         startButton.addActionListener(this);
         startButton.setOpaque(false);
         startButton.setContentAreaFilled(false);
-
 
         JPanel startPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         startPanel.setBackground(PRIMARY_COLOR);
