@@ -249,21 +249,25 @@ class Tile
             if (relUp != null)
                 throw new IllegalStateException("Already have an up neighbor");
             relUp = neighbor;
+            return;
         }
-        else if (dir == Direction.Down){
+        if (dir == Direction.Down){
             if (relDown != null)
                 throw new IllegalStateException("Already have a down neighbor");
             relDown = neighbor;
+            return;
         }
-        else if (dir == Direction.Left){
+        if (dir == Direction.Left){
             if (relLeft != null)
                 throw new IllegalStateException("Already have a left neighbor");
             relLeft = neighbor;
+            return;
         }
-        else if (dir == Direction.Right){
+        if (dir == Direction.Right){
             if (relRight != null)
                 throw new IllegalStateException("Already have a right neighbor");
             relRight = neighbor;
+            return;
         }
         throw new IllegalStateException("Invalid direction");
     }
