@@ -149,8 +149,7 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
                         timer = new Timer(1000, timerListener);
                         timer.start();
 
-                        int clickedIdx = ((MinesweeperButton) e.getSource()).getIdx();
-                        placeMines(clickedIdx);
+                        placeMines(((MinesweeperHBButton) e.getSource()).getTile());
                     }
                     onTileClick(e);
                     updateTitleText();
@@ -254,14 +253,14 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         } else if (pressed.equals("Reset")) {
             reset();
         } else {
-            if (e.getSource() instanceof MinesweeperButton) {
-                MinesweeperButton button = (MinesweeperButton) e.getSource();
+            if (e.getSource() instanceof MinesweeperHBButton) {
+                MinesweeperHBButton button = (MinesweeperHBButton) e.getSource();
                 button.reveal();
             }
         }
     }
 
-    private void placeMines(int clickIdx) {
+    private void placeMines(Tile startTile) {
         throw new IllegalStateException("Not implemented yet");
         // int[] clickPos = idxToPos(clickIdx);
 
