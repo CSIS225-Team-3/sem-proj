@@ -56,12 +56,19 @@ public class MinesweeperHBButton extends JButton {
     }
 
     /**
-     * Gets the tile this button is showing
-     * 
+     * Gets the tile this button is showing (or null if not representing a tile)
      * @return the tile this button is showing
      */
     public Tile getTile() {
         return tile;
+    }
+
+    /**
+     * Sets the tile for this button to show (or null if nothing to show)
+     * @param newTile The tile this button should show
+     */
+    public void setTile(Tile newTile) {
+        tile = newTile;
     }
 
     /**

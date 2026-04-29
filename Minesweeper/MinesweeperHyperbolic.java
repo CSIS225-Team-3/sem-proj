@@ -22,6 +22,8 @@ import java.util.HashSet;
 public class MinesweeperHyperbolic extends MinesweeperBase implements ActionListener {
     /** The array of buttons for the game */
     private MinesweeperHBButton[] buttons;
+    //This is definitely not a good way to do this, but it'd be too much work to generalize
+    private MinesweeperHBButton b_c, b_u, b_ul, b_lu, b_l, b_ld, b_dl, b_d, b_dr, b_rd, b_r, b_ru, b_ur;
 
     private Tile[] allTiles;
     private HashMap<Tile, MinesweeperHBButton> visibleTiles = new HashMap<>();
@@ -92,7 +94,6 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
      * Builds the GUI for the game
      */
     private void build() {
-
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setOpaque(false);
 
@@ -176,33 +177,33 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         int btnIdx = 0;
         //-###-
         gamePanel.add(new JPanel());
-        gamePanel.add(buttons[btnIdx++]);
-        gamePanel.add(buttons[btnIdx++]);
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_ul = buttons[btnIdx++]);
+        gamePanel.add(b_u = buttons[btnIdx++]);
+        gamePanel.add(b_ur = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
         //#---#
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_lu = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
         gamePanel.add(new JPanel());
         gamePanel.add(new JPanel());
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_ru = buttons[btnIdx++]);
         //#-#-#
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_l = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_c = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_r = buttons[btnIdx++]);
         //#---#
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_ld = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
         gamePanel.add(new JPanel());
         gamePanel.add(new JPanel());
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_rd = buttons[btnIdx++]);
         //-###-
         gamePanel.add(new JPanel());
-        gamePanel.add(buttons[btnIdx++]);
-        gamePanel.add(buttons[btnIdx++]);
-        gamePanel.add(buttons[btnIdx++]);
+        gamePanel.add(b_dl = buttons[btnIdx++]);
+        gamePanel.add(b_d = buttons[btnIdx++]);
+        gamePanel.add(b_dr = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
         if (btnIdx != viewButtons)
             throw new IllegalStateException("Wrong number of buttons");
@@ -307,24 +308,23 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
         removeAll();
 
-        if (timer != null) {
+        if (timer != null)
             timer.stop();
-        }
         secondsElapsed = 0;
         build();
         revalidate();
         repaint();
+
+        updateView(allTiles[0]);
 
         firstClick = true;
         roundNum++;
     }
 
     private void checkWin() {
-        for (MinesweeperHBButton b : buttons) {
-            if (!b.getMine() && !b.getRevealed()) {
+        for (MinesweeperHBButton b : buttons)
+            if (!b.getMine() && !b.getRevealed())
                 return;
-            }
-        }
 
         onWin();
     }
@@ -334,6 +334,40 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         for (MinesweeperHBButton b : buttons)
             if (b.getMine())
                 b.reveal();
+    }
+
+    private void updateView(Tile newCenter){
+        if (newCenter == null)
+            throw new IllegalStateException("Null center");
+
+        for (MinesweeperHBButton b : buttons)
+            b.setTile(null);
+
+        b_c.setTile(newCenter);
+        
+        b_u.setTile(newCenter.relUp);
+        if (newCenter.relUp != null){
+            b_ul.setTile(newCenter.relUp.relLeft);
+            b_ur.setTile(newCenter.relUp.relRight);
+        }
+
+        b_l.setTile(newCenter.relLeft);
+        if (newCenter.relLeft != null){
+            b_lu.setTile(newCenter.relLeft.relUp);
+            b_ld.setTile(newCenter.relLeft.relDown);
+        }
+
+        b_d.setTile(newCenter.relDown);
+        if (newCenter.relDown != null){
+            b_dl.setTile(newCenter.relDown.relLeft);
+            b_dr.setTile(newCenter.relDown.relRight);
+        }
+
+        b_r.setTile(newCenter.relRight);
+        if (newCenter.relRight != null){
+            b_ru.setTile(newCenter.relRight.relUp);
+            b_rd.setTile(newCenter.relRight.relDown);
+        }
     }
 
     /**
@@ -357,17 +391,14 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
     private void highlightNeighbors(MinesweeperHBButton button) {
         MinesweeperHBButton[] adj = getAdjacentButtons(button);
 
-        for (MinesweeperHBButton b : adj) {
-            if (!b.getRevealed()) {
+        for (MinesweeperHBButton b : adj)
+            if (!b.getRevealed())
                 b.setBorder(BorderFactory.createLineBorder(new Color(160, 160, 160), 3));
-            }
-        }
     }
 
     private void clearHighlights() {
-        for (MinesweeperHBButton b : buttons) {
+        for (MinesweeperHBButton b : buttons)
             b.setBorder(UIManager.getBorder("Button.border"));
-        }
     }
 
     @Override
@@ -377,10 +408,9 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
     @Override
     protected void paintComponent(Graphics g) {
-        if (bgImage != null) {
+        if (bgImage != null)
             g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
-        } else {
+        else
             super.paintComponent(g);
-        }
     }
 }
