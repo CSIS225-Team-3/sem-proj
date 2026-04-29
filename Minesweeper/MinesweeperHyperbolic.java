@@ -385,7 +385,7 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         for (Vert v : t.vertices)
             adjs.addAll(v.tiles);
         
-        return adjs.stream().map(visibleTiles::get).toArray(MinesweeperHBButton[]::new);
+        return adjs.stream().map(visibleTiles::get).filter(x -> x != null).toArray(MinesweeperHBButton[]::new);
     }
 
     private void highlightNeighbors(MinesweeperHBButton button) {
