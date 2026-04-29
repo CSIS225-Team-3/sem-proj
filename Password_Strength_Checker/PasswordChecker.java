@@ -52,6 +52,8 @@ public class PasswordChecker implements Runnable, ActionListener {
 
     private int targetStrength;
 
+    private AnimatedBar currentAnimator;
+
     /**
      * Panel to store labels which guide the user on the qualifications of a strong
      * password
@@ -293,7 +295,11 @@ public class PasswordChecker implements Runnable, ActionListener {
         setStrengthMessage();
         // strengthBar.setValue(strength);
         // strengthBar.setString(String.valueOf(strength));
-        new AnimatedBar(strength, strengthBar).start();
+        if (currentAnimator != null) {
+            currentAnimator.interrupt();
+        }
+        currentAnimator = new AnimatedBar(strength, strengthBar);
+        currentAnimator.start();
     }
 
     /**

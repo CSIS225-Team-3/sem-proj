@@ -38,9 +38,9 @@ public class AnimatedBar extends Thread {
             });
 
             try {
-                Thread.sleep(16);
+                Thread.sleep(20);
             } catch (InterruptedException e) {
-                System.err.println(e.getMessage());
+                break;
             }
         }
     }
