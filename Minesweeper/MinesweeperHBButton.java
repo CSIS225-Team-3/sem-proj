@@ -71,9 +71,16 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
             return;
         
         if (tile.getRevealed()) {
-            setBackground(REVEALED_COLOR);
-            if (tile.getNumAdjacent() != 0) {
-                setText(String.valueOf(tile.getNumAdjacent()));
+            if (tile.getMine()){
+                setBackground(Color.RED);
+                setText(null);
+                setIcon(scaledIcon(MINE_ICON));
+            }
+            else{
+                setBackground(REVEALED_COLOR);
+                if (tile.getNumAdjacent() != 0){
+                    setText(String.valueOf(tile.getNumAdjacent()));
+                }
             }
         } else if (tile.getFlagged()) {
             setIcon(scaledIcon(FLAG_ICON));
@@ -100,11 +107,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
             return;
 
         var wasMine = tile.reveal();
-
         if (wasMine) {
-            setText(null);
-            setIcon(scaledIcon(MINE_ICON));
-            setBackground(Color.RED);
             game.onLoss();
         }
     }

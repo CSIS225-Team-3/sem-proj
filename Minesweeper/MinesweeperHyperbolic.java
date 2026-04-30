@@ -314,9 +314,11 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
     @Override
     protected void revealMines() {
-        for (MinesweeperHBButton b : buttons)
+        for (MinesweeperHBButton b : buttons){
             if (b.getMine())
                 b.reveal();
+            b.redraw();
+        }
     }
 
     private void updateView(Tile newCenter){
