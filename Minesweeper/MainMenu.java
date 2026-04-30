@@ -220,12 +220,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         frame.add(cards);
         setOpaque(false);
         frame.setVisible(true);
-
-        // Dev thing, leave it for now
-        // int mines = 1;
-        // cards.add(new MinesweeperHyperbolic(mines, cardLayout, cards),
-        // HYPERBOLIC);
-        // cardLayout.show(cards, HYPERBOLIC);
     }
 
     @Override
