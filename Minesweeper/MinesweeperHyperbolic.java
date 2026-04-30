@@ -248,6 +248,8 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
             if (e.getSource() instanceof MinesweeperHBButton) {
                 MinesweeperHBButton button = (MinesweeperHBButton) e.getSource();
                 button.reveal();
+                for (MinesweeperHBButton b : buttons)
+                    b.redraw();
             }
         }
     }
