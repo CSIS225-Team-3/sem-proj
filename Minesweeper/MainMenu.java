@@ -318,7 +318,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     }
 
     /**
-     * Updates the maximum number of mines allowed based on selected dimensions.
+     * Creates main card panel.
+     *
+     * @return JPanel with CardLayout and background
      */
     private JPanel buildCardsPanel() {
         BufferedImage background = null;
@@ -356,6 +358,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         return panel;
     }
 
+    /**
+     * Builds top section of the UI including account controls, 
+     * login or register buttons, and the title.
+     *
+     * @return the constructed top panel
+     */
     private JPanel buildTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout());
 
@@ -477,6 +485,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         return topPanel;
     }
 
+    /**
+     * Builds the center section of the UI including mode selecting,
+     * game options, and the start button.
+     *
+     * @return the center panel
+     */
     private JPanel buildCenterPanel() {
         JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
@@ -665,6 +679,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         return centerPanel;
     }
 
+    /**
+     * Updates the maximum number of mines allowed based on selected dimensions.
+     */
     private void updateMaxMines() {
         if (dimensionsSelected == 2) {
             maxMines = MAX_ROWS * MAX_COLS - 1;
@@ -698,7 +715,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             passwordField.setEchoChar('*');
         }
     }
-
+    /**
+     * Registers a new user account using the entered username and password.
+     */
     private void register() {
 
         String username = usernameField.getText();
@@ -721,6 +740,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     }
 
+    /**
+     * Attempts to log in a user with the provided credentials.
+     */
     private void login() {
 
         String username = usernameField.getText();
@@ -757,6 +779,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     }
 
+    /**
+     * Logs out user that is logged in and resets UI.
+     */
     private void logout() {
         loggedInAccount = null;
         loginStatus.setForeground(Color.BLACK);
@@ -773,6 +798,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         passwordField.setBackground(Color.WHITE);
     }
 
+    /**
+     * Deletes the logged in account.
+     */
     private void deleteAccount() {
 
         if (!deleteConfirmed) {
@@ -803,6 +831,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
     }
 
+    /**
+     * Prompts user to confirm account deletion.
+     */
     private void deleteConfirmation() {
         int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to permenantly delete this account?",
                 "Confirm Deletion", JOptionPane.YES_NO_OPTION,
@@ -818,6 +849,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     }
 
+    /**
+     * Handles user seelcting game mode and updates the UI.
+     *
+     * @param src the source of the action event (selected mode button)
+     */
     private void handleModeSelection(Object src) {
 
         configPanel.setVisible(true);
@@ -983,6 +1019,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         repaint();
     }
 
+    /**
+     * Applies a preset difficulty setting based on selected button.
+     *
+     * @param src the source of the action event (selected difficulty button)
+     */
     private void handleDifficultySelection(Object src) {
         randomMines.setSelected(false);
         minesSpinner.setEnabled(true);
@@ -1114,6 +1155,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     }
 
+    /**
+     * Starts the game using the selected mode.
+     *
+     * @param src the source of the action event (start button)
+     */
     private void handleStartGame(Object src) {
         if (selectedMode == null) {
             return;
@@ -1224,6 +1270,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     }
 
+    /**
+     * Creates a panel with a background.
+     *
+     * @param layout the layout manager to apply panel
+     * @return a JPanel with style
+     */
     private static JPanel styledPanel(LayoutManager layout) {
         JPanel p = new JPanel(layout) {
             @Override
@@ -1237,6 +1289,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         return p;
     }
 
+    /**
+     * Creates a styled button.
+     *
+     * @param text text for display on the button
+     * @return a styled JButton
+     */
     public static JButton styledButton(String text) {
         JButton button = new JButton(text) {
             @Override
