@@ -259,7 +259,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
 
         // Mode buttons
-        if (src == twoDimension || src == threeDimension || src == fourDimension || src == fiveDimension) {
+        if (src == twoDimension || src == threeDimension || src == fourDimension || src == fiveDimension || src == hyperbolic) {
             handleModeSelection(src);
             return;
         }
@@ -826,6 +826,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             threeDimension.setEnabled(true);
             fourDimension.setEnabled(true);
             fiveDimension.setEnabled(true);
+            hyperbolic.setEnabled(true);
 
             splices3dLabel.setVisible(false);
             splices3dSpinner.setVisible(false);
@@ -855,6 +856,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             threeDimension.setEnabled(false);
             fourDimension.setEnabled(true);
             fiveDimension.setEnabled(true);
+            hyperbolic.setEnabled(true);
 
             splices3dLabel.setVisible(true);
             splices3dSpinner.setVisible(true);
@@ -884,6 +886,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             threeDimension.setEnabled(true);
             fourDimension.setEnabled(false);
             fiveDimension.setEnabled(true);
+            hyperbolic.setEnabled(true);
 
             splices3dLabel.setVisible(true);
             splices3dSpinner.setVisible(true);
@@ -912,6 +915,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             threeDimension.setEnabled(true);
             fourDimension.setEnabled(true);
             fiveDimension.setEnabled(false);
+            hyperbolic.setEnabled(true);
 
             splices3dLabel.setVisible(true);
             splices3dSpinner.setVisible(true);
@@ -931,6 +935,35 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             difficultyInfoLabels[3].setText("7D, 5x5x5x5x3x3x3, 4125 mines");
 
             minesSpinner.setValue(500);
+        } else if (src == hyperbolic) {
+            selectedMode = HYPERBOLIC;
+            dimensionsSelected = -2;
+
+            twoDimension.setEnabled(true);
+            threeDimension.setEnabled(true);
+            fourDimension.setEnabled(true);
+            fiveDimension.setEnabled(true);
+            hyperbolic.setEnabled(false);
+
+            splices3dLabel.setVisible(false);
+            splices3dSpinner.setVisible(false);
+
+            splices4dLabel.setVisible(false);
+            splices4dSpinner.setVisible(false);
+
+            splices5dLabel.setVisible(false);
+            splices5dSpinner.setVisible(false);
+
+            dimensionsLabel.setVisible(false);
+            dimensionsSpinner.setVisible(false);
+
+            // TODO: Finish
+            difficultyInfoLabels[0].setText("Size 10, 20 mines");
+            difficultyInfoLabels[1].setText("Size -1, 225 mines");
+            difficultyInfoLabels[2].setText("Size 58, 1000 mines");
+            difficultyInfoLabels[3].setText("Size -1, 4125 mines");
+
+            minesSpinner.setValue(20);
         } else {
             selectedMode = "";
         }
@@ -1063,6 +1096,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     minesSpinner.setValue(4125);
                 }
                 break;
+            case HYPERBOLIC:
+                break;
+            // TODO: Difficulties
             default:
                 return;
         }
@@ -1073,6 +1109,25 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     private void handleStartGame(Object src) {
         if (selectedMode == null) {
+            return;
+        }
+
+        // hyperbolic
+        if (dimensionsSelected == -2) {
+            int size = 13;
+            int mines;
+            if (randomMines.isSelected()) {
+                mines = new Random().nextInt(maxRandomMines) / 3 + 1;
+            } else {
+                mines = (int) minesSpinner.getValue();
+                if (mines > maxRandomMines) {
+                    errorLabel.setText("Too many mines!");
+                    return;
+                }
+            }
+            cards.add(new MinesweeperHyperbolic(size, mines, buttonSize, cardLayout, cards), HYPERBOLIC);
+
+            cardLayout.show(cards, HYPERBOLIC);
             return;
         }
 

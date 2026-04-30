@@ -46,6 +46,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private JButton autoplay;
 
+    /** If the autoplay feature has ever been toggled on, used to validate leaderboards */
     private boolean autoplayActive;
 
     private JPanel autoplayPanel;
