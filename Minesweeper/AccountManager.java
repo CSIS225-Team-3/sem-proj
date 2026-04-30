@@ -22,11 +22,20 @@ public class AccountManager {
 
     private static final String SAVE_FILE = "Minesweeper//accounts.dat";
 
+    /**
+     * Constructs AccountManager and loads already made accounts from file.
+     */
     public AccountManager() {
 
         accounts = loadAccounts();
     }
 
+    /**
+     * Hashes a password using SHA-256.
+     *
+     * @param password the password to hash
+     * @return the hashed password
+     */
     public String hashPassword(String password) {
 
         try {
@@ -40,6 +49,11 @@ public class AccountManager {
         return "";
     }
 
+    /**
+     * Loads saved accounts from the account save file.
+     *
+     * @return a HashMap containing saved accounts or empty
+     */
     private HashMap<String, Account> loadAccounts() {
 
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
@@ -53,6 +67,9 @@ public class AccountManager {
 
     }
 
+    /**
+     * Saves the current accounts to the account save file.
+     */
     private void saveAccounts() {
 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
@@ -62,6 +79,13 @@ public class AccountManager {
         }
     }
 
+    /**
+     * Registers new account if the username and password.
+     *
+     * @param username the username for account
+     * @param password the password for account
+     * @return error message if registration fails or null if registration works
+     */
     public String register(String username, String password) {
         // min 3, max 10
         if (username.length() < 3 || username.length() > 10) {
@@ -87,6 +111,13 @@ public class AccountManager {
         return null;
     }
 
+    /**
+     * Attempts to log in with username and password.
+     *
+     * @param username the account username
+     * @param password the account password
+     * @return the matching Account if login succeeds or null if login fails
+     */
     public Account login(String username, String password) {
         Account account = accounts.get(username);
 
@@ -99,6 +130,13 @@ public class AccountManager {
         return null;
     }
 
+    /**
+     * Deletes a account and saves the updated account list.
+     *
+     * @param username the username of the account to delete
+     * @param account the account object being deleted
+     * @return an error message if deletion fails or null if deletion succeeds
+     */
     public String deleteAccount(String username, Account account) {
         if (!accounts.containsKey(username)) {
             return "Account doesn't exist.";
@@ -112,6 +150,9 @@ public class AccountManager {
         return null;
     }
 
+    /**
+     * Prints all registered account usernames.
+     */
     public void listAccounts() {
         if (accounts.isEmpty()) {
             System.out.println("No accounts registered!");
@@ -123,6 +164,11 @@ public class AccountManager {
         }
     }
 
+    /**
+     * Creates an AccountManager and lists all registered accounts.
+     *
+     * @param args input arguments
+     */
     public static void main(String[] args) {
         AccountManager am = new AccountManager();
         am.listAccounts();
