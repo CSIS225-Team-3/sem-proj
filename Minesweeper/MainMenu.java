@@ -65,6 +65,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     private JButton leaderboardButton;
 
+    private LeaderboardPanel leaderboardPanel;
+
     /** The CardLayout for managing panels */
     private CardLayout cardLayout;
 
@@ -151,7 +153,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
     private JCheckBox showPassword;
 
-    JOptionPane deleteConfirmation;
+    private JOptionPane deleteConfirmation;
 
     /** The primary color for the UI */
     public static Color PRIMARY_COLOR = Color.WHITE;
@@ -211,6 +213,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         cards = buildCardsPanel();
 
+        leaderboardPanel = new LeaderboardPanel(cardLayout, cards);
+        cards.add(leaderboardPanel, LEADERBOARD_CARD);
+
         add(buildTopPanel(), BorderLayout.NORTH);
         add(buildCenterPanel(), BorderLayout.CENTER);
         setBackground(PRIMARY_COLOR);
@@ -230,6 +235,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
+
+        if (src == leaderboardButton) {
+            cardLayout.show(cards, LEADERBOARD_CARD);
+            return;
+        }
 
         // Password visibility
         if (src == showPassword) {
@@ -258,7 +268,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
 
         // Mode buttons
-        if (src == twoDimension || src == threeDimension || src == fourDimension || src == fiveDimension || src == hyperbolic) {
+        if (src == twoDimension || src == threeDimension || src == fourDimension || src == fiveDimension
+                || src == hyperbolic) {
             handleModeSelection(src);
             return;
         }
