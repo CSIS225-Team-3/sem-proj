@@ -222,6 +222,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         frame.setVisible(true);
     }
 
+    /**
+     * Handles button clicks and user interactions within the menu.
+     *
+     * @param e action event triggered by user interaction
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
@@ -277,6 +282,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         }
     }
 
+    /**
+     * Handles changes to spinner values and updates UI.
+     *
+     * @param e the change event triggered by a spinner
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
         if (!difficultyAdjusted) {
@@ -307,6 +317,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         updateMaxMines();
     }
 
+    /**
+     * Updates the maximum number of mines allowed based on selected dimensions.
+     */
     private JPanel buildCardsPanel() {
         BufferedImage background = null;
         TexturePaint texturepaint = null;
