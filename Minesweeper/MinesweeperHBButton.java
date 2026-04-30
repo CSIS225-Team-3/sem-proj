@@ -13,7 +13,7 @@ import java.awt.Image;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperHBButton extends JButton {
+public class MinesweeperHBButton extends MinesweeperButtonBase {
     public final static Color HIDDEN_COLOR = new Color(50, 80, 120, 180);
     public final static Color REVEALED_COLOR = new Color(100, 160, 240, 150);
 
@@ -35,7 +35,6 @@ public class MinesweeperHBButton extends JButton {
      * Constructor for MinesweeperButton
      */
     public MinesweeperHBButton(MinesweeperHyperbolic game) {
-        super((String) null);
         // super(position[0] + " " + position[1]);
 
         this.game = game;
@@ -83,6 +82,7 @@ public class MinesweeperHBButton extends JButton {
     /**
      * Reveal the button
      */
+    @Override
     public void reveal() {
         // If already revealed, do nothing
         // Block if it's flagged to avoid accidents
@@ -115,6 +115,7 @@ public class MinesweeperHBButton extends JButton {
     /**
      * Toggle the flagged status
      */
+    @Override
     public void toggleFlagged() {
         if (isRevealed)
             return;
@@ -128,7 +129,6 @@ public class MinesweeperHBButton extends JButton {
 
     /**
      * Gets the flagged status
-     * 
      * @return the flagged status
      */
     public boolean getFlagged() {
@@ -151,7 +151,6 @@ public class MinesweeperHBButton extends JButton {
 
     /**
      * Gets if the button is a mine or not
-     * 
      * @return True if mine, false if not
      */
     public boolean getMine() {
@@ -160,7 +159,6 @@ public class MinesweeperHBButton extends JButton {
 
     /**
      * Gets if the button has been revealed or not
-     * 
      * @return boolean on if the button has been revealed or not
      */
     public boolean getRevealed() {

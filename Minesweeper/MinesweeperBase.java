@@ -63,7 +63,7 @@ public abstract class MinesweeperBase extends JPanel {
     public abstract int numTiles();
 
     public void onTileClick(MouseEvent e) {
-        MinesweeperButton pressedButton = (MinesweeperButton) e.getSource();
+        MinesweeperButtonBase pressedButton = (MinesweeperButtonBase)e.getSource();
         if (SwingUtilities.isRightMouseButton(e)) {
             // Right click to flag
             pressedButton.toggleFlagged();
@@ -72,5 +72,4 @@ public abstract class MinesweeperBase extends JPanel {
             pressedButton.reveal();
         }
     }
-
 }
