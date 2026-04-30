@@ -46,6 +46,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private JButton autoplay;
 
+    /** If the autoplay feature has ever been toggled on, used to validate leaderboards */
     private boolean autoplayActive;
 
     private JPanel autoplayPanel;
@@ -412,16 +413,23 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         autoplayTimer = new Timer(speedToDelay(autoplaySpeedSlider.getValue()), e -> {
             ((Timer) e.getSource()).setDelay(speedToDelay(autoplaySpeedSlider.getValue()));
+            autoplayStep();
         });
+
+        autoplayTimer.start();
     }
 
     private int speedToDelay(int speed) {
-        return 2000 - (speed - 1) * (1950 / 9);
+        return 500 - (speed - 1) * (490 / 9);
     }
 
     private void stopAutoplay() {
         autoplayStart.setEnabled(true);
         autoplayPause.setEnabled(false);
+        if (autoplayTimer != null) {
+            autoplayTimer.stop();
+            autoplayTimer = null;
+        }
     }
 
     private void updateButtonSize(int newSize) {
@@ -513,6 +521,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         removeAll();
 
+        if (autoplayTimer != null) {
+            autoplayTimer.stop();
+            autoplayTimer = null;
+        }
         if (timer != null) {
             timer.stop();
         }
@@ -609,6 +621,127 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     @Override
     public int numTiles() {
         return gridVolume;
+    }
+
+    @Override
+    public void onWin() {
+        if (autoplayTimer != null) {
+            autoplayTimer.stop();
+            autoplayTimer = null;
+        }
+        super.onWin();
+    }
+
+    @Override
+    public void onLoss() {
+        if (autoplayTimer != null) {
+            autoplayTimer.stop();
+            autoplayTimer = null;
+        }
+        super.onLoss();
+    }
+
+    private void autoplayStep() {
+        if (firstClick) {
+            doAutoClick((int) (Math.random() * gridVolume));
+            return;
+        }
+
+        // loop through all revealed non-mine buttons with neighbors
+        for (MinesweeperButton button : buttons) {
+            if (button.getRevealed() && !button.getMine() && button.getNumAdjacent() > 0) {
+                MinesweeperButton[] adjacentButtons = getAdjacentButtons(button.getIdx());
+
+                int flaggedCount = 0;
+                ArrayList<MinesweeperButton> unrevealed = new ArrayList<>();
+
+                for (MinesweeperButton adjButton : adjacentButtons) {
+                    if (adjButton.getFlagged()) {
+                        flaggedCount++;
+                    } else if (!adjButton.getRevealed()) {
+                        unrevealed.add(adjButton);
+                    }
+                }
+
+                int remainingMines = button.getNumAdjacent() - flaggedCount;
+
+                // all unrevealed neighbors are mines, flag rest
+                if (remainingMines == unrevealed.size() && !unrevealed.isEmpty()) {
+                    for (MinesweeperButton a : unrevealed) {
+                        a.toggleFlagged();
+                    }
+                    updateTitleText();
+                    return;
+                }
+
+                // all mines are flagged, reveal rest
+                if (remainingMines == 0 && !unrevealed.isEmpty()) {
+                    for (MinesweeperButton a : unrevealed) {
+                        doAutoClick(a.getIdx());
+                    }
+                    return;
+                }
+            }
+        }
+
+        // 50/50, but it'll always choose right :)
+        MinesweeperButton bestButton = null;
+        int bestScore = Integer.MAX_VALUE;
+
+        for (MinesweeperButton button : buttons) {
+            if (!button.getRevealed() && !button.getMine() && !button.getFlagged()) {
+                MinesweeperButton[] adj = getAdjacentButtons(button.getIdx());
+                int minNeighborCount = Integer.MAX_VALUE;
+                boolean hasRevealedNeighbor = false;
+
+                for (MinesweeperButton a : adj) {
+                    if (a.getRevealed() && !a.getMine()) {
+                        hasRevealedNeighbor = true;
+                        if (a.getNumAdjacent() < minNeighborCount)
+                            minNeighborCount = a.getNumAdjacent();
+                    }
+                }
+
+                if (hasRevealedNeighbor && minNeighborCount < bestScore) {
+                    bestScore = minNeighborCount;
+                    bestButton = button;
+                }
+            }
+        }
+
+        if (bestButton != null) {
+            doAutoClick(bestButton.getIdx());
+        } else {
+            // Island created, click randomly again, but ensure its not a mine
+            ArrayList<MinesweeperButton> candidates = new ArrayList<>();
+            for (MinesweeperButton b : buttons) {
+                if (!b.getRevealed() && !b.getFlagged() && !b.getMine()) {
+                    candidates.add(b);
+                }
+            }
+            if (!candidates.isEmpty()) {
+                MinesweeperButton randomButton = candidates.get((int) (Math.random() * candidates.size()));
+                doAutoClick(randomButton.getIdx());
+            } else {
+                stopAutoplay();
+            }
+        }
+    }
+
+    private void doAutoClick(int idx) {
+        if (firstClick) {
+            firstClick = false;
+            timer = new Timer(1000, e2 -> {
+                secondsElapsed++;
+                timerLabel.setText(String.format("%02d:%02d", secondsElapsed / 60, secondsElapsed % 60));
+            });
+            timer.start();
+            placeMines(idx);
+        }
+        buttons[idx].reveal();
+        updateTitleText();
+        refreshNumbers();
+        checkWin();
     }
 
     private int[] idxToPos(int idx) {
