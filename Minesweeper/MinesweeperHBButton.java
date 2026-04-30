@@ -1,11 +1,11 @@
 package Minesweeper;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Insets;
 
 /**
  * Custom class for handling the locations on the minefield
@@ -68,21 +68,15 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
 
         setBackground(HIDDEN_COLOR);
         setForeground(Color.BLACK);
+        setText(null);
+        setIcon(null);
 
         if (tile == null)
             return;
         
         if (tile.getRevealed()) {
-            setIcon(null);
             setBackground(REVEALED_COLOR);
-            if (tile.getNumAdjacent() == 0) {
-                setText(null);
-
-                MinesweeperHBButton[] adjacents = game.getAdjacentButtons(this);
-                for (int i = 0; i < adjacents.length; i++) {
-                    adjacents[i].reveal();
-                }
-            } else {
+            if (tile.getNumAdjacent() != 0) {
                 setText(String.valueOf(tile.getNumAdjacent()));
             }
         } else if (tile.getFlagged()) {
