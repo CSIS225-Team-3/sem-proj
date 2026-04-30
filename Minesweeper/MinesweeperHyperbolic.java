@@ -370,11 +370,21 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         }
     }
 
+    /**
+     * Gets an indirect neighbor relative a tile's orientation
+     * @param source The tile
+     * @param selfSide The side of the source the direct neighbor is on
+     * @param otherSide The side of the neighbor the indirect neighbor is on
+     * @return The indirect neighbor
+     */
     private Tile getRelOrientedTile(Tile source, Direction selfSide, Direction otherSide){
         if (source == null)
             return null;
-        var relOtherSide = otherSide.reorient(selfSide);
-        return source.getRelSide(selfSide).getRelSide(relOtherSide);
+        var neighbor = source.getRelSide(selfSide);
+        //Relative to the neighbor, which side is the source on?
+        var relNeighborSide = neighbor.getSideOfNeighbor(source);
+        var side =  relNeighborSide.reorient(otherSide);
+        return neighbor.getRelSide(side);
     }
 
     /**

@@ -293,6 +293,23 @@ class Tile
                 throw new IllegalStateException("Invalid direction");
         }
     }
+
+    /**
+     * Returns the side of this tile that neighbor is on
+     * @param neighbor The neighbor
+     * @return The side
+     */
+    public Direction getSideOfNeighbor(Tile neighbor){
+        if (relUp == neighbor)
+            return Direction.Up;
+        if (relDown == neighbor)
+            return Direction.Down;
+        if (relLeft == neighbor)
+            return Direction.Left;
+        if (relRight == neighbor)
+            return Direction.Right;
+        throw new IllegalStateException("Not a neighbor");
+    }
 }
 
 enum Direction {
