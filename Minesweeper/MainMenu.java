@@ -5,7 +5,9 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.LayoutManager;
@@ -58,6 +60,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private static final String FIVE_DIMENSIONS = "5D+ Minesweeper";
 
     private static final String HYPERBOLIC = "Hyperbolic Minesweeper";
+
+    private static final String LEADERBOARD_CARD = "Leaderboard";
+
+    private JButton leaderboardButton;
 
     /** The CardLayout for managing panels */
     private CardLayout cardLayout;
@@ -218,7 +224,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         // Dev thing, leave it for now
         // int mines = 1;
         // cards.add(new MinesweeperHyperbolic(mines, cardLayout, cards),
-        //         HYPERBOLIC);
+        // HYPERBOLIC);
         // cardLayout.show(cards, HYPERBOLIC);
     }
 
@@ -439,6 +445,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         mainText.setForeground(Color.WHITE);
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
         topPanel.add(mainText, BorderLayout.NORTH);
+
+        JPanel leaderboardSide = new JPanel(new GridBagLayout());
+        leaderboardSide.setOpaque(false);
+        leaderboardSide.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEmptyBorder(), ""));
+        leaderboardButton = styledButton("Leaderboard");
+        leaderboardButton.setFont(leaderboardButton.getFont().deriveFont(Font.BOLD, 18f));
+        leaderboardButton.setPreferredSize(new Dimension(180, 80));
+        leaderboardButton.addActionListener(this);
+        leaderboardSide.add(leaderboardButton);
+
+        topPanel.add(leaderboardSide, BorderLayout.WEST);
 
         topPanel.setOpaque(false);
         loginMainPanel.setOpaque(false);
