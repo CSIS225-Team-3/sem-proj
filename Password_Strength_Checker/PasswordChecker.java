@@ -360,6 +360,9 @@ public class PasswordChecker implements Runnable, ActionListener {
             strengthBar.setForeground(new Color(0, 200, 0));
     }
 
+    /**
+     * Updates the UI labels to reflect which password requirements are met.
+     */
     private void setGuides() {
         String password = new String(passwordBox.getPassword());
 

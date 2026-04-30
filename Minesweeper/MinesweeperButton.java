@@ -1,7 +1,6 @@
 package Minesweeper;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -14,7 +13,7 @@ import java.awt.Insets;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperButton extends JButton {
+public class MinesweeperButton extends MinesweeperButtonBase {
     public final static Color HIDDEN_COLOR = new Color(50, 80, 120);
     public final static Color REVEALED_COLOR = new Color(100, 160, 240);
 
@@ -38,7 +37,6 @@ public class MinesweeperButton extends JButton {
      * Constructor for MinesweeperButton
      */
     public MinesweeperButton(MinesweeperEuclidean game, int buttonSize, int idx) {
-        super((String) null);
         // super(position[0] + " " + position[1]);
 
         this.game = game;
@@ -83,6 +81,7 @@ public class MinesweeperButton extends JButton {
     /**
      * Reveal the button
      */
+    @Override
     public void reveal() {
         // If already revealed, do nothing
         // Block if it's flagged to avoid accidents
@@ -120,6 +119,7 @@ public class MinesweeperButton extends JButton {
     /**
      * Toggle the flagged status
      */
+    @Override
     public void toggleFlagged() {
         if (isRevealed)
             return;
@@ -133,7 +133,6 @@ public class MinesweeperButton extends JButton {
 
     /**
      * Gets the flagged status
-     * 
      * @return the flagged status
      */
     public boolean getFlagged() {
@@ -142,7 +141,6 @@ public class MinesweeperButton extends JButton {
 
     /**
      * Sets if the button is a mine or not
-     * 
      * @param isMine True if mine, false if not
      */
     public void setMine(boolean isMine) {
@@ -156,7 +154,6 @@ public class MinesweeperButton extends JButton {
 
     /**
      * Gets if the button is a mine or not
-     * 
      * @return True if mine, false if not
      */
     public boolean getMine() {
@@ -165,18 +162,10 @@ public class MinesweeperButton extends JButton {
 
     /**
      * Gets if the button has been revealed or not
-     * 
      * @return boolean on if the button has been revealed or not
      */
     public boolean getRevealed() {
         return isRevealed;
-    }
-
-    public void hide() {
-        isRevealed = false;
-        setText(null);
-        setIcon(null);
-        setBackground(HIDDEN_COLOR);
     }
 
     public void resizeButton(int newSize) {
