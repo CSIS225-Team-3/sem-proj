@@ -420,7 +420,7 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     }
 
     private int speedToDelay(int speed) {
-        return 2000 - (speed - 1) * (1950 / 9);
+        return 500 - (speed - 1) * (490 / 9);
     }
 
     private void stopAutoplay() {
