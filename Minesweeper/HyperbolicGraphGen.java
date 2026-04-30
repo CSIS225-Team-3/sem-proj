@@ -310,11 +310,22 @@ class Tile
             return Direction.Right;
         throw new IllegalStateException("Not a neighbor");
     }
+    
+    /**
+     * Gets the list of tiles adjacent to this one
+     * @return the list of tiles adjacent to this one
+     */
+    public ArrayList<Tile> getVertNeighbors() {
+        HashSet<Tile> adjs = new HashSet<>();
+        for (Vert v : this.vertices)
+            adjs.addAll(v.tiles);
+        
+        return adjs.stream().collect(Collectors.toCollection(ArrayList<Tile>::new));
+    }
 }
 
 enum Direction {
     Up, Down, Left, Right;
-
 
     /**
      * Returns this direction relative to a given direction (up serving as the default basis)
