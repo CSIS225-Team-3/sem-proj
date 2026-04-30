@@ -172,13 +172,6 @@ public class MinesweeperButton extends JButton {
         return isRevealed;
     }
 
-    public void hide() {
-        isRevealed = false;
-        setText(null);
-        setIcon(null);
-        setBackground(HIDDEN_COLOR);
-    }
-
     public void resizeButton(int newSize) {
         this.buttonSize = newSize;
         setPreferredSize(new Dimension(newSize, newSize));

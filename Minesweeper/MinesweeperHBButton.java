@@ -167,13 +167,6 @@ public class MinesweeperHBButton extends JButton {
         return isRevealed;
     }
 
-    public void hide() {
-        isRevealed = false;
-        setText(null);
-        setIcon(null);
-        setBackground(HIDDEN_COLOR);
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         // Paint the background color manually, ignoring the pressed state
