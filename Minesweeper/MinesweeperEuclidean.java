@@ -619,11 +619,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     }
 
     @Override
-    public int numTiles() {
-        return gridVolume;
-    }
-
-    @Override
     public void onWin() {
         if (autoplayTimer != null) {
             autoplayTimer.stop();

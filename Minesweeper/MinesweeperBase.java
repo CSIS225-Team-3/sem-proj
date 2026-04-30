@@ -56,12 +56,6 @@ public abstract class MinesweeperBase extends JPanel {
      */
     protected abstract void revealMines();
     
-    /**
-     * Gets the number of tiles on this board
-     * @return The number of tiles
-     */
-    public abstract int numTiles();
-
     public void onTileClick(MouseEvent e) {
         MinesweeperButtonBase pressedButton = (MinesweeperButtonBase)e.getSource();
         if (SwingUtilities.isRightMouseButton(e)) {

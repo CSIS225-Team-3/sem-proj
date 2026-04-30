@@ -47,9 +47,6 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
     private JScrollPane scrollPane;
 
-    /** The size of the grid for the game (amount of buttons) */
-    private int gridVolume;
-
     /** The CardLayout for managing panels */
     private CardLayout cardLayout;
 
@@ -82,11 +79,6 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         }
 
         setLayout(new BorderLayout());
-
-        gridVolume = 1;
-        // for (int i = 0; i < dims.length; i++) {
-        //     gridVolume *= dims[i];
-        // }
 
         reset();
     }
@@ -406,11 +398,6 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
     private void clearHighlights() {
         for (MinesweeperHBButton b : buttons)
             b.setBorder(UIManager.getBorder("Button.border"));
-    }
-
-    @Override
-    public int numTiles() {
-        return gridVolume;
     }
 
     @Override
