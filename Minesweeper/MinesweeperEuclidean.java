@@ -711,7 +711,19 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         if (bestButton != null) {
             doAutoClick(bestButton.getIdx());
         } else {
-            stopAutoplay();
+            // Island created, click randomly again, but ensure its not a mine
+            ArrayList<MinesweeperButton> candidates = new ArrayList<>();
+            for (MinesweeperButton b : buttons) {
+                if (!b.getRevealed() && !b.getFlagged() && !b.getMine()) {
+                    candidates.add(b);
+                }
+            }
+            if (!candidates.isEmpty()) {
+                MinesweeperButton randomButton = candidates.get((int) (Math.random() * candidates.size()));
+                doAutoClick(randomButton.getIdx());
+            } else {
+                stopAutoplay();
+            }
         }
     }
 

@@ -309,6 +309,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         } else {
             errorLabel.setText(" ");
         }
+
+        updateMaxMines();
     }
 
     private JPanel buildCardsPanel() {
