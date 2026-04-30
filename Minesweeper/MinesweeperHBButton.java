@@ -20,14 +20,6 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
     MinesweeperHyperbolic game;
     private Tile tile = null;
 
-    private boolean isRevealed = false;
-
-    /** The number of adjacent mines */
-    private int numAdjacent = 0;
-
-    private boolean isMine = false;
-    private boolean isFlagged = false;
-
     private static final ImageIcon MINE_ICON = loadIcon("MinesweeperMine.png");
     private static final ImageIcon FLAG_ICON = loadIcon("MinesweeperFlag.png");
 
@@ -76,7 +68,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
      * @return the number of adjacent mines
      */
     public int getNumAdjacent() {
-        return numAdjacent;
+        return tile.getNumAdjacent();
     }
 
     /**
@@ -86,12 +78,12 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
     public void reveal() {
         // If already revealed, do nothing
         // Block if it's flagged to avoid accidents
-        if (isRevealed || isFlagged)
+        if (tile.getRevealed() || tile.getFlagged())
             return;
 
-        isRevealed = true;
+        var wasMine = tile.reveal();
 
-        if (isMine) {
+        if (wasMine) {
             setText(null);
             setIcon(MINE_ICON);
             setBackground(Color.RED);
@@ -99,7 +91,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
         } else {
             setIcon(null);
             setBackground(REVEALED_COLOR);
-            if (numAdjacent == 0) {
+            if (tile.getNumAdjacent() == 0) {
                 setText(null);
 
                 MinesweeperHBButton[] adjacents = game.getAdjacentButtons(this);
@@ -107,7 +99,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
                     adjacents[i].reveal();
                 }
             } else {
-                setText(String.valueOf(numAdjacent));
+                setText(String.valueOf(tile.getNumAdjacent()));
             }
         }
     }
@@ -117,10 +109,10 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
      */
     @Override
     public void toggleFlagged() {
-        if (isRevealed)
+        if (getRevealed())
             return;
-        isFlagged = !isFlagged;
-        if (isFlagged) {
+        tile.toggleFlagged();
+        if (tile.getFlagged()) {
             setIcon(FLAG_ICON);
         } else {
             setIcon(null);
@@ -132,21 +124,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
      * @return the flagged status
      */
     public boolean getFlagged() {
-        return isFlagged;
-    }
-
-    /**
-     * Sets if the button is a mine or not
-     * 
-     * @param isMine True if mine, false if not
-     */
-    public void setMine(boolean isMine) {
-        this.isMine = isMine;
-
-        MinesweeperHBButton[] adjacents = game.getAdjacentButtons(this);
-        for (int i = 0; i < adjacents.length; i++) {
-            adjacents[i].numAdjacent++;
-        }
+        return tile.getFlagged();
     }
 
     /**
@@ -154,7 +132,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
      * @return True if mine, false if not
      */
     public boolean getMine() {
-        return isMine;
+        return tile.getMine();
     }
 
     /**
@@ -162,7 +140,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
      * @return boolean on if the button has been revealed or not
      */
     public boolean getRevealed() {
-        return isRevealed;
+        return tile.getRevealed();
     }
 
     @Override
