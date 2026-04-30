@@ -351,6 +351,10 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
             b_ru.setTile(getRelOrientedTile(newCenter, Direction.Right, Direction.Left));
             b_rd.setTile(getRelOrientedTile(newCenter, Direction.Right, Direction.Right));
         }
+
+        visibleTiles.clear();
+        for (MinesweeperHBButton b : buttons)
+            visibleTiles.put(b.getTile(), b);
     }
 
     /**
