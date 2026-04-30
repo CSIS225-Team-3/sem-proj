@@ -2,6 +2,8 @@ package Minesweeper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 public class HyperbolicGraphGen
 {
     static Tile[] gen()
@@ -221,6 +223,15 @@ class Tile
 
     public Vert[] vertices;
 
+    //minesweeper stuff
+    private boolean isRevealed = false;
+
+    /** The number of adjacent mines */
+    private int numAdjacent = 0;
+
+    private boolean isMine = false;
+    private boolean isFlagged = false;
+
     public Tile(Vert[] vertices){
         this.vertices = vertices;
         for (Vert v : vertices)
@@ -310,11 +321,103 @@ class Tile
             return Direction.Right;
         throw new IllegalStateException("Not a neighbor");
     }
+    
+    /**
+     * Gets the list of tiles adjacent to this one
+     * @return the list of tiles adjacent to this one
+     */
+    public ArrayList<Tile> getVertNeighbors() {
+        HashSet<Tile> adjs = new HashSet<>();
+        for (Vert v : this.vertices)
+            adjs.addAll(v.tiles);
+        
+        return adjs.stream().collect(Collectors.toCollection(ArrayList<Tile>::new));
+    }
+    
+    //--------------------------------------
+    //Minesweeper related
+    //--------------------------------------
+
+    /**
+     * Gets the number of adjacent mines
+     * @return the number of adjacent mines
+     */
+    public int getNumAdjacent() {
+        return numAdjacent;
+    }
+
+    /**
+     * Reveal the tile
+     * @return True if the tile is a mine
+     */
+    public boolean reveal() {
+        // If already revealed, do nothing
+        // Block if it's flagged to avoid accidents
+        if (isRevealed || isFlagged)
+            return false;
+
+        isRevealed = true;
+
+        if (isMine)
+            return true;
+        else {
+            if (numAdjacent == 0) {
+                var adjacents = getVertNeighbors();
+                for (var t : adjacents)
+                    t.reveal();
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Toggle the flagged status
+     */
+    public void toggleFlagged() {
+        if (isRevealed)
+            return;
+        isFlagged = !isFlagged;
+    }
+
+    /**
+     * Gets the flagged status
+     * @return the flagged status
+     */
+    public boolean getFlagged() {
+        return isFlagged;
+    }
+
+    /**
+     * Turns this tile into a mine
+     */
+    public void setMine() {
+        this.isMine = true;
+
+        ArrayList<Tile> adjacents = getVertNeighbors();
+        for (var t : adjacents) {
+            t.numAdjacent++;
+        }
+    }
+
+    /**
+     * Gets if the button is a mine or not
+     * @return True if mine, false if not
+     */
+    public boolean getMine() {
+        return isMine;
+    }
+
+    /**
+     * Gets if the tile has been revealed or not
+     * @return boolean on if the tile has been revealed or not
+     */
+    public boolean getRevealed() {
+        return isRevealed;
+    }
 }
 
 enum Direction {
     Up, Down, Left, Right;
-
 
     /**
      * Returns this direction relative to a given direction (up serving as the default basis)

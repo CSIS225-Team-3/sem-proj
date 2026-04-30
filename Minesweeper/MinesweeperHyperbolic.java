@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -239,7 +240,6 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
     /**
      * Listens for JButton actions and responds
-     * 
      * @param e The JButton to listen for
      */
     public void actionPerformed(ActionEvent e) {
@@ -262,34 +262,24 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
     }
 
     private void placeMines(Tile startTile) {
-        throw new IllegalStateException("Not implemented yet");
-        // int[] clickPos = idxToPos(clickIdx);
+        ArrayList<Tile> clickNeighbors = startTile.getVertNeighbors();
 
-        // ArrayList<int[]> allPositions = new ArrayList<>();
-        // for (MinesweeperHBButton b : buttons) {
-        //     int[] pos = idxToPos(b.getIdx());
-        //     for (int d = 0; d < pos.length; d++) {
+        ArrayList<Tile> availableTiles = new ArrayList<>();
+        for (Tile t : allTiles) {
+            if (!clickNeighbors.contains(t))
+                availableTiles.add(t);
+        }
 
-        //         // If the point is more than 1 units away in any dimension
-        //         if (Math.abs(pos[d] - clickPos[d]) > 1) {
-        //             allPositions.add(pos);
-        //             break;
-        //         }
+        java.util.Collections.shuffle(availableTiles);
 
-        //     }
-        // }
+        int actualMineCount = Math.min(mineCount, availableTiles.size());
 
-        // java.util.Collections.shuffle(allPositions);
-
-        // int actualMineCount = Math.min(mineCount, allPositions.size());
-
-        // for (int i = 0; i < actualMineCount; i++) {
-        //     int[] pos = allPositions.get(i);
-        //     int idx = posToIdx(pos);
-        //     if (buttons[idx].getMine())
-        //         throw new IllegalStateException("Placing mine on existing mine");
-        //     buttons[idx].setMine(true);
-        // }
+        for (int i = 0; i < actualMineCount; i++) {
+            Tile t = availableTiles.get(i);
+            if (t.getMine())
+                throw new IllegalStateException("Placing mine on existing mine");
+            t.setMine();
+        }
     }
 
     /**

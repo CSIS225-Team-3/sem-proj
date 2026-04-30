@@ -13,20 +13,12 @@ import java.awt.Image;
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
  */
-public class MinesweeperHBButton extends JButton {
+public class MinesweeperHBButton extends MinesweeperButtonBase {
     public final static Color HIDDEN_COLOR = new Color(50, 80, 120, 180);
     public final static Color REVEALED_COLOR = new Color(100, 160, 240, 150);
 
     MinesweeperHyperbolic game;
     private Tile tile = null;
-
-    private boolean isRevealed = false;
-
-    /** The number of adjacent mines */
-    private int numAdjacent = 0;
-
-    private boolean isMine = false;
-    private boolean isFlagged = false;
 
     private static final ImageIcon MINE_ICON = loadIcon("MinesweeperMine.png");
     private static final ImageIcon FLAG_ICON = loadIcon("MinesweeperFlag.png");
@@ -35,7 +27,6 @@ public class MinesweeperHBButton extends JButton {
      * Constructor for MinesweeperButton
      */
     public MinesweeperHBButton(MinesweeperHyperbolic game) {
-        super((String) null);
         // super(position[0] + " " + position[1]);
 
         this.game = game;
@@ -77,21 +68,22 @@ public class MinesweeperHBButton extends JButton {
      * @return the number of adjacent mines
      */
     public int getNumAdjacent() {
-        return numAdjacent;
+        return tile.getNumAdjacent();
     }
 
     /**
      * Reveal the button
      */
+    @Override
     public void reveal() {
         // If already revealed, do nothing
         // Block if it's flagged to avoid accidents
-        if (isRevealed || isFlagged)
+        if (tile.getRevealed() || tile.getFlagged())
             return;
 
-        isRevealed = true;
+        var wasMine = tile.reveal();
 
-        if (isMine) {
+        if (wasMine) {
             setText(null);
             setIcon(MINE_ICON);
             setBackground(Color.RED);
@@ -99,7 +91,7 @@ public class MinesweeperHBButton extends JButton {
         } else {
             setIcon(null);
             setBackground(REVEALED_COLOR);
-            if (numAdjacent == 0) {
+            if (tile.getNumAdjacent() == 0) {
                 setText(null);
 
                 MinesweeperHBButton[] adjacents = game.getAdjacentButtons(this);
@@ -107,7 +99,7 @@ public class MinesweeperHBButton extends JButton {
                     adjacents[i].reveal();
                 }
             } else {
-                setText(String.valueOf(numAdjacent));
+                setText(String.valueOf(tile.getNumAdjacent()));
             }
         }
     }
@@ -115,11 +107,12 @@ public class MinesweeperHBButton extends JButton {
     /**
      * Toggle the flagged status
      */
+    @Override
     public void toggleFlagged() {
-        if (isRevealed)
+        if (getRevealed())
             return;
-        isFlagged = !isFlagged;
-        if (isFlagged) {
+        tile.toggleFlagged();
+        if (tile.getFlagged()) {
             setIcon(FLAG_ICON);
         } else {
             setIcon(null);
@@ -128,43 +121,26 @@ public class MinesweeperHBButton extends JButton {
 
     /**
      * Gets the flagged status
-     * 
      * @return the flagged status
      */
     public boolean getFlagged() {
-        return isFlagged;
-    }
-
-    /**
-     * Sets if the button is a mine or not
-     * 
-     * @param isMine True if mine, false if not
-     */
-    public void setMine(boolean isMine) {
-        this.isMine = isMine;
-
-        MinesweeperHBButton[] adjacents = game.getAdjacentButtons(this);
-        for (int i = 0; i < adjacents.length; i++) {
-            adjacents[i].numAdjacent++;
-        }
+        return tile.getFlagged();
     }
 
     /**
      * Gets if the button is a mine or not
-     * 
      * @return True if mine, false if not
      */
     public boolean getMine() {
-        return isMine;
+        return tile.getMine();
     }
 
     /**
      * Gets if the button has been revealed or not
-     * 
      * @return boolean on if the button has been revealed or not
      */
     public boolean getRevealed() {
-        return isRevealed;
+        return tile.getRevealed();
     }
 
     @Override
