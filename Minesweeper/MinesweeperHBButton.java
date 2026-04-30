@@ -3,9 +3,7 @@ package Minesweeper;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Insets;
 
 /**
  * Custom class for handling the locations on the minefield
@@ -14,14 +12,8 @@ import java.awt.Insets;
  * @version 4/14/2026
  */
 public class MinesweeperHBButton extends MinesweeperButtonBase {
-    public final static Color HIDDEN_COLOR = new Color(50, 80, 120, 180);
-    public final static Color REVEALED_COLOR = new Color(100, 160, 240, 150);
-
     MinesweeperHyperbolic game;
     private Tile tile = null;
-
-    private static final ImageIcon MINE_ICON = loadIcon("MinesweeperMine.png");
-    private static final ImageIcon FLAG_ICON = loadIcon("MinesweeperFlag.png");
 
     /**
      * Constructor for MinesweeperButton
@@ -84,7 +76,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
                 setText(String.valueOf(tile.getNumAdjacent()));
             }
         } else if (tile.getFlagged()) {
-            setIcon(FLAG_ICON);
+            setIcon(scaledIcon(FLAG_ICON));
         }
     }
 
@@ -111,7 +103,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
 
         if (wasMine) {
             setText(null);
-            setIcon(MINE_ICON);
+            setIcon(scaledIcon(MINE_ICON));
             setBackground(Color.RED);
             game.onLoss();
         }
@@ -126,7 +118,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
             return;
         tile.toggleFlagged();
         if (tile.getFlagged()) {
-            setIcon(FLAG_ICON);
+            setIcon(scaledIcon(FLAG_ICON));
         } else {
             setIcon(null);
         }
@@ -156,24 +148,10 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
         return tile.getRevealed();
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        // Paint the background color manually, ignoring the pressed state
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
-        // Paint the text and borders normally
-        super.paintComponent(g);
-    }
-
-    private static ImageIcon loadIcon(String name) {
-        try {
-            ImageIcon icon = new ImageIcon(MinesweeperButton.class.getResource(name));
-            Image scaled = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            return new ImageIcon(scaled);
-        } catch (Exception e) {
-            System.err.println("Could not load \'" + name + "\' image: " + e.getMessage());
+    private ImageIcon scaledIcon(Image img) {
+        if (img == null)
             return null;
-        }
+        final int buttonSize = 32;
+        return new ImageIcon(img.getScaledInstance(buttonSize, buttonSize, Image.SCALE_SMOOTH));
     }
 }
