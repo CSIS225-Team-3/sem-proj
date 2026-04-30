@@ -60,6 +60,34 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
      */
     public void setTile(Tile newTile) {
         tile = newTile;
+        
+        // if (tile == null)
+        //     setText("Null");
+        // else
+        //     setText(String.valueOf(tile.id));
+
+        setBackground(HIDDEN_COLOR);
+        setForeground(Color.BLACK);
+
+        if (tile == null)
+            return;
+        
+        if (tile.getRevealed()) {
+            setIcon(null);
+            setBackground(REVEALED_COLOR);
+            if (tile.getNumAdjacent() == 0) {
+                setText(null);
+
+                MinesweeperHBButton[] adjacents = game.getAdjacentButtons(this);
+                for (int i = 0; i < adjacents.length; i++) {
+                    adjacents[i].reveal();
+                }
+            } else {
+                setText(String.valueOf(tile.getNumAdjacent()));
+            }
+        } else if (tile.getFlagged()) {
+            setIcon(FLAG_ICON);
+        }
     }
 
     /**

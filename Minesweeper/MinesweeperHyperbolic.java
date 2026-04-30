@@ -70,8 +70,6 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         this.cardLayout = cardLayout;
         this.cards = cards;
 
-        allTiles = HyperbolicGraphGen.gen();
-
         try {
             bgImage = ImageIO.read(new File("Minesweeper/InGameBackground.png"));
         } catch (IOException e) {
@@ -117,6 +115,7 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
         mainPanel.add(bottomButtons, BorderLayout.SOUTH);
 
+        allTiles = HyperbolicGraphGen.gen();
         final int viewButtons = 13;
         buttons = new MinesweeperHBButton[viewButtons];
 
