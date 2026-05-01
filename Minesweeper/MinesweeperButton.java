@@ -202,6 +202,8 @@ public class MinesweeperButton extends MinesweeperButtonBase {
         setText(String.valueOf(display));
         if (display < 0) {
             setForeground(Color.RED);
+        } else if (display == 0) {
+            setForeground(new Color(110, 110, 110));
         } else {
             setForeground(Color.BLACK);
         }

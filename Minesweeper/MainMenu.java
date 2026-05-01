@@ -1261,8 +1261,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             } else {
                 mines = (int) minesSpinner.getValue();
                 if (mines > maxRandomMines) {
-                    errorLabel.setText("Too many mines!");
-                    return;
+                    //errorLabel.setText("Too many mines!");
+                    //return;
                 }
             }
 
