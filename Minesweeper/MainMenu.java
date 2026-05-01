@@ -38,6 +38,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -176,6 +177,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     public static Color TERTIARY_COLOR = new Color(65, 150, 255, 220);
 
     public static Color TRANSPARENT_COLOR = new Color(0, 0, 0, 255);
+
+    public static Color TEXT_COLOR = Color.WHITE;
 
     private final static int MAX_ROWS = 100;
     private final static int MAX_COLS = 100;
@@ -391,17 +394,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         usernameField = new JTextField();
 
-        usernameField.setForeground(Color.BLACK);
+        usernameField.setForeground(TEXT_COLOR);
         usernameField.setBackground(SECONDARY_COLOR);
         usernameField.setOpaque(false);
-        usernameField.setForeground(Color.BLACK);
+        usernameField.setForeground(TEXT_COLOR);
 
         passwordField = new JPasswordField();
 
-        passwordField.setForeground(Color.BLACK);
+        passwordField.setForeground(TEXT_COLOR);
         passwordField.setBackground(SECONDARY_COLOR);
         passwordField.setOpaque(false);
-        passwordField.setForeground(Color.BLACK);
+        passwordField.setForeground(TEXT_COLOR);
 
         registerButton = styledButton("Register");
         loginButton = styledButton("Login");
@@ -436,13 +439,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         fieldsPanel.setOpaque(false);
 
         JLabel usernameLabel = new JLabel("Username", SwingConstants.RIGHT);
-        usernameLabel.setForeground(Color.BLACK);
+        usernameLabel.setForeground(TEXT_COLOR);
 
         fieldsPanel.add(usernameLabel);
         fieldsPanel.add(usernameField);
 
         JLabel passwordLabel = new JLabel("Password", SwingConstants.RIGHT);
-        passwordLabel.setForeground(Color.BLACK);
+        passwordLabel.setForeground(TEXT_COLOR);
 
         fieldsPanel.add(passwordLabel);
         fieldsPanel.add(passwordField);
@@ -453,7 +456,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         showPassword.addActionListener(this);
 
         JLabel showPasswordLabel = new JLabel("Show Password", SwingConstants.RIGHT);
-        showPasswordLabel.setForeground(Color.BLACK);
+        showPasswordLabel.setForeground(TEXT_COLOR);
         fieldsPanel.add(showPasswordLabel);
         fieldsPanel.add(showPassword);
 
@@ -473,17 +476,20 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         buttonsPanel.add(bottomButtons);
 
         loginStatus = new JLabel("Not logged in.", SwingConstants.CENTER);
+        loginStatus.setForeground(TEXT_COLOR);
 
         loginMainPanel.add(fieldsPanel, BorderLayout.NORTH);
         loginMainPanel.add(buttonsPanel, BorderLayout.CENTER);
         loginMainPanel.add(loginStatus, BorderLayout.SOUTH);
 
-        loginMainPanel.setBorder(BorderFactory.createTitledBorder("Account"));
+        TitledBorder loginBorder = BorderFactory.createTitledBorder("Account");
+        loginBorder.setTitleColor(TEXT_COLOR);
+        loginMainPanel.setBorder(loginBorder);
 
         topPanel.add(loginMainPanel, BorderLayout.EAST);
 
         mainText = new JLabel("Welcome to Minesweeper!", SwingConstants.CENTER);
-        mainText.setForeground(Color.BLACK);
+        mainText.setForeground(TEXT_COLOR);
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
         topPanel.add(mainText, BorderLayout.NORTH);
 
@@ -533,7 +539,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         JPanel modePanel = styledPanel(new GridLayout(5, 1, 0, 5));
-        modePanel.setBorder(BorderFactory.createTitledBorder("Select Mode"));
+
+        TitledBorder modeBorder = BorderFactory.createTitledBorder("Select Mode");
+        modeBorder.setTitleColor(TEXT_COLOR);
+        modePanel.setBorder(modeBorder);
         modePanel.setBackground(SECONDARY_COLOR);
 
         twoDimension = styledButton("2D Minesweeper");
@@ -555,22 +564,29 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         configPanel.setVisible(false);
 
         JPanel settingsPanel = styledPanel(new FlowLayout(FlowLayout.CENTER, 20, 8));
-        settingsPanel.setBorder(BorderFactory.createTitledBorder("Game Settings"));
+        TitledBorder settingsBorder = BorderFactory.createTitledBorder("Game Settings");
+        settingsBorder.setTitleColor(TEXT_COLOR);
+        settingsPanel.setBorder(settingsBorder);
         settingsPanel.setBackground(SECONDARY_COLOR);
 
-        settingsPanel.add(new JLabel("Rows: "));
+        JLabel rowsLabel = new JLabel("Rows: ");
+        rowsLabel.setForeground(TEXT_COLOR);
+        settingsPanel.add(rowsLabel);
         rowsSpinner = new JSpinner(new SpinnerNumberModel(6, 2, MAX_ROWS, 1));
         rowsSpinner.setPreferredSize(new Dimension(60, 30));
         rowsSpinner.addChangeListener(this);
         settingsPanel.add(rowsSpinner);
 
-        settingsPanel.add(new JLabel("Columns: "));
+        JLabel colsLabel = new JLabel("Columns: ");
+        colsLabel.setForeground(TEXT_COLOR);
+        settingsPanel.add(colsLabel);
         colsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
         colsSpinner.setPreferredSize(new Dimension(60, 30));
         colsSpinner.addChangeListener(this);
         settingsPanel.add(colsSpinner);
 
         splices3dLabel = new JLabel("3D Splices: ");
+        splices3dLabel.setForeground(TEXT_COLOR);
         settingsPanel.add(splices3dLabel);
         splices3dSpinner = new JSpinner(new SpinnerNumberModel(5, 2, MAX_SPLICES3D, 1));
         splices3dSpinner.setPreferredSize(new Dimension(60, 30));
@@ -581,6 +597,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         splices3dSpinner.setVisible(false);
 
         splices4dLabel = new JLabel("4D Splices: ");
+        splices4dLabel.setForeground(TEXT_COLOR);
         settingsPanel.add(splices4dLabel);
         splices4dSpinner = new JSpinner(new SpinnerNumberModel(3, 2, MAX_SPLICES4D, 1));
         splices4dSpinner.setPreferredSize(new Dimension(60, 30));
@@ -591,6 +608,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         splices4dSpinner.setVisible(false);
 
         splices5dLabel = new JLabel("5D Splices: ");
+        splices5dLabel.setForeground(TEXT_COLOR);
         settingsPanel.add(splices5dLabel);
         splices5dSpinner = new JSpinner(new SpinnerNumberModel(3, 2, MAX_SPLICES5D, 1));
         splices5dSpinner.setPreferredSize(new Dimension(60, 30));
@@ -601,6 +619,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         splices5dSpinner.setVisible(false);
 
         dimensionsLabel = new JLabel("Dimension Count: ");
+        dimensionsLabel.setForeground(TEXT_COLOR);
         settingsPanel.add(dimensionsLabel);
         dimensionsSpinner = new JSpinner(new SpinnerNumberModel(5, 5, MAX_DIMENSIONS, 1));
         dimensionsSpinner.setPreferredSize(new Dimension(60, 30));
@@ -612,7 +631,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         JPanel mineConfigPanel = styledPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         mineConfigPanel.setBackground(SECONDARY_COLOR);
-        mineConfigPanel.add(new JLabel("Mine Amount: "));
+        JLabel mineAmountLabel = new JLabel("Mine Amount: ");
+        mineAmountLabel.setForeground(TEXT_COLOR);
+        mineConfigPanel.add(mineAmountLabel);
 
         minesModel = new SpinnerNumberModel(10, 0, maxMines, 1);
         minesSpinner = new JSpinner(minesModel);
@@ -620,7 +641,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         minesSpinner.addChangeListener(this);
 
         mineConfigPanel.add(minesSpinner);
-        mineConfigPanel.add(new JLabel("Random # of Mines: "));
+        JLabel randomMinesLabel = new JLabel("Random # of Mines: ");
+        randomMinesLabel.setForeground(TEXT_COLOR);
+        mineConfigPanel.add(randomMinesLabel);
         randomMines = new JCheckBox();
         randomMines.setBackground(SECONDARY_COLOR);
         randomMines.addActionListener(this);
@@ -630,13 +653,19 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         configPanel.add(settingsPanel, BorderLayout.NORTH);
 
         JPanel difficultyPanel = styledPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
-        difficultyPanel.setBorder(BorderFactory.createTitledBorder("Preset Difficulties"));
+        TitledBorder difficultyBorder = BorderFactory.createTitledBorder("Preset Difficulties");
+        difficultyBorder.setTitleColor(TEXT_COLOR);
+        difficultyPanel.setBorder(difficultyBorder);
         difficultyPanel.setBackground(SECONDARY_COLOR);
 
         easyBtn = new JRadioButton("Easy");
+        easyBtn.setForeground(TEXT_COLOR);
         mediumBtn = new JRadioButton("Medium");
+        mediumBtn.setForeground(TEXT_COLOR);
         hardBtn = new JRadioButton("Hard");
+        hardBtn.setForeground(TEXT_COLOR);
         extremeBtn = new JRadioButton("Extreme");
+        extremeBtn.setForeground(TEXT_COLOR);
 
         difficultyGroup = new ButtonGroup();
         difficultyGroup.add(easyBtn);
@@ -825,7 +854,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
      */
     private void logout() {
         loggedInAccount = null;
-        loginStatus.setForeground(Color.BLACK);
+        loginStatus.setForeground(TEXT_COLOR);
         loginStatus.setText("Logged out.");
         loginButton.setEnabled(true);
         registerButton.setEnabled(true);
@@ -887,7 +916,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             deleteConfirmed = true;
             deleteAccount();
         } else {
-            loginStatus.setForeground(Color.BLACK);
+            loginStatus.setForeground(TEXT_COLOR);
             loginStatus.setText("Deletion Cancelled");
         }
 
@@ -1408,7 +1437,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         //button.setBorderPainted(false);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
-        button.setForeground(Color.BLACK);
+        button.setForeground(TEXT_COLOR);
         button.setBackground(TERTIARY_COLOR);
         return button;
     }
