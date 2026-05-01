@@ -550,6 +550,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         fourDimension = styledButton("4D Minesweeper");
         fiveDimension = styledButton("5D+ Minesweeper");
         hyperbolic = styledButton("Hyperbolic Minesweeper");
+        hyperbolic.setVisible(false);
 
         JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension, hyperbolic };
         for (JButton b : dimensions) {
@@ -829,6 +830,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             loggedInAccount = account;
             if (account.getUsername().equals("admin")) {
                 resetLeaderboardButton.setVisible(true);
+                hyperbolic.setVisible(true);
             }
             loginStatus.setForeground(Color.GREEN.darker());
             loginStatus.setText("Welcome, " + account.getUsername() + "!");
@@ -867,6 +869,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         passwordField.setEnabled(true);
         showPassword.setEnabled(true);
         resetLeaderboardButton.setVisible(false);
+        hyperbolic.setVisible(false);
 
         usernameField.setBackground(Color.WHITE);
         passwordField.setBackground(Color.WHITE);
