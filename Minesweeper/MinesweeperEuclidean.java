@@ -237,7 +237,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         autoplay = MainMenu.styledButton("Enable Autoplay Mode");
         autoplay.addActionListener(e -> {
-            // TODO: Thing here to prevent score from submitting to leaderboards
             autoplayActive = true;
             addAutoplay();
         });
