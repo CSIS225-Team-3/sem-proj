@@ -394,11 +394,6 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
         } else if (pressed.equals("Reset")) {
             reset();
-        } else {
-            if (e.getSource() instanceof MinesweeperButton) {
-                MinesweeperButton button = (MinesweeperButton) e.getSource();
-                button.reveal();
-            }
         }
     }
 

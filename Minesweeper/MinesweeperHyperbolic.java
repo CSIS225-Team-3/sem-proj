@@ -145,6 +145,8 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
                         placeMines(((MinesweeperHBButton) e.getSource()).getTile());
                     }
                     onTileClick(e);
+                    for (MinesweeperHBButton b : buttons)
+                        b.redraw();
                     updateTitleText();
                     checkWin();
                 }
@@ -244,13 +246,6 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
         } else if (pressed.equals("Reset")) {
             reset();
-        } else {
-            if (e.getSource() instanceof MinesweeperHBButton) {
-                MinesweeperHBButton button = (MinesweeperHBButton) e.getSource();
-                button.reveal();
-                for (MinesweeperHBButton b : buttons)
-                    b.redraw();
-            }
         }
     }
 
