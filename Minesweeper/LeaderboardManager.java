@@ -37,6 +37,24 @@ public class LeaderboardManager {
             return false;
         }
 
+        boolean modeGood = false;
+        for (String m : MODES) {
+            if (m.equals(mode)) {
+                modeGood = true;
+            }
+        }
+
+        boolean diffGood = false;
+        for (String d : DIFFICULTIES) {
+            if (d.equals(difficulty)) {
+                diffGood = true;
+            }
+        }
+
+        if (!modeGood || !diffGood) {
+            return false;
+        }
+
         String key = mode + "|" + difficulty;
 
         if (!leaderboards.containsKey(key)) {
