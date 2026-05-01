@@ -1403,6 +1403,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 super.paintComponent(g);
             }
         };
+        button.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        button.setBorderPainted(false);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setForeground(Color.WHITE);
