@@ -40,4 +40,8 @@ public class LeaderboardEntry implements Serializable, Comparable<LeaderboardEnt
     public int compareTo(LeaderboardEntry o) {
         return Integer.compare(this.secondsElapsed, o.secondsElapsed);
     }
+
+    public String getFormattedTime() {
+        return (secondsElapsed / 60) + ":" + String.format("%02d", secondsElapsed % 60);
+    }
 }

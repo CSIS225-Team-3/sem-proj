@@ -27,6 +27,11 @@ public class LeaderboardManager {
         leaderboards = loadLeaderboards();
     }
 
+    public void resetLeaderboard() {
+        leaderboards.clear();
+        saveLeaderboards();
+    }
+
     public boolean addEntry(String mode, String difficulty, String username, int seconds) {
         if (mode == null || difficulty == null || username == null) {
             return false;
@@ -39,6 +44,21 @@ public class LeaderboardManager {
         }
         List<LeaderboardEntry> list = leaderboards.get(key);
         LeaderboardEntry entry = new LeaderboardEntry(username, seconds);
+        LeaderboardEntry existing = null;
+        for (LeaderboardEntry e : list) {
+            if (e.getUsername().equals(username)) {
+                existing = e;
+                break;
+            }
+        }
+
+        if (existing != null) {
+            if (seconds < existing.getSeconds()) {
+                list.remove(existing);
+            } else {
+                return false;
+            }
+        }
         list.add(entry);
         Collections.sort(list);
 

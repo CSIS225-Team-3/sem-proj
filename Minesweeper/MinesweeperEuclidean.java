@@ -46,7 +46,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
 
     private JButton autoplay;
 
-    /** If the autoplay feature has ever been toggled on, used to validate leaderboards */
+    /**
+     * If the autoplay feature has ever been toggled on, used to validate
+     * leaderboards
+     */
     private boolean autoplayActive;
 
     private JPanel autoplayPanel;
@@ -395,6 +398,13 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         } else if (pressed.equals("Reset")) {
             reset();
         }
+    }
+
+    protected boolean isEligibleForLeaderboard() {
+        if (leaderboardAccount != null && leaderboardAccount.getUsername().equals("admin")) {
+            return true;
+        }
+        return !autoplayActive;
     }
 
     private void addAutoplay() {

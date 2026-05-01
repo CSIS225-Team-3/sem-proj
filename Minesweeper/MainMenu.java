@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.LayoutManager;
@@ -22,6 +21,8 @@ import java.io.IOException;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -50,22 +51,31 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The name of the menu card */
     private static final String MENU_CARD = "Menu";
 
+    /** The name of the 2D minesweeper card */
     private static final String TWO_DIMENSIONS = "2D Minesweeper";
 
+    /** The name of the 3D minesweeper card */
     private static final String THREE_DIMENSIONS = "3D Minesweeper";
 
-    /** The name of the gamble mode card */
+    /** The name of the 4D minesweeper card */
     private static final String FOUR_DIMENSIONS = "4D Minesweeper";
 
+    /** The name of the 5D+ minesweeper card */
     private static final String FIVE_DIMENSIONS = "5D+ Minesweeper";
 
+    /** The name of the hyperbolic minesweeper card */
     private static final String HYPERBOLIC = "Hyperbolic Minesweeper";
 
+    /** The name of the leaderboard card */
     private static final String LEADERBOARD_CARD = "Leaderboard";
 
     private JButton leaderboardButton;
 
     private LeaderboardPanel leaderboardPanel;
+
+    private JButton resetLeaderboardButton;
+
+    private String selectedDifficulty;
 
     /** The CardLayout for managing panels */
     private CardLayout cardLayout;
@@ -213,7 +223,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         cards = buildCardsPanel();
 
-        leaderboardPanel = new LeaderboardPanel(cardLayout, cards);
+        leaderboardPanel = new LeaderboardPanel(cardLayout, cards, new LeaderboardManager());
         cards.add(leaderboardPanel, LEADERBOARD_CARD);
 
         add(buildTopPanel(), BorderLayout.NORTH);
@@ -370,7 +380,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     }
 
     /**
-     * Builds top section of the UI including account controls, 
+     * Builds top section of the UI including account controls,
      * login or register buttons, and the title.
      *
      * @return the constructed top panel
@@ -382,12 +392,14 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         usernameField.setForeground(Color.WHITE);
         usernameField.setBackground(SECONDARY_COLOR);
+        usernameField.setOpaque(false);
         usernameField.setCaretColor(Color.WHITE);
 
         passwordField = new JPasswordField();
 
         passwordField.setForeground(Color.WHITE);
         passwordField.setBackground(SECONDARY_COLOR);
+        passwordField.setOpaque(false);
         passwordField.setCaretColor(Color.WHITE);
 
         registerButton = styledButton("Register");
@@ -474,15 +486,28 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
         topPanel.add(mainText, BorderLayout.NORTH);
 
-        JPanel leaderboardSide = new JPanel(new GridBagLayout());
+        JPanel leaderboardSide = new JPanel();
+        leaderboardSide.setLayout(new BoxLayout(leaderboardSide, BoxLayout.Y_AXIS));
         leaderboardSide.setOpaque(false);
-        leaderboardSide.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEmptyBorder(), ""));
+
         leaderboardButton = styledButton("Leaderboard");
         leaderboardButton.setFont(leaderboardButton.getFont().deriveFont(Font.BOLD, 18f));
-        leaderboardButton.setPreferredSize(new Dimension(180, 80));
+        leaderboardButton.setMaximumSize(new Dimension(180, 80));
         leaderboardButton.addActionListener(this);
+
+        resetLeaderboardButton = styledButton("Reset Leaderboard");
+        resetLeaderboardButton.setFont(resetLeaderboardButton.getFont().deriveFont(Font.BOLD, 12f));
+        resetLeaderboardButton.setMaximumSize(new Dimension(180, 40));
+        resetLeaderboardButton.setVisible(false);
+        resetLeaderboardButton.addActionListener(e -> {
+            leaderboardPanel.getLeaderboardManager().resetLeaderboard();
+            leaderboardPanel.refresh();
+            JOptionPane.showMessageDialog(frame, "Leaderboard reset.");
+        });
+
         leaderboardSide.add(leaderboardButton);
+        leaderboardSide.add(Box.createVerticalStrut(6));
+        leaderboardSide.add(resetLeaderboardButton);
 
         topPanel.add(leaderboardSide, BorderLayout.WEST);
 
@@ -726,6 +751,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             passwordField.setEchoChar('*');
         }
     }
+
     /**
      * Registers a new user account using the entered username and password.
      */
@@ -768,6 +794,9 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         Account account = accountManager.login(username, password);
         if (account != null) {
             loggedInAccount = account;
+            if (account.getUsername().equals("admin")) {
+                resetLeaderboardButton.setVisible(true);
+            }
             loginStatus.setForeground(Color.GREEN.darker());
             loginStatus.setText("Welcome, " + account.getUsername() + "!");
             loginButton.setEnabled(false);
@@ -804,6 +833,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         usernameField.setEnabled(true);
         passwordField.setEnabled(true);
         showPassword.setEnabled(true);
+        resetLeaderboardButton.setVisible(false);
 
         usernameField.setBackground(Color.WHITE);
         passwordField.setBackground(Color.WHITE);
@@ -836,6 +866,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
                 usernameField.setBackground(Color.WHITE);
                 passwordField.setBackground(Color.WHITE);
+
+                resetLeaderboardButton.setVisible(false);
             } else {
                 loginStatus.setText(accountManager.deleteAccount(loggedInAccount.getUsername(), loggedInAccount));
             }
@@ -1036,6 +1068,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
      * @param src the source of the action event (selected difficulty button)
      */
     private void handleDifficultySelection(Object src) {
+
+        if (src == easyBtn) {
+            selectedDifficulty = "Easy";
+        } else if (src == mediumBtn) {
+            selectedDifficulty = "Medium";
+        } else if (src == hardBtn) {
+            selectedDifficulty = "Hard";
+        } else if (src == extremeBtn) {
+            selectedDifficulty = "Extreme";
+        }
+
         randomMines.setSelected(false);
         minesSpinner.setEnabled(true);
         difficultyAdjusted = true;
@@ -1189,8 +1232,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     return;
                 }
             }
-            cards.add(new MinesweeperHyperbolic(size, mines, buttonSize, cardLayout, cards), HYPERBOLIC);
 
+            MinesweeperHyperbolic hypGame = new MinesweeperHyperbolic(size, mines, buttonSize, cardLayout, cards);
+            hypGame.setLeaderboardInfo(leaderboardPanel.getLeaderboardManager(), loggedInAccount, null, HYPERBOLIC);
+            cards.add(hypGame, HYPERBOLIC);
             cardLayout.show(cards, HYPERBOLIC);
             return;
         }
@@ -1214,7 +1259,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 }
             }
 
-            cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), TWO_DIMENSIONS);
+            String difficulty;
+            if (randomMines.isSelected()) {
+                difficulty = null;
+            } else {
+                difficulty = selectedDifficulty;
+            }
+
+            MinesweeperEuclidean game = new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards);
+            game.setLeaderboardInfo(leaderboardPanel.getLeaderboardManager(), loggedInAccount, difficulty,
+                    TWO_DIMENSIONS);
+            cards.add(game, TWO_DIMENSIONS);
             cardLayout.show(cards, TWO_DIMENSIONS);
         } else if (dimensionsSelected == 3) {
 
@@ -1231,7 +1286,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     return;
                 }
             }
-            cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), THREE_DIMENSIONS);
+
+            String difficulty;
+            if (randomMines.isSelected()) {
+                difficulty = null;
+            } else {
+                difficulty = selectedDifficulty;
+            }
+
+            MinesweeperEuclidean game = new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards);
+            game.setLeaderboardInfo(leaderboardPanel.getLeaderboardManager(), loggedInAccount, difficulty,
+                    THREE_DIMENSIONS);
+            cards.add(game, THREE_DIMENSIONS);
             cardLayout.show(cards, THREE_DIMENSIONS);
         } else if (dimensionsSelected == 4) {
 
@@ -1249,7 +1315,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     return;
                 }
             }
-            cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), FOUR_DIMENSIONS);
+
+            String difficulty;
+            if (randomMines.isSelected()) {
+                difficulty = null;
+            } else {
+                difficulty = selectedDifficulty;
+            }
+
+            MinesweeperEuclidean game = new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards);
+            game.setLeaderboardInfo(leaderboardPanel.getLeaderboardManager(), loggedInAccount, difficulty,
+                    FOUR_DIMENSIONS);
+            cards.add(game, FOUR_DIMENSIONS);
             cardLayout.show(cards, FOUR_DIMENSIONS);
         } else if (dimensionsSelected >= 5) {
 
@@ -1275,7 +1352,18 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                     return;
                 }
             }
-            cards.add(new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards), FIVE_DIMENSIONS);
+
+            String difficulty;
+            if (randomMines.isSelected()) {
+                difficulty = null;
+            } else {
+                difficulty = selectedDifficulty;
+            }
+
+            MinesweeperEuclidean game = new MinesweeperEuclidean(dims, mines, buttonSize, cardLayout, cards);
+            game.setLeaderboardInfo(leaderboardPanel.getLeaderboardManager(), loggedInAccount, difficulty,
+                    FIVE_DIMENSIONS);
+            cards.add(game, FIVE_DIMENSIONS);
             cardLayout.show(cards, FIVE_DIMENSIONS);
         }
 
@@ -1287,7 +1375,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
      * @param layout the layout manager to apply panel
      * @return a JPanel with style
      */
-    private static JPanel styledPanel(LayoutManager layout) {
+    public static JPanel styledPanel(LayoutManager layout) {
         JPanel p = new JPanel(layout) {
             @Override
             protected void paintComponent(Graphics g) {
