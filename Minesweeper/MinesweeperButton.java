@@ -40,6 +40,7 @@ public class MinesweeperButton extends MinesweeperButtonBase {
         setForeground(Color.BLACK);
         setFocusPainted(false);
         // setRolloverEnabled(false); //Mouse hover
+        setUI(new javax.swing.plaf.basic.BasicButtonUI());
         setContentAreaFilled(false);
         setOpaque(false);
         setPreferredSize(new Dimension(buttonSize, buttonSize));
@@ -126,6 +127,7 @@ public class MinesweeperButton extends MinesweeperButtonBase {
 
     /**
      * Gets the flagged status
+     * 
      * @return the flagged status
      */
     public boolean getFlagged() {
@@ -134,6 +136,7 @@ public class MinesweeperButton extends MinesweeperButtonBase {
 
     /**
      * Sets if the button is a mine or not
+     * 
      * @param isMine True if mine, false if not
      */
     public void setMine(boolean isMine) {
@@ -147,6 +150,7 @@ public class MinesweeperButton extends MinesweeperButtonBase {
 
     /**
      * Gets if the button is a mine or not
+     * 
      * @return True if mine, false if not
      */
     public boolean getMine() {
@@ -155,6 +159,7 @@ public class MinesweeperButton extends MinesweeperButtonBase {
 
     /**
      * Gets if the button has been revealed or not
+     * 
      * @return boolean on if the button has been revealed or not
      */
     public boolean getRevealed() {
