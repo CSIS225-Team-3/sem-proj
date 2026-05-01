@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class LeaderboardEntry implements Serializable {
+public class LeaderboardEntry implements Serializable, Comparable<LeaderboardEntry> {
     private static final long serialVersionUID = 1L;
 
     private final String username;
@@ -34,5 +34,10 @@ public class LeaderboardEntry implements Serializable {
 
     public String getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public int compareTo(LeaderboardEntry o) {
+        return Integer.compare(this.secondsElapsed, o.secondsElapsed);
     }
 }

@@ -1,7 +1,15 @@
 package Minesweeper;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 public class LeaderboardManager {
-    private static LeaderboardManager instance;
 
     private static final String SAVE_FILE = "Minesweeper//leaderboard.dat";
     private static final int MAX_ENTRIES = 10;
@@ -12,10 +20,58 @@ public class LeaderboardManager {
             "5D+ Minesweeper", "Hyperbolic Minesweeper"
     };
 
-    // TODO: figure out a good data structure to store leaderboard, hashmap most
-    // likely
+    /* key: Mode|Difficulty, value: sorted list of entries */
+    private HashMap<String, List<LeaderboardEntry>> leaderboards;
 
     public LeaderboardManager() {
-        // LOAD DATA
+        leaderboards = loadLeaderboards();
     }
+
+    public boolean addEntry(String mode, String difficulty, String username, int seconds) {
+        if (mode == null || difficulty == null || username == null) {
+            return false;
+        }
+
+        String key = mode + "|" + difficulty;
+
+        if (!leaderboards.containsKey(key)) {
+            leaderboards.put(key, new ArrayList<>());
+        }
+        List<LeaderboardEntry> list = leaderboards.get(key);
+        LeaderboardEntry entry = new LeaderboardEntry(username, seconds);
+        list.add(entry);
+        Collections.sort(list);
+
+        boolean madeBoard = list.indexOf(entry) < MAX_ENTRIES;
+        while (list.size() > MAX_ENTRIES) {
+            list.remove(list.size() - 1);
+        }
+        saveLeaderboards();
+        return madeBoard;
+    }
+
+    public List<LeaderboardEntry> getEntries(String mode, String difficulty) {
+        List<LeaderboardEntry> list = leaderboards.get(mode + "|" + difficulty);
+        if (list == null) {
+            return new ArrayList<>();
+        }
+        return list;
+    }
+
+    private HashMap<String, List<LeaderboardEntry>> loadLeaderboards() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
+            return (HashMap<String, List<LeaderboardEntry>>) in.readObject();
+        } catch (Exception e) {
+            return new HashMap<>();
+        }
+    }
+
+    private void saveLeaderboards() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
+            out.writeObject(leaderboards);
+        } catch (Exception e) {
+            System.err.println("Leaderboard save failed: " + e.getMessage());
+        }
+    }
+
 }
