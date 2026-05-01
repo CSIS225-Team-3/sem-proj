@@ -629,8 +629,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         dimensionsLabel.setVisible(false);
         dimensionsSpinner.setVisible(false);
 
-        JPanel mineConfigPanel = styledPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        mineConfigPanel.setBackground(SECONDARY_COLOR);
+        JPanel mineConfigPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        mineConfigPanel.setOpaque(false);
         JLabel mineAmountLabel = new JLabel("Mine Amount: ");
         mineAmountLabel.setForeground(TEXT_COLOR);
         mineConfigPanel.add(mineAmountLabel);
@@ -645,7 +645,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         randomMinesLabel.setForeground(TEXT_COLOR);
         mineConfigPanel.add(randomMinesLabel);
         randomMines = new JCheckBox();
-        randomMines.setBackground(SECONDARY_COLOR);
+        //randomMines.setBackground(SECONDARY_COLOR);
+        randomMines.setOpaque(false);
         randomMines.addActionListener(this);
         mineConfigPanel.add(randomMines);
         settingsPanel.add(mineConfigPanel);
@@ -687,12 +688,14 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             btns[i].setOpaque(false);
             btns[i].setContentAreaFilled(false);
 
-            JPanel each = styledPanel(new BorderLayout());
-            each.setBackground(SECONDARY_COLOR);
+            JPanel each = new JPanel(new BorderLayout());
+            each.setOpaque(false);
+            //each.setBackground(SECONDARY_COLOR);
 
             infoLabels[i].setFont(infoLabels[i].getFont().deriveFont(10f));
-            infoLabels[i].setOpaque(true);
-            infoLabels[i].setBackground(SECONDARY_COLOR);
+            infoLabels[i].setOpaque(false);
+            infoLabels[i].setForeground(TEXT_COLOR);
+            //infoLabels[i].setBackground(SECONDARY_COLOR);
 
             each.add(btns[i], BorderLayout.CENTER);
             each.add(infoLabels[i], BorderLayout.SOUTH);
