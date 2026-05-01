@@ -390,17 +390,17 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         usernameField = new JTextField();
 
-        usernameField.setForeground(Color.WHITE);
+        usernameField.setForeground(Color.BLACK);
         usernameField.setBackground(SECONDARY_COLOR);
         usernameField.setOpaque(false);
-        usernameField.setCaretColor(Color.WHITE);
+        usernameField.setForeground(Color.BLACK);
 
         passwordField = new JPasswordField();
 
-        passwordField.setForeground(Color.WHITE);
+        passwordField.setForeground(Color.BLACK);
         passwordField.setBackground(SECONDARY_COLOR);
         passwordField.setOpaque(false);
-        passwordField.setCaretColor(Color.WHITE);
+        passwordField.setForeground(Color.BLACK);
 
         registerButton = styledButton("Register");
         loginButton = styledButton("Login");
@@ -435,13 +435,13 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         fieldsPanel.setOpaque(false);
 
         JLabel usernameLabel = new JLabel("Username", SwingConstants.RIGHT);
-        usernameLabel.setForeground(Color.WHITE);
+        usernameLabel.setForeground(Color.BLACK);
 
         fieldsPanel.add(usernameLabel);
         fieldsPanel.add(usernameField);
 
         JLabel passwordLabel = new JLabel("Password", SwingConstants.RIGHT);
-        passwordLabel.setForeground(Color.WHITE);
+        passwordLabel.setForeground(Color.BLACK);
 
         fieldsPanel.add(passwordLabel);
         fieldsPanel.add(passwordField);
@@ -452,7 +452,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         showPassword.addActionListener(this);
 
         JLabel showPasswordLabel = new JLabel("Show Password", SwingConstants.RIGHT);
-        showPasswordLabel.setForeground(Color.WHITE);
+        showPasswordLabel.setForeground(Color.BLACK);
         fieldsPanel.add(showPasswordLabel);
         fieldsPanel.add(showPassword);
 
@@ -482,7 +482,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         topPanel.add(loginMainPanel, BorderLayout.EAST);
 
         mainText = new JLabel("Welcome to Minesweeper!", SwingConstants.CENTER);
-        mainText.setForeground(Color.WHITE);
+        mainText.setForeground(Color.BLACK);
         mainText.setFont(mainText.getFont().deriveFont(48.0f));
         topPanel.add(mainText, BorderLayout.NORTH);
 
@@ -1407,7 +1407,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         button.setBorderPainted(false);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
-        button.setForeground(Color.WHITE);
+        button.setForeground(Color.BLACK);
         button.setBackground(TERTIARY_COLOR);
         return button;
     }
