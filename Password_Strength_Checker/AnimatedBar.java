@@ -8,21 +8,21 @@ import javax.swing.SwingUtilities;
  */
 public class AnimatedBar extends Thread {
 
-    private int target;
+    private float target;
 
     private JProgressBar strengthBar;
 
     public AnimatedBar(int target, JProgressBar strengthBar) {
-        this.target = target;
+        this.target = (float)(target * 20);
         this.strengthBar = strengthBar;
     }
 
     @Override
     public void run() {
-        double current = strengthBar.getValue();
-        while ((int) current != target) {
-            double diff = target - current;
-            current += diff / 7.0;
+        float current = strengthBar.getValue();
+        while (current != target) {
+            float diff = target - current;
+            current += diff / 7.0f;
 
             // if (step == 0) {
             //     if (diff > 0) {
@@ -32,10 +32,10 @@ public class AnimatedBar extends Thread {
             //     }
             // }
             // final int next = current + step;
-            final int next = (int) current;
+            final float next = current;
             SwingUtilities.invokeLater(() -> {
-                strengthBar.setValue(next);
-                strengthBar.setString(String.valueOf(next));
+                strengthBar.setValue((int)(next));
+                strengthBar.setString(String.valueOf((int)(next0)));
             });
 
             try {
