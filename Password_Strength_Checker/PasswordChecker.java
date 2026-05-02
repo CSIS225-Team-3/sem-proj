@@ -1,5 +1,3 @@
-//package Password_Strength_Checker;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.BorderLayout;

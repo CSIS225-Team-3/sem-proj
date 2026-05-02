@@ -8,6 +8,10 @@ import javax.swing.SwingUtilities;
  */
 public class AnimatedBar extends Thread {
 
+<<<<<<< Updated upstream
+=======
+    private float target;
+>>>>>>> Stashed changes
 
     /* A varible to store the current target to interpolate the progress values */
     private float target;
@@ -20,7 +24,11 @@ public class AnimatedBar extends Thread {
 
     /* Constructor for the Animmated bar, creates a target value for the bar utilizing scaling */
     public AnimatedBar(int target, JProgressBar strengthBar) {
+<<<<<<< Updated upstream
         this.target = (float)(target * smoothnessScale);
+=======
+        this.target = (float)(target * 20);
+>>>>>>> Stashed changes
         this.strengthBar = strengthBar;
     }
 
@@ -32,6 +40,17 @@ public class AnimatedBar extends Thread {
             float diff = target - current;
             current += diff / 7.0f;
 
+<<<<<<< Updated upstream
+=======
+            // if (step == 0) {
+            //     if (diff > 0) {
+            //         step = 1;
+            //     } else {
+            //         step = -1;
+            //     }
+            // }
+            // final int next = current + step;
+>>>>>>> Stashed changes
             final float next = current;
             SwingUtilities.invokeLater(() -> {
                 strengthBar.setValue((int)(next));
