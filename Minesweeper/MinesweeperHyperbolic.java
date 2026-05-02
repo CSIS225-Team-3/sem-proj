@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * A 2D game of minesweeper
+ * A hyperbolic game of minesweeper
  *
  * @author Patrick Kosmider
  * @version 4/28/2026
@@ -23,14 +23,24 @@ import java.util.HashSet;
 public class MinesweeperHyperbolic extends MinesweeperBase implements ActionListener {
     /** The array of buttons for the game */
     private MinesweeperHBButton[] buttons;
-    //This is definitely not a good way to do this, but it'd be too much work to generalize
+    // This is definitely not a good way to do this, but it'd be too much work to
+    // generalize
+    /** The buttons for the game board */
     private MinesweeperHBButton b_c, b_u, b_ul, b_lu, b_l, b_ld, b_dl, b_d, b_dr, b_rd, b_r, b_ru, b_ur;
 
+    /** The array of all tiles in the game */
     private Tile[] allTiles;
+
+    /** A mapping of currently visible tiles to their corresponding buttons */
     private HashMap<Tile, MinesweeperHBButton> visibleTiles = new HashMap<>();
 
+    /** The number of mines in the game */
     private int mineCount;
 
+    /**
+     * Whether the first click has been made yet (used to delay mine placement until
+     * after the first click)
+     */
     private boolean firstClick = true;
 
     /** The label for the top of the window */
@@ -45,6 +55,7 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
     /** The round number for the game */
     private int roundNum;
 
+    /** The scroll pane for the game board */
     private JScrollPane scrollPane;
 
     /** The CardLayout for managing panels */
@@ -53,10 +64,12 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
     /** The JPanel that holds the cards */
     private JPanel cards;
 
+    /** The background image for the game */
     private BufferedImage bgImage;
 
     /**
-     * Constructor for the MinesweeperEuclidean class that initializes the game with
+     * Constructor for the MinesweeperHyperbolic class that initializes the game
+     * with
      * the given parameters.
      * 
      * @param mines      the number of mines for the game
@@ -170,31 +183,31 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
         gamePanel.setLayout(new GridLayout(5, 5));
         int btnIdx = 0;
-        //-###-
+        // -###-
         gamePanel.add(new JPanel());
         gamePanel.add(b_ul = buttons[btnIdx++]);
         gamePanel.add(b_u = buttons[btnIdx++]);
         gamePanel.add(b_ur = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
-        //#---#
+        // #---#
         gamePanel.add(b_lu = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
         gamePanel.add(new JPanel());
         gamePanel.add(new JPanel());
         gamePanel.add(b_ru = buttons[btnIdx++]);
-        //#-#-#
+        // #-#-#
         gamePanel.add(b_l = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
         gamePanel.add(b_c = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
         gamePanel.add(b_r = buttons[btnIdx++]);
-        //#---#
+        // #---#
         gamePanel.add(b_ld = buttons[btnIdx++]);
         gamePanel.add(new JPanel());
         gamePanel.add(new JPanel());
         gamePanel.add(new JPanel());
         gamePanel.add(b_rd = buttons[btnIdx++]);
-        //-###-
+        // -###-
         gamePanel.add(new JPanel());
         gamePanel.add(b_dl = buttons[btnIdx++]);
         gamePanel.add(b_d = buttons[btnIdx++]);
@@ -204,7 +217,7 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
             throw new IllegalStateException("Wrong number of buttons");
 
         scrollPane = new JScrollPane(gamePanel);
-        
+
         gamePanel.setOpaque(false);
         scrollPane.getViewport().setBackground(new Color(0, 0, 0, 0));
 
@@ -213,17 +226,17 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         // buttons[i][j].reveal();
         // }
         // }
-        
+
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
-        
+
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setOpaque(false);
-        
+
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-        
+
         add(mainPanel);
-        
+
         newGame.setBackground(MainMenu.TERTIARY_COLOR);
         reset.setBackground(MainMenu.TERTIARY_COLOR);
         bottomButtons.setOpaque(false);
@@ -234,6 +247,7 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
     /**
      * Listens for JButton actions and responds
+     * 
      * @param e The JButton to listen for
      */
     public void actionPerformed(ActionEvent e) {
@@ -250,6 +264,13 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         }
     }
 
+    /**
+     * Places mines on the board, ensuring that the first clicked tile and its
+     * neighbors are not mines
+     * 
+     * @param startTile The tile that was first clicked, which should not be a mine
+     *                  and should not have mines in its neighbors
+     */
     private void placeMines(Tile startTile) {
         ArrayList<Tile> clickNeighbors = startTile.getVertNeighbors();
 
@@ -300,6 +321,9 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         roundNum++;
     }
 
+    /**
+     * Checks if the player has won
+     */
     private void checkWin() {
         for (MinesweeperHBButton b : buttons)
             if (!b.getMine() && !b.getRevealed())
@@ -308,16 +332,24 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         onWin();
     }
 
+    /**
+     * Reveals all mines
+     */
     @Override
     protected void revealMines() {
-        for (MinesweeperHBButton b : buttons){
+        for (MinesweeperHBButton b : buttons) {
             if (b.getMine())
                 b.reveal();
             b.redraw();
         }
     }
 
-    private void updateView(Tile newCenter){
+    /**
+     * Updates the displayed buttons to reflect a new center tile
+     * 
+     * @param newCenter The new center tile to update the view around
+     */
+    private void updateView(Tile newCenter) {
         if (newCenter == null)
             throw new IllegalStateException("Null center");
 
@@ -325,27 +357,27 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
             b.setTile(null);
 
         b_c.setTile(newCenter);
-        
+
         b_u.setTile(newCenter.relUp);
-        if (newCenter.relUp != null){
+        if (newCenter.relUp != null) {
             b_ul.setTile(getRelOrientedTile(newCenter, Direction.Up, Direction.Left));
             b_ur.setTile(getRelOrientedTile(newCenter, Direction.Up, Direction.Right));
         }
 
         b_l.setTile(newCenter.relLeft);
-        if (newCenter.relLeft != null){
+        if (newCenter.relLeft != null) {
             b_lu.setTile(getRelOrientedTile(newCenter, Direction.Left, Direction.Right));
             b_ld.setTile(getRelOrientedTile(newCenter, Direction.Left, Direction.Left));
         }
 
         b_d.setTile(newCenter.relDown);
-        if (newCenter.relDown != null){
+        if (newCenter.relDown != null) {
             b_dl.setTile(getRelOrientedTile(newCenter, Direction.Down, Direction.Right));
             b_dr.setTile(getRelOrientedTile(newCenter, Direction.Down, Direction.Left));
         }
 
         b_r.setTile(newCenter.relRight);
-        if (newCenter.relRight != null){
+        if (newCenter.relRight != null) {
             b_ru.setTile(getRelOrientedTile(newCenter, Direction.Right, Direction.Left));
             b_rd.setTile(getRelOrientedTile(newCenter, Direction.Right, Direction.Right));
         }
@@ -357,23 +389,25 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
 
     /**
      * Gets an indirect neighbor relative a tile's orientation
-     * @param source The tile
-     * @param selfSide The side of the source the direct neighbor is on
+     * 
+     * @param source    The tile
+     * @param selfSide  The side of the source the direct neighbor is on
      * @param otherSide The side of the neighbor the indirect neighbor is on
      * @return The indirect neighbor
      */
-    private Tile getRelOrientedTile(Tile source, Direction selfSide, Direction otherSide){
+    private Tile getRelOrientedTile(Tile source, Direction selfSide, Direction otherSide) {
         if (source == null)
             return null;
         var neighbor = source.getRelSide(selfSide);
-        //Relative to the neighbor, which side is the source on?
+        // Relative to the neighbor, which side is the source on?
         var relNeighborSide = neighbor.getSideOfNeighbor(source);
-        var side =  relNeighborSide.reorient(otherSide);
+        var side = relNeighborSide.reorient(otherSide);
         return neighbor.getRelSide(side);
     }
 
     /**
      * Gets the list of buttons adjacent to one
+     * 
      * @param position The index of the reference button
      * @return the list of buttons adjacent to one
      */
@@ -386,10 +420,16 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
         HashSet<Tile> adjs = new HashSet<>();
         for (Vert v : t.vertices)
             adjs.addAll(v.tiles);
-        
+
         return adjs.stream().map(visibleTiles::get).filter(x -> x != null).toArray(MinesweeperHBButton[]::new);
     }
 
+    /**
+     * Highlights the buttons adjacent to one by setting their borders to a
+     * different color
+     * 
+     * @param button
+     */
     private void highlightNeighbors(MinesweeperHBButton button) {
         MinesweeperHBButton[] adj = getAdjacentButtons(button);
 
@@ -398,11 +438,19 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
                 b.setBorder(BorderFactory.createLineBorder(new Color(160, 160, 160), 3));
     }
 
+    /**
+     * Clears the highlighted borders from all buttons by resetting their borders to
+     * the default
+     */
     private void clearHighlights() {
         for (MinesweeperHBButton b : buttons)
             b.setBorder(UIManager.getBorder("Button.border"));
     }
 
+    /**
+     * Override paintComponent to draw the background image, if it exists, instead
+     * of the default button background
+     */
     @Override
     protected void paintComponent(Graphics g) {
         if (bgImage != null)
