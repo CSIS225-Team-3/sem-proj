@@ -13,17 +13,26 @@ import java.awt.Insets;
  * @version 4/14/2026
  */
 public class MinesweeperButton extends MinesweeperButtonBase {
+
+    /** The game instance */
     MinesweeperEuclidean game;
+
+    /** The index of this button in the game board */
     private int idx;
 
+    /** The size of the button in pixels */
     private int buttonSize;
 
+    /** The color for hidden buttons */
     private boolean isRevealed = false;
 
     /** The number of adjacent mines */
     private int numAdjacent = 0;
 
+    /** The color for hidden buttons */
     private boolean isMine = false;
+
+    /** The color for hidden buttons */
     private boolean isFlagged = false;
 
     /**
@@ -166,6 +175,12 @@ public class MinesweeperButton extends MinesweeperButtonBase {
         return isRevealed;
     }
 
+    /**
+     * Resizes the button and its font based on the new button size, and updates the
+     * icons if necessary
+     * 
+     * @param newSize the new size for the button in pixels
+     */
     public void resizeButton(int newSize) {
         this.buttonSize = newSize;
         setPreferredSize(new Dimension(newSize, newSize));
@@ -186,6 +201,13 @@ public class MinesweeperButton extends MinesweeperButtonBase {
         }
     }
 
+    /**
+     * Updates the displayed number based on the number of adjacent mines and the
+     * flagged status of adjacent buttons
+     * 
+     * @param subtractFlagged True if the number of flagged adjacent buttons should
+     *                        be subtracted from the displayed number, false if not
+     */
     public void updateDisplayedNumber(boolean subtractFlagged) {
         if (!isRevealed || isMine || numAdjacent == 0) {
             return;
@@ -209,6 +231,12 @@ public class MinesweeperButton extends MinesweeperButtonBase {
         }
     }
 
+    /**
+     * Scales the input image to fit the button size and returns it as an ImageIcon
+     * 
+     * @param img the image to scale and convert to an ImageIcon
+     * @return the scaled ImageIcon, or null if the input image is null
+     */
     private ImageIcon scaledIcon(Image img) {
         if (img == null)
             return null;
