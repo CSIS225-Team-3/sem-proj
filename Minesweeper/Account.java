@@ -4,15 +4,18 @@ import java.io.Serializable;
 /**
  * Simple Account System for Leaderboards
  * 
- * @author Ahyaan Malik (so far)
+ * @author Ahyaan Malik
  * @version 4/19/2026
  */
 public class Account implements Serializable {
 
-    private final String USERNAME;
-    private final String PASSWORD_HASHED;
+    /** The username for the account */
+    private final String username;
 
-    // Needed according to API
+    /** The hashed password for the account */
+    private final String passwordHashed;
+
+    /** The serial version UID */
     private static final long serialVersionUID  = 1L;
     
     /**
@@ -22,8 +25,8 @@ public class Account implements Serializable {
      * @param passwordHashed the hashed password for secure storage
      */
     public Account(String username, String passwordHashed) {
-        this.USERNAME = username;
-        this.PASSWORD_HASHED = passwordHashed;
+        this.username = username;
+        this.passwordHashed = passwordHashed;
     }
 
     /**
@@ -32,7 +35,7 @@ public class Account implements Serializable {
      * @return the username
      */
     public String getUsername() {
-        return USERNAME;
+        return username;
     }
 
     /**
@@ -41,6 +44,6 @@ public class Account implements Serializable {
      * @return the passwordhash
      */
     public String getPasswordHash() {
-        return PASSWORD_HASHED;
+        return passwordHashed;
     }
 }
