@@ -13,13 +13,15 @@ import java.nio.charset.StandardCharsets;
  * Account Manager for all Accounts
  * Will use SHA-256 since it hasn't been broken yet
  * 
- * @author Ahyaan Malik (so far)
+ * @author Ahyaan Malik
  * @version 4/19/2026
  */
 public class AccountManager {
 
+    /** A HashMap to store all accounts */
     private HashMap<String, Account> accounts;
 
+    /** The file path for saving accounts */
     private static final String SAVE_FILE = "Minesweeper//accounts.dat";
 
     /**
