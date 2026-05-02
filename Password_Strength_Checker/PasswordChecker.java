@@ -163,7 +163,7 @@ public class PasswordChecker implements Runnable, ActionListener {
         centerPanel.add(passwordChecksWrapperPanel, BorderLayout.SOUTH);
 
         // Strength bar
-        strengthBar = new JProgressBar(SwingConstants.HORIZONTAL, 0, 30);
+        strengthBar = new JProgressBar(SwingConstants.HORIZONTAL, 0, 600);
         strengthBar.setUI(new javax.swing.plaf.basic.BasicProgressBarUI());
         strengthBar.setString("");
         strengthBar.setStringPainted(true);
@@ -330,7 +330,7 @@ public class PasswordChecker implements Runnable, ActionListener {
         double combinations = Math.pow(choices, password.length());
 
         // Scale down the massive number
-        strength = (int) Math.log(combinations) / 2 - 2;
+        strength = ((int) Math.log(combinations) / 2 - 2);
 
         // checking for sequence or common password
         if (isCommonPassword(password) || isSequential(password)) {
