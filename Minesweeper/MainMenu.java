@@ -10,8 +10,6 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.LayoutManager;
-import java.awt.Rectangle;
-import java.awt.TexturePaint;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -164,8 +162,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     private Account loggedInAccount;
 
     private JCheckBox showPassword;
-
-    private JOptionPane deleteConfirmation;
 
     /** The primary color for the UI */
     public static Color PRIMARY_COLOR = Color.WHITE;
@@ -349,16 +345,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
      */
     private JPanel buildCardsPanel() {
         BufferedImage background = null;
-        TexturePaint texturepaint = null;
         try {
             background = ImageIO.read(new File("Minesweeper/Background.jpg"));
-            texturepaint = new TexturePaint(background,
-                    new Rectangle(0, 0, background.getWidth(), background.getHeight()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         final BufferedImage bg = background;
-        final TexturePaint tp = texturepaint;
         cardLayout = new CardLayout();
         JPanel panel = new JPanel(cardLayout) {
             @Override
@@ -646,7 +638,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         randomMinesLabel.setForeground(TEXT_COLOR);
         mineConfigPanel.add(randomMinesLabel);
         randomMines = new JCheckBox();
-        //randomMines.setBackground(SECONDARY_COLOR);
+        // randomMines.setBackground(SECONDARY_COLOR);
         randomMines.setOpaque(false);
         randomMines.addActionListener(this);
         mineConfigPanel.add(randomMines);
@@ -691,12 +683,12 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
             JPanel each = new JPanel(new BorderLayout());
             each.setOpaque(false);
-            //each.setBackground(SECONDARY_COLOR);
+            // each.setBackground(SECONDARY_COLOR);
 
             infoLabels[i].setFont(infoLabels[i].getFont().deriveFont(10f));
             infoLabels[i].setOpaque(false);
             infoLabels[i].setForeground(TEXT_COLOR);
-            //infoLabels[i].setBackground(SECONDARY_COLOR);
+            // infoLabels[i].setBackground(SECONDARY_COLOR);
 
             each.add(btns[i], BorderLayout.CENTER);
             each.add(infoLabels[i], BorderLayout.SOUTH);
@@ -1264,8 +1256,8 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             } else {
                 mines = (int) minesSpinner.getValue();
                 if (mines > maxRandomMines) {
-                    //errorLabel.setText("Too many mines!");
-                    //return;
+                    // errorLabel.setText("Too many mines!");
+                    // return;
                 }
             }
 
@@ -1440,7 +1432,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             }
         };
         button.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        //button.setBorderPainted(false);
+        // button.setBorderPainted(false);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setForeground(TEXT_COLOR);

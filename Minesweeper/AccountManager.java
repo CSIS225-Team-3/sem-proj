@@ -56,10 +56,11 @@ public class AccountManager {
      *
      * @return a HashMap containing saved accounts or empty
      */
+    @SuppressWarnings("unchecked")
     private HashMap<String, Account> loadAccounts() {
 
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
-            // funny unchecked cast
+
             return (HashMap<String, Account>) in.readObject();
 
         } catch (Exception e) {

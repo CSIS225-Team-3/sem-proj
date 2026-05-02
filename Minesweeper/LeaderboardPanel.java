@@ -20,11 +20,22 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+/**
+ * A panel for displaying the leaderboard, allowing users to view the top scores
+ * for each mode and difficulty, and reset the leaderboard
+ * 
+ * @author Ahyaan Malik
+ * @version 4/30/2026
+ */
 public class LeaderboardPanel extends JPanel {
 
+    /** The list of valid modes */
     private static final String[] MODES = { "2D", "3D", "4D", "5D+", "Hyperbolic" };
+
+    /** The list of valid difficulties */
     private static final String[] DIFFICULTIES = { "Easy", "Medium", "Hard", "Extreme" };
 
+    /** The colors for the tabs and rank colors */
     private static final Color TAB_ACTIVE = new Color(65, 150, 255, 220);
     private static final Color TAB_INACTIVE = new Color(30, 100, 200, 120);
     private static final Color ROW_EVEN = MainMenu.SECONDARY_COLOR;
@@ -33,17 +44,38 @@ public class LeaderboardPanel extends JPanel {
     private static final Color RANK_SILVER = new Color(200, 200, 200);
     private static final Color RANK_BRONZE = new Color(200, 130, 60);
 
+    /** The card layout for the panel */
     private CardLayout cardLayout;
+
+    /** The panel for the cards */
     private JPanel cards;
+
+    /** The leaderboard manager */
     private LeaderboardManager leaderboardManager;
 
+    /** The buttons for selecting the mode */
     private JButton[] modeButtons;
+
+    /** The buttons for selecting the difficulty */
     private JButton[] diffButtons;
+
+    /** The currently selected mode */
     private int selectedMode = 0;
+
+    /** The currently selected difficulty */
     private int selectedDiff = 0;
 
+    /** The panel for displaying the leaderboard rows */
     private JPanel rowsPanel;
 
+    /**
+     * Constructs a new leaderboard panel with the given card layout, cards panel,
+     * and leaderboard manager
+     * 
+     * @param cardLayout         the card layout for the panel
+     * @param cards              the panel for the cards
+     * @param leaderboardManager the leaderboard manager
+     */
     public LeaderboardPanel(CardLayout cardLayout, JPanel cards, LeaderboardManager leaderboardManager) {
         this.cardLayout = cardLayout;
         this.cards = cards;
@@ -56,6 +88,12 @@ public class LeaderboardPanel extends JPanel {
         add(buildCenter(), BorderLayout.CENTER);
     }
 
+    /**
+     * Builds the top bar for the leaderboard panel, which contains the title and
+     * back button
+     * 
+     * @return the built top bar panel
+     */
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new BorderLayout());
         bar.setOpaque(false);
@@ -74,6 +112,11 @@ public class LeaderboardPanel extends JPanel {
         return bar;
     }
 
+    /**
+     * Builds the center panel for the leaderboard panel
+     * 
+     * @return the built center panel
+     */
     private JPanel buildCenter() {
         JPanel center = new JPanel(new BorderLayout(0, 0));
         center.setOpaque(false);
@@ -114,6 +157,16 @@ public class LeaderboardPanel extends JPanel {
         return center;
     }
 
+    /**
+     * Builds a row of tabs for selecting the mode or difficulty, with the given
+     * labels, buttons, and onSelect action
+     * 
+     * @param labels   the labels for the tabs
+     * @param buttons  the buttons for the tabs
+     * @param onSelect the action to perform when a tab is selected, with the index
+     *                 of the selected tab as input
+     * @return
+     */
     private JPanel buildTabRow(String[] labels, JButton[] buttons, IntConsumer onSelect) {
         JPanel row = new JPanel(new GridLayout(1, labels.length, 0, 0));
         row.setOpaque(false);
@@ -130,6 +183,11 @@ public class LeaderboardPanel extends JPanel {
         return row;
     }
 
+    /**
+     * Refreshes the rows in the leaderboard based on the currently selected mode
+     * and difficulty, by getting the relevant entries from the leaderboard manager
+     * and rebuilding the rows panel.
+     */
     private void refreshRows() {
         rowsPanel.removeAll();
 
@@ -154,6 +212,15 @@ public class LeaderboardPanel extends JPanel {
         rowsPanel.repaint();
     }
 
+    /**
+     * Builds a row for the given rank, entry, and whether the row should be even or
+     * odd colored
+     * 
+     * @param rank  the rank for this row
+     * @param entry the leaderboard entry for this row
+     * @param even  whether this row should be colored as an even row or odd row
+     * @return
+     */
     private JPanel buildRow(int rank, LeaderboardEntry entry, boolean even) {
         Color bg;
         if (even) {
@@ -203,6 +270,12 @@ public class LeaderboardPanel extends JPanel {
         return row;
     }
 
+    /**
+     * Gets the color for the given rank
+     * 
+     * @param rank the rank to get the color for
+     * @return the color for the given rank
+     */
     private Color rankColor(int rank) {
         if (rank == 1)
             return RANK_GOLD;
@@ -213,6 +286,13 @@ public class LeaderboardPanel extends JPanel {
         return new Color(180, 180, 180);
     }
 
+    /**
+     * Builds a styled tab button with the given text, which changes background
+     * color when active
+     * 
+     * @param text the text for the button
+     * @return the built button
+     */
     private JButton styledTabButton(String text) {
         JButton btn = new JButton(text) {
             @Override
@@ -232,6 +312,13 @@ public class LeaderboardPanel extends JPanel {
         return btn;
     }
 
+    /**
+     * Sets the active button in the given array of buttons to the given index, by
+     * changing the background color of the buttons
+     * 
+     * @param buttons   the array of buttons to set the active button in
+     * @param activeIdx the index of the active button
+     */
     private void setActive(JButton[] buttons, int activeIdx) {
         for (int i = 0; i < buttons.length; i++) {
             if (i == activeIdx) {
@@ -242,10 +329,20 @@ public class LeaderboardPanel extends JPanel {
         }
     }
 
+    /**
+     * Refreshes the rows in the leaderboard based on the currently selected mode
+     * and difficulty, by getting the relevant entries from the leaderboard manager
+     * and rebuilding the rows panel.
+     */
     public void refresh() {
         refreshRows();
     }
 
+    /**
+     * Gets the leaderboard manager for this panel
+     * 
+     * @return the leaderboard manager for this panel
+     */
     public LeaderboardManager getLeaderboardManager() {
         return leaderboardManager;
     }

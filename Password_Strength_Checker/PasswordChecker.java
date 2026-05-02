@@ -50,8 +50,7 @@ public class PasswordChecker implements Runnable, ActionListener {
     /** The current password strength */
     private int strength;
 
-    private int targetStrength;
-
+    /** Animator for the strength bar */
     private AnimatedBar currentAnimator;
 
     /**
@@ -70,7 +69,7 @@ public class PasswordChecker implements Runnable, ActionListener {
 
     private static final Color PRIMARY_COLOR = new Color(15, 30, 20);
     private static final Color SECONDARY_COLOR = new Color(30, 55, 35);
-    private static final Color TERTIARY_COLOR = new Color(20, 40, 25);
+    //private static final Color TERTIARY_COLOR = new Color(20, 40, 25);
 
     private static final Color TEXT_COLOR = new Color(200, 200, 200);
 

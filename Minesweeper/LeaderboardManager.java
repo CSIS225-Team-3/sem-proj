@@ -137,6 +137,7 @@ public class LeaderboardManager {
      * 
      * @return the loaded leaderboards, or an empty leaderboard if loading failed
      */
+    @SuppressWarnings("unchecked")
     private HashMap<String, List<LeaderboardEntry>> loadLeaderboards() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
             return (HashMap<String, List<LeaderboardEntry>>) in.readObject();
