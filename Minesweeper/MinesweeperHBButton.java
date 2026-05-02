@@ -12,7 +12,10 @@ import java.awt.Image;
  * @version 4/14/2026
  */
 public class MinesweeperHBButton extends MinesweeperButtonBase {
+    /** The game instance this button belongs to */
     MinesweeperHyperbolic game;
+
+    /** The tile this button represents */
     private Tile tile = null;
 
     /**
@@ -40,6 +43,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
 
     /**
      * Gets the tile this button is showing (or null if not representing a tile)
+     * 
      * @return the tile this button is showing
      */
     public Tile getTile() {
@@ -48,6 +52,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
 
     /**
      * Sets the tile for this button to show (or null if nothing to show)
+     * 
      * @param newTile The tile this button should show
      */
     public void setTile(Tile newTile) {
@@ -56,11 +61,15 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
         redraw();
     }
 
-    public void redraw(){
+    /**
+     * Redraws the button based on the current tile's properties, including revealed
+     * status, mine status, and number of adjacent mines
+     */
+    public void redraw() {
         // if (tile == null)
-        //     setText("Null");
+        // setText("Null");
         // else
-        //     setText(String.valueOf(tile.id));
+        // setText(String.valueOf(tile.id));
 
         setBackground(HIDDEN_COLOR);
         setForeground(Color.BLACK);
@@ -69,16 +78,15 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
 
         if (tile == null)
             return;
-        
+
         if (tile.getRevealed()) {
-            if (tile.getMine()){
+            if (tile.getMine()) {
                 setBackground(Color.RED);
                 setText(null);
                 setIcon(scaledIcon(MINE_ICON));
-            }
-            else{
+            } else {
                 setBackground(REVEALED_COLOR);
-                if (tile.getNumAdjacent() != 0){
+                if (tile.getNumAdjacent() != 0) {
                     setText(String.valueOf(tile.getNumAdjacent()));
                 }
             }
@@ -129,6 +137,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
 
     /**
      * Gets the flagged status
+     * 
      * @return the flagged status
      */
     public boolean getFlagged() {
@@ -137,6 +146,7 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
 
     /**
      * Gets if the button is a mine or not
+     * 
      * @return True if mine, false if not
      */
     public boolean getMine() {
@@ -145,12 +155,18 @@ public class MinesweeperHBButton extends MinesweeperButtonBase {
 
     /**
      * Gets if the button has been revealed or not
+     * 
      * @return boolean on if the button has been revealed or not
      */
     public boolean getRevealed() {
         return tile.getRevealed();
     }
 
+    /**
+     * Gets the image icon for the mine, scaled to fit the button size
+     * @param img the image to scale and convert to an ImageIcon
+     * @return The image as an icon
+     */
     private ImageIcon scaledIcon(Image img) {
         if (img == null)
             return null;
