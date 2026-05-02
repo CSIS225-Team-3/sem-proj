@@ -4,33 +4,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
-public class HyperbolicGraphGen
-{
-    static Tile[] gen()
-    {
+
+/**
+ * Generates the graph structure for the hyperbolic board.
+ * 
+ * @author Patrick Kosmider
+ * @version 5/1/2026
+ */
+public class HyperbolicGraphGen {
+    /**
+     * Generates the graph structure for the hyperbolic board.
+     * 
+     * @return the list of tiles for the hyperbolic board
+     */
+    static Tile[] gen() {
         ArrayList<Tile> tiles = new ArrayList<>();
 
         var v0 = new Vert();
         var v1 = new Vert();
-        
-        ExtrudeReturn e1 = extrude3L(v0, v1); //First tile
+
+        ExtrudeReturn e1 = extrude3L(v0, v1); // First tile
         var v2 = e1.l;
         var v3 = e1.r;
         Tile tile0 = new Tile(new Vert[] { v0, v1, v2, v3 });
         tiles.add(tile0);
-        v0.addNeighbor(v1, tile0, Direction.Down); //Bottom edge
-        v0.markBuilder(v2, tile0, Direction.Left); //Left edge
-        v1.markBuilder(v3, tile0, Direction.Right); //Right edge
-        
-        ExtrudeReturn e2 = extrude3L(v2, v3); //2nd tile
+        v0.addNeighbor(v1, tile0, Direction.Down); // Bottom edge
+        v0.markBuilder(v2, tile0, Direction.Left); // Left edge
+        v1.markBuilder(v3, tile0, Direction.Right); // Right edge
+
+        ExtrudeReturn e2 = extrude3L(v2, v3); // 2nd tile
         var v4 = e2.l;
         var v5 = e2.r;
         Tile tile1 = new Tile(new Vert[] { v2, v3, v4, v5 });
         tiles.add(tile1);
         tile0.addNeighbor(tile1, Direction.Up, Direction.Down);
-        v4.markBuilder(v5, tile1, Direction.Up); //Top edge
-        v3.markBuilder(v5, tile1, Direction.Right); //Right edge
-
+        v4.markBuilder(v5, tile1, Direction.Up); // Top edge
+        v3.markBuilder(v5, tile1, Direction.Right); // Right edge
 
         var l = v2;
         var r = v4;
@@ -53,13 +62,13 @@ public class HyperbolicGraphGen
 
     /**
      * A simplified version of extrude which is used for the initial setup
+     * 
      * @param parentL The left vertex
      * @param parentR The right vertex
      * @return The new vertices
      */
-    private static ExtrudeReturn extrude3L(Vert parentL, Vert parentR)
-    {
-        //Full extrusion
+    private static ExtrudeReturn extrude3L(Vert parentL, Vert parentR) {
+        // Full extrusion
         var nL = new Vert();
         var nR = new Vert();
         parentL.addNeighbor(nL, null, null);
@@ -68,11 +77,20 @@ public class HyperbolicGraphGen
         return new ExtrudeReturn(nL, nR, null, null);
     }
 
-    static ExtrudeReturn extrude(Vert parentL, Vert parentR, Tile parentTile, Direction nextDir)
-    {
-        if (parentL.neighbors.size() == 3 || parentL.neighbors.size() == 4)
-        {
-            //Full extrusion
+    /**
+     * Extrudes a new tile from the given parent tile and vertices in the given
+     * direction, modifying the graph structure accordingly. Returns the new
+     * vertices, tile, and next direction to extrude in.
+     * 
+     * @param parentL The left vertex
+     * @param parentR The right vertex
+     * @param parentTile The parent tile
+     * @param nextDir The direction to extrude in
+     * @return The new vertices, tile, and next direction to extrude in
+     */
+    static ExtrudeReturn extrude(Vert parentL, Vert parentR, Tile parentTile, Direction nextDir) {
+        if (parentL.neighbors.size() == 3 || parentL.neighbors.size() == 4) {
+            // Full extrusion
             var nL = new Vert();
             var nR = new Vert();
 
@@ -83,14 +101,12 @@ public class HyperbolicGraphGen
             parentR.addNeighbor(nR, newTile, Direction.Right);
             nL.addNeighbor(nR, newTile, Direction.Up);
             return new ExtrudeReturn(parentL, nL, newTile, Direction.Left);
-        }
-        else if (parentL.neighbors.size() == 5)
-        {
-            //Merging extrusion
-            //CCW
+        } else if (parentL.neighbors.size() == 5) {
+            // Merging extrusion
+            // CCW
             var nL = parentL.builderCons.entrySet().iterator().next();
             var nR = new Vert();
-            
+
             Tile newTile = new Tile(new Vert[] { parentL, parentR, nL.getKey(), nR });
             parentTile.addNeighbor(newTile, nextDir, Direction.Down);
 
@@ -98,21 +114,21 @@ public class HyperbolicGraphGen
             parentR.addNeighbor(nR, newTile, Direction.Right);
             nL.getKey().addNeighbor(nR, null, null);
             return new ExtrudeReturn(nL.getKey(), nR, newTile, Direction.Up);
-        }
-        else
+        } else
             throw new IllegalStateException("Uh oh");
     }
 }
 
-class ExtrudeReturn
-{
+/**
+ * A helper class for extrude that contains the return values
+ */
+class ExtrudeReturn {
     public Vert l;
     public Vert r;
     public Tile newTile;
     public Direction nextDir;
 
-    public ExtrudeReturn(Vert l, Vert r, Tile newTile, Direction nextDir)
-    {
+    public ExtrudeReturn(Vert l, Vert r, Tile newTile, Direction nextDir) {
         this.l = l;
         this.r = r;
         this.newTile = newTile;
@@ -120,13 +136,15 @@ class ExtrudeReturn
     }
 }
 
-class Vert
-{
+/**
+ * A vertex in the hyperbolic graph. Contains a list of neighboring vertices and the
+ */
+class Vert {
     static int instances = 0;
     int id = instances++;
 
     public ArrayList<Vert> neighbors = new ArrayList<>();
-    //Vert => Tile
+    // Vert => Tile
     public HashMap<Vert, BuilderData> builderCons = null;
 
     /** Tiles this vertex is part of */
@@ -134,30 +152,31 @@ class Vert
 
     /**
      * Add a neighbor to this vertex
+     * 
      * @param neighbor The neighboring vertex
-     * @param tile If supplied, the edge between this vertex and the neighbor will be marked as a builder edge associated with this tile
-     * @param dir Which side of the tile this edge is on
+     * @param tile     If supplied, the edge between this vertex and the neighbor
+     *                 will be marked as a builder edge associated with this tile
+     * @param dir      Which side of the tile this edge is on
      */
-    public void addNeighbor(Vert neighbor, Tile tile, Direction dir)
-    {
+    public void addNeighbor(Vert neighbor, Tile tile, Direction dir) {
         if (neighbors.contains(neighbor) || neighbor.neighbors.contains(this))
             throw new IllegalStateException("Already a neighbor");
 
         neighbors.add(neighbor);
         neighbor.neighbors.add(this);
-        
+
         if (tile != null)
             markBuilder(neighbor, tile, dir);
     }
 
     /**
      * Marks an edge with a neighbor as a builder
+     * 
      * @param neighbor The neighboring vertex
-     * @param tile The tile associated with this builder edge
-     * @param dir Which side of the tile this edge is on
+     * @param tile     The tile associated with this builder edge
+     * @param dir      Which side of the tile this edge is on
      */
-    public void markBuilder(Vert neighbor, Tile tile, Direction dir)
-    {
+    public void markBuilder(Vert neighbor, Tile tile, Direction dir) {
         if (!neighbors.contains(neighbor))
             throw new IllegalStateException("Not a neighbor");
 
@@ -165,20 +184,23 @@ class Vert
         data.tile = tile;
         data.dir = dir;
 
-        if (builderCons == null) builderCons = new HashMap<>();
+        if (builderCons == null)
+            builderCons = new HashMap<>();
         builderCons.put(neighbor, data);
 
-        if (neighbor.builderCons == null) neighbor.builderCons = new HashMap<>();
+        if (neighbor.builderCons == null)
+            neighbor.builderCons = new HashMap<>();
         neighbor.builderCons.put(this, data);
     }
 
     /**
      * Unmarks an edge with a neighbor as a builder
+     * 
      * @param neighbor The neighboring vertex
-     * @param newTile The new tile that should be associated with the edge's other tile
+     * @param newTile  The new tile that should be associated with the edge's other
+     *                 tile
      */
-    public void unmarkBuilder(Vert neighbor, Tile newTile)
-    {
+    public void unmarkBuilder(Vert neighbor, Tile newTile) {
         if (!neighbors.contains(neighbor))
             throw new IllegalStateException("Not a neighbor");
 
@@ -188,7 +210,7 @@ class Vert
         BuilderData data = builderCons.remove(neighbor);
         neighbor.builderCons.remove(this);
 
-        //The old tile should always be left of the new one since we're going CCW
+        // The old tile should always be left of the new one since we're going CCW
         data.tile.addNeighbor(newTile, data.dir, Direction.Left);
 
         if (builderCons.size() == 0)
@@ -197,8 +219,7 @@ class Vert
             neighbor.builderCons = null;
     }
 
-    public void addTile(Tile tile)
-    {
+    public void addTile(Tile tile) {
         tiles.add(tile);
     }
 
@@ -208,8 +229,7 @@ class Vert
     }
 }
 
-class Tile
-{
+class Tile {
     static int instances = 0;
     int id = instances++;
 
@@ -223,7 +243,7 @@ class Tile
 
     public Vert[] vertices;
 
-    //minesweeper stuff
+    // minesweeper stuff
     private boolean isRevealed = false;
 
     /** The number of adjacent mines */
@@ -232,7 +252,7 @@ class Tile
     private boolean isMine = false;
     private boolean isFlagged = false;
 
-    public Tile(Vert[] vertices){
+    public Tile(Vert[] vertices) {
         this.vertices = vertices;
         for (Vert v : vertices)
             v.addTile(this);
@@ -240,12 +260,13 @@ class Tile
 
     /**
      * Adds a neighbor to this tile
-     * @param neighbor The neighbor to add
-     * @param selfDir Which (relative) side of this tile that neighbor is on
-     * @param neighborsDir Which (relative) side of the neighbor that this tile is on
+     * 
+     * @param neighbor     The neighbor to add
+     * @param selfDir      Which (relative) side of this tile that neighbor is on
+     * @param neighborsDir Which (relative) side of the neighbor that this tile is
+     *                     on
      */
-    public void addNeighbor(Tile neighbor, Direction selfDir, Direction neighborsDir)
-    {
+    public void addNeighbor(Tile neighbor, Direction selfDir, Direction neighborsDir) {
         if (neighbors.contains(neighbor) || neighbor.neighbors.contains(this))
             throw new IllegalStateException("Already a neighbor");
 
@@ -256,27 +277,31 @@ class Tile
         neighbor.setRelSide(this, neighborsDir);
     }
 
-    private void setRelSide(Tile neighbor, Direction dir)
-    {
-        if (dir == Direction.Up){
+    /**
+     * Sets the given neighbor as the given side of this tile, overwriting any existing
+     * @param neighbor The neighbor to set
+     * @param dir The side to set the neighbor on
+     */
+    private void setRelSide(Tile neighbor, Direction dir) {
+        if (dir == Direction.Up) {
             if (relUp != null)
                 throw new IllegalStateException("Already have an up neighbor");
             relUp = neighbor;
             return;
         }
-        if (dir == Direction.Down){
+        if (dir == Direction.Down) {
             if (relDown != null)
                 throw new IllegalStateException("Already have a down neighbor");
             relDown = neighbor;
             return;
         }
-        if (dir == Direction.Left){
+        if (dir == Direction.Left) {
             if (relLeft != null)
                 throw new IllegalStateException("Already have a left neighbor");
             relLeft = neighbor;
             return;
         }
-        if (dir == Direction.Right){
+        if (dir == Direction.Right) {
             if (relRight != null)
                 throw new IllegalStateException("Already have a right neighbor");
             relRight = neighbor;
@@ -287,10 +312,11 @@ class Tile
 
     /**
      * Returns the neighbor of this tile in the given direction
+     * 
      * @param dir The direction
      * @return The neighbor
      */
-    public Tile getRelSide(Direction dir){
+    public Tile getRelSide(Direction dir) {
         switch (dir) {
             case Up:
                 return relUp;
@@ -307,10 +333,11 @@ class Tile
 
     /**
      * Returns the side of this tile that neighbor is on
+     * 
      * @param neighbor The neighbor
      * @return The side
      */
-    public Direction getSideOfNeighbor(Tile neighbor){
+    public Direction getSideOfNeighbor(Tile neighbor) {
         if (relUp == neighbor)
             return Direction.Up;
         if (relDown == neighbor)
@@ -321,25 +348,27 @@ class Tile
             return Direction.Right;
         throw new IllegalStateException("Not a neighbor");
     }
-    
+
     /**
      * Gets the list of tiles adjacent to this one
+     * 
      * @return the list of tiles adjacent to this one
      */
     public ArrayList<Tile> getVertNeighbors() {
         HashSet<Tile> adjs = new HashSet<>();
         for (Vert v : this.vertices)
             adjs.addAll(v.tiles);
-        
+
         return adjs.stream().collect(Collectors.toCollection(ArrayList<Tile>::new));
     }
-    
-    //--------------------------------------
-    //Minesweeper related
-    //--------------------------------------
+
+    // --------------------------------------
+    // Minesweeper related
+    // --------------------------------------
 
     /**
      * Gets the number of adjacent mines
+     * 
      * @return the number of adjacent mines
      */
     public int getNumAdjacent() {
@@ -348,6 +377,7 @@ class Tile
 
     /**
      * Reveal the tile
+     * 
      * @return True if the tile is a mine
      */
     public boolean reveal() {
@@ -381,6 +411,7 @@ class Tile
 
     /**
      * Gets the flagged status
+     * 
      * @return the flagged status
      */
     public boolean getFlagged() {
@@ -401,6 +432,7 @@ class Tile
 
     /**
      * Gets if the button is a mine or not
+     * 
      * @return True if mine, false if not
      */
     public boolean getMine() {
@@ -409,6 +441,7 @@ class Tile
 
     /**
      * Gets if the tile has been revealed or not
+     * 
      * @return boolean on if the tile has been revealed or not
      */
     public boolean getRevealed() {
@@ -420,11 +453,13 @@ enum Direction {
     Up, Down, Left, Right;
 
     /**
-     * Returns this direction relative to a given direction (up serving as the default basis)
+     * Returns this direction relative to a given direction (up serving as the
+     * default basis)
+     * 
      * @param dir The direction to orient relative to
      * @return The relative direction
      */
-    public Direction reorient(Direction dir){
+    public Direction reorient(Direction dir) {
         switch (dir) {
             case Up:
                 return this;
