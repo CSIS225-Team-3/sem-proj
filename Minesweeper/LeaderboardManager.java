@@ -9,29 +9,56 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Manages the leaderboard for the Minesweeper game.
+ * 
+ * @author Ahyaan Malik
+ * @version 4/30/2026
+ */
 public class LeaderboardManager {
-
+    /** The file path for saving the leaderboard data */
     private static final String SAVE_FILE = "Minesweeper//leaderboard.dat";
+
+    /** The maximum number of entries to keep in each leaderboard */
     private static final int MAX_ENTRIES = 10;
 
+    /** The list of valid difficulties */
     public static final String[] DIFFICULTIES = { "Easy", "Medium", "Hard", "Extreme" };
+
+    /** The list of valid modes */
     public static final String[] MODES = {
             "2D Minesweeper", "3D Minesweeper", "4D Minesweeper",
             "5D+ Minesweeper", "Hyperbolic Minesweeper"
     };
 
-    /* key: Mode|Difficulty, value: sorted list of entries */
+    /** key: Mode|Difficulty, value: sorted list of entries */
     private HashMap<String, List<LeaderboardEntry>> leaderboards;
 
+    /** Constructs a new leaderboard manager */
     public LeaderboardManager() {
         leaderboards = loadLeaderboards();
     }
 
+    /**
+     * Resets the leaderboard by clearing all entries and saving the empty
+     * leaderboards
+     */
     public void resetLeaderboard() {
         leaderboards.clear();
         saveLeaderboards();
     }
 
+    /**
+     * Adds an entry to the leaderboard for the given mode and difficulty if it
+     * qualifies, and saves the updated leaderboards. Returns true if the entry made
+     * the leaderboard, false otherwise.
+     * 
+     * @param mode       The mode
+     * @param difficulty The difficulty
+     * @param username   The username for the entry
+     * @param seconds    The time in seconds for the entry
+     * @return true if the entry made the leaderboard, false otherwise
+     */
     public boolean addEntry(String mode, String difficulty, String username, int seconds) {
         if (mode == null || difficulty == null || username == null) {
             return false;
@@ -88,6 +115,15 @@ public class LeaderboardManager {
         return madeBoard;
     }
 
+    /**
+     * Gets the list of leaderboard entries for the given mode and difficulty,
+     * sorted
+     * 
+     * @param mode       The mode
+     * @param difficulty The difficulty
+     * @return the list of leaderboard entries for the given mode and difficulty,
+     *         sorted
+     */
     public List<LeaderboardEntry> getEntries(String mode, String difficulty) {
         List<LeaderboardEntry> list = leaderboards.get(mode + "|" + difficulty);
         if (list == null) {
@@ -96,6 +132,11 @@ public class LeaderboardManager {
         return list;
     }
 
+    /**
+     * Loads the leaderboards from the save file, or returns an empty leaderboard if
+     * 
+     * @return the loaded leaderboards, or an empty leaderboard if loading failed
+     */
     private HashMap<String, List<LeaderboardEntry>> loadLeaderboards() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
             return (HashMap<String, List<LeaderboardEntry>>) in.readObject();
@@ -104,6 +145,9 @@ public class LeaderboardManager {
         }
     }
 
+    /**
+     * Saves the leaderboards to the save file
+     */
     private void saveLeaderboards() {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
             out.writeObject(leaderboards);
