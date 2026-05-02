@@ -28,11 +28,7 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
     /** The buttons for the game board */
     private MinesweeperHBButton b_c, b_u, b_ul, b_lu, b_l, b_ld, b_dl, b_d, b_dr, b_rd, b_r, b_ru, b_ur;
 
-<<<<<<< Updated upstream
     /** The array of all tiles in the game */
-=======
-    /** */ */
->>>>>>> Stashed changes
     private Tile[] allTiles;
 
     /** A mapping of currently visible tiles to their corresponding buttons */
