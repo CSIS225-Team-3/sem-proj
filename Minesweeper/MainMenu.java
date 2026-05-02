@@ -43,7 +43,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Main Game to show the options for type of modes.
  * 
- * @author Ahyaan Malik (so far)
+ * @author Ahyaan Malik
  * @version 4/14/2026
  */
 public class MainMenu extends JPanel implements ActionListener, ChangeListener, Runnable {
@@ -69,12 +69,16 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The name of the leaderboard card */
     private static final String LEADERBOARD_CARD = "Leaderboard";
 
+    /** The button for accessing the leaderboard */
     private JButton leaderboardButton;
 
+    /** The panel for displaying the leaderboard */
     private LeaderboardPanel leaderboardPanel;
 
+    /** The button for resetting the leaderboard */
     private JButton resetLeaderboardButton;
 
+    /** The selected difficulty level */
     private String selectedDifficulty;
 
     /** The CardLayout for managing panels */
@@ -95,13 +99,22 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The spinner for configuring the number of columns */
     private JSpinner colsSpinner;
 
+    /** The label for the rows spinner */
+    private JLabel rowsLabel;
+
+    /** The label for the columns spinner */
+    private JLabel colsLabel;
+
     /** The spinner for configuring the number of mines */
     private JSpinner minesSpinner;
 
+    /** The model for the mines spinner */
     private SpinnerNumberModel minesModel;
 
+    /** The size of each button */
     private int buttonSize = 40;
 
+    /** The checkbox for randomizing mine placement */
     private JCheckBox randomMines;
 
     /** The label for displaying error messages */
@@ -542,7 +555,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         fourDimension = styledButton("4D Minesweeper");
         fiveDimension = styledButton("5D+ Minesweeper");
         hyperbolic = styledButton("Hyperbolic Minesweeper");
-        hyperbolic.setVisible(false);
+        // hyperbolic.setVisible(false);
 
         JButton[] dimensions = { twoDimension, threeDimension, fourDimension, fiveDimension, hyperbolic };
         for (JButton b : dimensions) {
@@ -562,7 +575,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         settingsPanel.setBorder(settingsBorder);
         settingsPanel.setBackground(SECONDARY_COLOR);
 
-        JLabel rowsLabel = new JLabel("Rows: ");
+        rowsLabel = new JLabel("Rows: ");
         rowsLabel.setForeground(TEXT_COLOR);
         settingsPanel.add(rowsLabel);
         rowsSpinner = new JSpinner(new SpinnerNumberModel(6, 2, MAX_ROWS, 1));
@@ -570,7 +583,7 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         rowsSpinner.addChangeListener(this);
         settingsPanel.add(rowsSpinner);
 
-        JLabel colsLabel = new JLabel("Columns: ");
+        colsLabel = new JLabel("Columns: ");
         colsLabel.setForeground(TEXT_COLOR);
         settingsPanel.add(colsLabel);
         colsSpinner = new JSpinner(new SpinnerNumberModel(9, 2, MAX_COLS, 1));
@@ -822,7 +835,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             loggedInAccount = account;
             if (account.getUsername().equals("admin")) {
                 resetLeaderboardButton.setVisible(true);
-                hyperbolic.setVisible(true);
             }
             loginStatus.setForeground(Color.GREEN.darker());
             loginStatus.setText("Welcome, " + account.getUsername() + "!");
@@ -861,7 +873,6 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
         passwordField.setEnabled(true);
         showPassword.setEnabled(true);
         resetLeaderboardButton.setVisible(false);
-        hyperbolic.setVisible(false);
 
         usernameField.setBackground(Color.WHITE);
         passwordField.setBackground(Color.WHITE);
@@ -942,6 +953,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             fiveDimension.setEnabled(true);
             hyperbolic.setEnabled(true);
 
+            rowsSpinner.setVisible(true);
+            rowsLabel.setVisible(true);
+            colsSpinner.setVisible(true);
+            colsLabel.setVisible(true);
+
             splices3dLabel.setVisible(false);
             splices3dSpinner.setVisible(false);
 
@@ -971,6 +987,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             fourDimension.setEnabled(true);
             fiveDimension.setEnabled(true);
             hyperbolic.setEnabled(true);
+
+            rowsSpinner.setVisible(true);
+            rowsLabel.setVisible(true);
+            colsSpinner.setVisible(true);
+            colsLabel.setVisible(true);
 
             splices3dLabel.setVisible(true);
             splices3dSpinner.setVisible(true);
@@ -1002,6 +1023,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             fiveDimension.setEnabled(true);
             hyperbolic.setEnabled(true);
 
+            rowsSpinner.setVisible(true);
+            rowsLabel.setVisible(true);
+            colsSpinner.setVisible(true);
+            colsLabel.setVisible(true);
+
             splices3dLabel.setVisible(true);
             splices3dSpinner.setVisible(true);
 
@@ -1031,6 +1057,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             fiveDimension.setEnabled(false);
             hyperbolic.setEnabled(true);
 
+            rowsSpinner.setVisible(true);
+            rowsLabel.setVisible(true);
+            colsSpinner.setVisible(true);
+            colsLabel.setVisible(true);
+
             splices3dLabel.setVisible(true);
             splices3dSpinner.setVisible(true);
 
@@ -1059,6 +1090,11 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             fiveDimension.setEnabled(true);
             hyperbolic.setEnabled(false);
 
+            rowsSpinner.setVisible(false);
+            rowsLabel.setVisible(false);
+            colsSpinner.setVisible(false);
+            colsLabel.setVisible(false);
+
             splices3dLabel.setVisible(false);
             splices3dSpinner.setVisible(false);
 
@@ -1071,11 +1107,10 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
             dimensionsLabel.setVisible(false);
             dimensionsSpinner.setVisible(false);
 
-            // TODO: Finish
-            difficultyInfoLabels[0].setText("Size 10, 20 mines");
-            difficultyInfoLabels[1].setText("Size -1, 225 mines");
-            difficultyInfoLabels[2].setText("Size 58, 1000 mines");
-            difficultyInfoLabels[3].setText("Size -1, 4125 mines");
+            difficultyInfoLabels[0].setText("5 mines");
+            difficultyInfoLabels[1].setText("8 mines");
+            difficultyInfoLabels[2].setText("10 mines");
+            difficultyInfoLabels[3].setText("12 mines");
 
             minesSpinner.setValue(20);
         } else {
@@ -1227,8 +1262,16 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
                 }
                 break;
             case HYPERBOLIC:
+                if (src == easyBtn) {
+                    minesSpinner.setValue(5);
+                } else if (src == mediumBtn) {
+                    minesSpinner.setValue(8);
+                } else if (src == hardBtn) {
+                    minesSpinner.setValue(10);
+                } else if (src == extremeBtn) {
+                    minesSpinner.setValue(12);
+                }
                 break;
-            // TODO: Difficulties
             default:
                 return;
         }
@@ -1249,20 +1292,23 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
 
         // hyperbolic
         if (dimensionsSelected == -2) {
-            int size = 13;
             int mines;
             if (randomMines.isSelected()) {
-                mines = new Random().nextInt(maxRandomMines) / 3 + 1;
+                mines = new Random().nextInt(12) + 1;
             } else {
                 mines = (int) minesSpinner.getValue();
-                if (mines > maxRandomMines) {
-                    // errorLabel.setText("Too many mines!");
-                    // return;
-                }
             }
 
-            MinesweeperHyperbolic hypGame = new MinesweeperHyperbolic(size, mines, buttonSize, cardLayout, cards);
-            hypGame.setLeaderboardInfo(leaderboardPanel.getLeaderboardManager(), loggedInAccount, null, HYPERBOLIC);
+            String difficulty;
+            if (randomMines.isSelected()) {
+                difficulty = null;
+            } else {
+                difficulty = selectedDifficulty;
+            }
+
+            MinesweeperHyperbolic hypGame = new MinesweeperHyperbolic(mines, buttonSize, cardLayout, cards);
+            hypGame.setLeaderboardInfo(leaderboardPanel.getLeaderboardManager(), loggedInAccount, difficulty,
+                    HYPERBOLIC);
             cards.add(hypGame, HYPERBOLIC);
             cardLayout.show(cards, HYPERBOLIC);
             return;

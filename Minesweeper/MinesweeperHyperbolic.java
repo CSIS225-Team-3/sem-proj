@@ -60,10 +60,11 @@ public class MinesweeperHyperbolic extends MinesweeperBase implements ActionList
      * the given parameters.
      * 
      * @param mines      the number of mines for the game
+     * @param buttonSize the size of each button in pixels
      * @param cardLayout the CardLayout for managing panels
      * @param cards      the JPanel that holds the cards
      */
-    public MinesweeperHyperbolic(int size, int mines, int buttonSize, CardLayout cardLayout, JPanel cards) {
+    public MinesweeperHyperbolic(int mines, int buttonSize, CardLayout cardLayout, JPanel cards) {
         super();
 
         this.mineCount = mines;
