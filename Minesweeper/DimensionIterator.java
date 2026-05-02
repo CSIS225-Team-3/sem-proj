@@ -45,11 +45,19 @@ public class DimensionIterator<D> implements Iterator<D> {
     }
 
     @Override
+    /**
+     * Checks if there is another element in the iteration
+     * @return true if there is another element, false otherwise
+     */
     public boolean hasNext() {
         return indices[indices.length - 1] < ends[ends.length - 1];
     }
 
     @Override
+    /**
+     * Gets the next element in the iteration
+     * @return the next element in the iteration
+     */
     public D next() {
         D current = null;
 
