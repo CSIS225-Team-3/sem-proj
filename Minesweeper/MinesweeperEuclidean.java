@@ -18,7 +18,7 @@ import javax.swing.border.TitledBorder;
 import java.util.ArrayList;
 
 /**
- * A 2D game of minesweeper
+ * A multi-dimensional game of minesweeper
  *
  * @author Ahyaan Malik & Patrick Kosmider
  * @version 4/14/2026
@@ -27,12 +27,16 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     /** The array of buttons for the game */
     private MinesweeperButton[] buttons;
 
+    /** The number of mines in the game */
     private int mineCount;
 
+    /** The number of seconds elapsed in the game */
     private boolean firstClick = true;
 
+    /** Whether the numbers should subtract the count of flagged adjacent buttons */
     private boolean subtractFlagged = false;
 
+    /** The checkbox for toggling the subtract flagged feature */
     private JCheckBox subtractBox;
 
     /** The label for the top of the window */
@@ -44,37 +48,49 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     /** The button to reset the game */
     private JButton reset;
 
+    /** The button to enable autoplay mode */
     private JButton autoplay;
 
-    /**
-     * If the autoplay feature has ever been toggled on, used to validate
-     * leaderboards
-     */
+    /** Whether autoplay mode is active */
     private boolean autoplayActive;
 
+    /** The panel containing the autoplay controls */
     private JPanel autoplayPanel;
 
+    /** The button to start autoplay */
     private JButton autoplayStart;
 
+    /** The button to pause autoplay */
     private JButton autoplayPause;
 
+    /** The slider to control autoplay speed */
     private JSlider autoplaySpeedSlider;
 
+    /** The timer for autoplay mode */
     private Timer autoplayTimer;
 
     /** The dimensions of the game */
     private int[] dims;
 
+    /** The size of the grid for the game (amount of buttons) */
     private int buttonSize;
 
+    /** The array of panels for each splice of the game board (for 3D+ games) */
     private JPanel[] splices;
 
+    /** The main panel for the game board */
     private JPanel gamePanel;
 
+    /** The scroll pane that holds the game panel */
     private JScrollPane scrollPane;
 
+    /** The number of splices in the game board (for 3D+ games) */
     private int numSplices;
+
+    /** The number of columns in the outer grid (for 3D+ games) */
     private int outerCols;
+
+    /** The number of rows in the outer grid (for 3D+ games) */
     private int outerRows;
 
     /** The size of the grid for the game (amount of buttons) */
@@ -86,15 +102,16 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
     /** The JPanel that holds the cards */
     private JPanel cards;
 
+    /** The background image for the game */
     private BufferedImage bgImage;
 
     /**
      * Constructor for the MinesweeperEuclidean class that initializes the game with
      * the given parameters.
      * 
-     * @param rows       the number of rows for the game
-     * @param cols       the number of columns for the game
-     * @param mines      the number of mines for the game
+     * @param dims       the dimensions of the game board
+     * @param mines      the number of mines to place on the board
+     * @param buttonSize the size of each button in pixels
      * @param cardLayout the CardLayout for managing panels
      * @param cards      the JPanel that holds the cards
      */
@@ -399,6 +416,12 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
     }
 
+    /**
+     * Determines if the current game is eligible for the leaderboard
+     * 
+     * @return true if the game is eligible to be added to the leaderboard, false
+     *         otherwise
+     */
     protected boolean isEligibleForLeaderboard() {
         if (leaderboardAccount != null && leaderboardAccount.getUsername().equals("admin")) {
             return true;
@@ -406,11 +429,17 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         return !autoplayActive;
     }
 
+    /**
+     * Adds the autoplay controls to the GUI and enables autoplay mode
+     */
     private void addAutoplay() {
         autoplayPanel.setVisible(true);
         autoplay.setEnabled(false);
     }
 
+    /**
+     * Starts the autoplaying
+     */
     private void startAutoplay() {
         autoplayStart.setEnabled(false);
         autoplayPause.setEnabled(true);
@@ -423,10 +452,19 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         autoplayTimer.start();
     }
 
+    /**
+     * Translates speed value to delay value for timer
+     * 
+     * @param speed the speed value from the slider
+     * @return the corresponding delay value for the timer in milliseconds
+     */
     private int speedToDelay(int speed) {
         return 500 - (speed - 1) * (490 / 9);
     }
 
+    /**
+     * Stops the autoplaying
+     */
     private void stopAutoplay() {
         autoplayStart.setEnabled(true);
         autoplayPause.setEnabled(false);
@@ -436,6 +474,11 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
     }
 
+    /**
+     * Updates button sizing based on new size
+     * 
+     * @param newSize the new size for the buttons in pixels
+     */
     private void updateButtonSize(int newSize) {
         this.buttonSize = newSize;
 
@@ -460,6 +503,11 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         repaint();
     }
 
+    /**
+     * Places the mines
+     * 
+     * @param clickIdx the index of the first clicked button
+     */
     private void placeMines(int clickIdx) {
         int[] clickPos = idxToPos(clickIdx);
 
@@ -541,6 +589,9 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         firstClick = true;
     }
 
+    /**
+     * Checks if the game has been won yet
+     */
     private void checkWin() {
         DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
             return new int[] { 0, length };
@@ -556,6 +607,9 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         onWin();
     }
 
+    /**
+     * Reveals all the mines on the board (called on loss)
+     */
     @Override
     protected void revealMines() {
         DimensionIterator<MinesweeperButton> iter = new DimensionIterator<>(buttons, dims, (axis, length, context) -> {
@@ -606,6 +660,9 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         return adjs.toArray(new MinesweeperButton[0]);
     }
 
+    /**
+     * Highlights the neighbors of a button when hovered over
+     */
     private void highlightNeighbors(MinesweeperButton button) {
         MinesweeperButton[] adj = getAdjacentButtons(button.getIdx());
 
@@ -616,12 +673,19 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
     }
 
+    /**
+     * Clears the highlights from the neighbors of a button when the mouse exits
+     */
     private void clearHighlights() {
         for (MinesweeperButton b : buttons) {
             b.setBorder(UIManager.getBorder("Button.border"));
         }
     }
 
+    /**
+     * Handles the actions to take when the game is won, including stopping timers
+     * and autoplay, and showing the win screen
+     */
     @Override
     public void onWin() {
         if (autoplayTimer != null) {
@@ -631,6 +695,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         super.onWin();
     }
 
+    /**
+     * Handles the actions to take when the game is lost, including stopping timers
+     * and autoplay, revealing mines, and showing the loss screen
+     */
     @Override
     public void onLoss() {
         if (autoplayTimer != null) {
@@ -640,6 +708,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         super.onLoss();
     }
 
+    /**
+     * Does a step in autoplaying, checking for safe moves to make based on revealed
+     * information, and if not, making a "random" move
+     */
     private void autoplayStep() {
         if (firstClick) {
             doAutoClick((int) (Math.random() * gridVolume));
@@ -727,6 +799,13 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
     }
 
+    /**
+     * Handles the actions to take when autoplay clicks a button, including starting
+     * the timer and placing mines if it's the first click, revealing the button,
+     * updating the title text and numbers
+     * 
+     * @param idx the index of the button to click
+     */
     private void doAutoClick(int idx) {
         if (firstClick) {
             firstClick = false;
@@ -743,6 +822,14 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         checkWin();
     }
 
+    /**
+     * Converts a button index to its corresponding position in the
+     * multi-dimensional grid
+     * 
+     * @param idx the index to convert
+     * @return the position in the multi-dimensional grid corresponding to the given
+     *         index
+     */
     private int[] idxToPos(int idx) {
         int[] pos = new int[dims.length];
         int tempIdx = idx;
@@ -754,6 +841,13 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         return pos;
     }
 
+    /**
+     * Converts a position in the multi-dimensional grid to its corresponding button
+     * index
+     * 
+     * @param pos the position to convert
+     * @return the index of the button corresponding to the given position
+     */
     private int posToIdx(int[] pos) {
         int idx = 0;
         int stride = 1;
@@ -765,6 +859,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         return idx;
     }
 
+    /**
+     * Refreshes the displayed numbers on all buttons based on the current flagged
+     * status
+     */
     private void refreshNumbers() {
         for (MinesweeperButton b : buttons) {
             if (b != null) {
@@ -773,6 +871,10 @@ public class MinesweeperEuclidean extends MinesweeperBase implements ActionListe
         }
     }
 
+    /**
+     * Overrides the paintComponent method to draw the background image, if it
+     * exists, before painting the buttons
+     */
     @Override
     protected void paintComponent(Graphics g) {
         if (bgImage != null) {
