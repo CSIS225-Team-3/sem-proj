@@ -43,8 +43,8 @@ import javax.swing.event.ChangeListener;
 /**
  * Main Game to show the options for type of modes.
  * 
- * @author Ahyaan Malik
- * @version 4/14/2026
+ * @author Ahyaan Malik, Team PLAD
+ * @version 5/01/2026
  */
 public class MainMenu extends JPanel implements ActionListener, ChangeListener, Runnable {
 
@@ -120,60 +120,106 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The label for displaying error messages */
     private JLabel errorLabel;
 
+    /** The button for the 2D minesweeper mode */
     private JButton twoDimension;
 
+    /** The button for the 3D minesweeper mode */
     private JButton threeDimension;
 
+    /** The button for the 4D minesweeper mode */
     private JButton fourDimension;
 
+    /** The button for the 5D+ minesweeper mode */
     private JButton fiveDimension;
 
+    /** The button for the hyperbolic minesweeper mode */
     private JButton hyperbolic;
 
+    /** Easy difficulty selection */
     private JRadioButton easyBtn;
+
+    /** Medium difficulty selection */
     private JRadioButton mediumBtn;
+
+    /** Hard difficulty selection */
     private JRadioButton hardBtn;
+
+    /** Extreme difficulty selection */
     private JRadioButton extremeBtn;
 
+    /** Start Button */
     private JButton startButton;
 
+    /** Selected Mode */
     private String selectedMode;
+
+    /** Difficulty info labels */
     private JLabel[] difficultyInfoLabels;
 
+    /** 3D splices spinner */
     private JSpinner splices3dSpinner;
+
+    /** 3D splices label */
     private JLabel splices3dLabel;
 
+    /** 4D splices spinner */
     private JSpinner splices4dSpinner;
+
+    /** 4D splices label */
     private JLabel splices4dLabel;
 
-    // 5D+
+    /** 5D+ splices spinner */
     private JSpinner splices5dSpinner;
+
+    /** 5D+ splices label */
     private JLabel splices5dLabel;
 
+    /** Dimensions spinner */
     private JSpinner dimensionsSpinner;
+
+    /** Dimensions label */
     private JLabel dimensionsLabel;
 
+    /** Group for the difficulty radio buttons */
     private ButtonGroup difficultyGroup;
 
+    /** Flag indicating if the difficulty has been adjusted */
     private boolean difficultyAdjusted;
 
+    /** Configuration panel for the menu */
     private JPanel configPanel;
 
+    /** Username field for login/register */
     private JTextField usernameField;
+
+    /** Password field for login/register */
     private JPasswordField passwordField;
 
+    /** Register button for creating a new account */
     private JButton registerButton;
+
+    /** Login button for accessing an existing account */
     private JButton loginButton;
+
+    /** Logout button for ending the current session */
     private JButton logoutButton;
+
+    /** Delete account button */
     private JButton deleteButton;
 
+    /** Label for displaying login status */
     private JLabel loginStatus;
 
+    /** Flag indicating if the delete confirmation has been received */
     private boolean deleteConfirmed;
 
+    /** The account manager for handling user accounts */
     private AccountManager accountManager;
+
+    /** The currently logged-in account */
     private Account loggedInAccount;
 
+    /** Checkbox for showing/hiding password */
     private JCheckBox showPassword;
 
     /** The primary color for the UI */
@@ -185,22 +231,37 @@ public class MainMenu extends JPanel implements ActionListener, ChangeListener, 
     /** The tertiary color for the UI */
     public static Color TERTIARY_COLOR = new Color(65, 150, 255, 220);
 
+    /** The transparent color for the UI */
     public static Color TRANSPARENT_COLOR = new Color(0, 0, 0, 255);
 
+    /** The text color for the UI */
     public static Color TEXT_COLOR = Color.WHITE;
 
+    /** The maximum number of rows for the game board */
     private final static int MAX_ROWS = 100;
+
+    /** The maximum number of columns for the game board */
     private final static int MAX_COLS = 100;
+
+    /** The maximum number of splices for the 3D mode */
     private final static int MAX_SPLICES3D = 100;
+
+    /** The maximum number of splices for the 4D mode */
     private final static int MAX_SPLICES4D = 100;
+
+    /** The maximum number of splices for the 5D+ mode */
     private final static int MAX_SPLICES5D = 100;
 
+    /** The maximum number of mines for the game board (2D calculated) */
     private int maxMines = MAX_ROWS * MAX_COLS;
 
+    /** The maximum number of random mines for the game board */
     private int maxRandomMines;
 
+    /** The maximum number of dimensions for the game board */
     private final static int MAX_DIMENSIONS = 100;
 
+    /** The number of dimensions selected for the game board */
     private int dimensionsSelected;
 
     /**
